@@ -1,0 +1,321 @@
+{
+    "university name": "Häme University of Applied Sciences",
+    "short name": "HAMK",
+    "about":"Häme University of Applied Sciences (HAMK) is a learning and research community of people driven to make a positive impact on the world. We are a team of approximately 9,000 people shaping the future of bioeconomy, health, education, business, design, and technology. Our presence spans across seven campuses, online, and internationally. We provide exceptional tools and environments to our students, staff, and partners to work and collaborate together to accomplish useful actions.Studying is teamwork – both with fellow students and with our partners at HAMK. As our student, you will have the opportunity to tackle real-world workplace problems right from the beginning of your studies through various business collaboration projects. The world and the workplaces are constantly evolving, which is why continuous learning is essential. You will find plenty of opportunities to develop your skills with us in both Finnish and English.At HAMK, we know that you can save the world with both feet on the ground. That's what bettermakers do.",
+    "bachelor’s degree": [
+        {
+            "program": "Computer Applications",
+            "field of studies": ["Computer Applications", "IT and ICT"],
+            "degree title": "Bachelor of Business Administration (BBA)",
+            "teaching language": "English",
+            "duration": "3 years 6 months",
+            "credits": "210 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus": "Hämeenlinna",
+            "objective": "You will learn for example a wide range of topics in programming, user interface design, operating systems, software robotics and business. In profiling studies, you can focus on web- and mobile development, data science and artificial intelligence or software delivery and cloud computing",
+            "qualification": "As a graduate, you will become a professional programmer ready for the modern ICT challenges. You can apply to many different programming jobs all over the world. Your work title can be for example Software Developer, ICT project Manager, Data Analyst or Game Programmer",
+            "structure": " For you as a future ICT professional, it is essential to understand the needs of your clients. To support businesses in a best way, you learn to make applications and systems easily accessible for the users. This requires a great deal of planning, patience, client understanding, project management and various other skills. You will develop these competences during your studies. Our Computer Applications studies are strongly based on the needs of the working life, and during your studies, you will gain work-related skills through various team projects. One of our longest-running business partnerships is the ICT project. Also, we organize the BitJobs recruitment event for our students. In this event you will meet representatives from several IT companies, and you have the opportunity to establish important contacts for your future career.Our goal is to encourage entrepreneurial mindset. You will improve skills needed for running your own company, create entrepreneurship that is based on higher education, and renew and develop existing businesses. You will start your studies with compulsory core competence studies which cover a wide range of topics in programming. You will learn programming languages and techniques most commonly used today. Studies include also for example user interface design, operating systems, web development, databases, cloud operations, software robotics, business and innovation. ",
+            "specialization options": "Profiling studies are optional modules that you can use for steering your competence towards your career goals. After core competence studies, you will select studies according to your own interests and focus with the following profiling competences: web- and mobile development data science and artificial intelligence software delivery and cloud computing. You may also take optional studies from HAMK’s selection and from other higher education institutions in Finland or abroad. Your studies include work placement and a thesis. In your work placement you have an opportunity to practise in real-life working environments in companies. You will also observe how the company, the employees and the customers interact. Many of our alumni students have been employed by their internship company. In your thesis you research a subject that interests you in analytical and solution-oriented way, often for a company in your own field"
+        },
+        {
+            "program":"Information and Communication Technology, Circular Economy",
+            "field of studies": ["Information and Communication Technology", "Circular Economy","IT and ICT"],
+            "degree title": "Bachelor of Engineering (BEng)",
+            "teaching language": "English",
+            "duration": "4 years",
+            "credits": "240 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Forssa",
+            "objective":"Combine ICT engineering and circular economy in our degree programme, where you will learn about data-analytics, the Internet of Things and smart technologies that you can use to create sustainable products and services of the future. With sustainable technology, you can have a critical impact on preventing climate change by utilising natural resources responsibly for people’s wellbeing.You learn to use information and communication technology to advance circular economy and sustainable development in our global society. ",
+            "qualification":"You will become an expert on circular economy who can work in manufacturing, engineering and design offices or public sector for example as a circular economy engineer or data analyst.",
+            "structure":"our Information and Communication Technology, Circular Economy programme, you combine an engineer’s information technology studies with circular economy that helps to develop our society. You get a strong basic knowledge in data analytics, IoT, smart systems, sensors, cloud services and how to use them to benefit circular economy. At the same time, you learn about sustainable products and services that utilise renewable natural resources. Smart and ecologically sustainable systems are needed in all fields of industries. That’s why you get to do real corporate development projects with students from other fields in international environments. Our business projects have been about water, energy and waste management, material efficiency and sustainable utility of natural resources. Earlier our students have created for example a hologram that tracks water consumption, helped local businesses with data-analytics and developed new ways to utilise motion sensors and leftover textiles.",
+            "specialization options":"You can complete your core studies with studies from for example 3D modelling and printing, machine learning and AI or global sustainability. In 3D modelling our students have designed and printed for example wind turbines that can produce enough ecological energy to charge a phone.Your studies include work placement and a thesis. In your work placement you have an opportunity to practise in real-life working environments in companies. In your thesis you research a subject that interests you in an analytical and solution-oriented way, often for a company in your own field"
+           
+        },
+        {
+            "program":"Smart and Sustainable Design",
+            "field of studies": ["Design","Design Programmes"],
+            "degree title": "Bachelor of Culture and Arts (BCA)",
+            "teaching language": "English",
+            "duration": "4 years",
+            "credits": "240 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Hämeenlinna",
+            "objective":"Sustainable future needs innovative designers. In Smart and Sustainable Design degree programme you get to have an impact on what the future world looks like and how we design sustainable products.You can study fashion design, footwear design, glass design or ceramics design. You will use new techniques like digital modelling, textile printing and 3D printing from clay to decal. We are the only higher education provider in the Nordics where you can study footwear design and the only one in Finland where you can study glass and ceramics design.You learn to design products that take into consideration the future’s challenges and possibilities. You learn to use different materials and manufacturing methods that utilise traditional and modern technologies",
+            "qualification":"You will become a professional designer. You can create environmentally conscious products for example as a fashion designer, product developer or entrepreneur.",
+            "structure":"In our Smart and Sustainable Design degree programme you learn to take into consideration the challenges of sustainability in modern design. You learn to use different production techniques and materials in practise so you can design more sustainable products and services that fit to our future’s needs.In your designs you research the users’ needs, create solutions and utilize digital sketching tools side by side with traditional ones. You familiarise yourself with different materials and manufacturing products in real studio environments. Our students have for example printed shoes with a 3D printer and created new fashion from leftover fabric scraps.During your studies you develop as a designer in real working life projects. You often work in teams and will get skills that you can apply in working life.As a designer you will specialise in fashion, glass or ceramics. In your chosen studies you will deepen your knowledge based on your interests. You can complement your design skills for example by choosing studies from international fashion business or sustainable business.",
+            "specialization options":"Profiling studies in fashion design allow you to first explore both clothing and footwear design before you choose which one to specialise in. As a fashion student you design and manufacture outfits, footwear and whole collections during your studies. In practical projects you solve the fashion industry’s sustainability challenges with your designs and utilize digitisation like 3D modelling.In our glass and ceramic design studies you get to work in real studio environments for example with clay. You learn to use recycled materials and develop your own glazes. You learn to design and manufacture lasting and practical items using different techniques. You can use for example 3D modelling and 3D printing as part of your product development. Our students’ designs in our unique programme have previously been displayed in Finland’s glass museum and in our traditional Design Market."
+
+        },
+        {
+            "program":"Health Care, Nursing",
+            "field of studies": ["Health","Health and Social Services"],
+            "degree title": "Bachelor of Health Care, Nursing",
+            "teaching language": "English",
+            "duration": "3 years 6 months",
+            "credits": "210 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Hämeenlinna",
+            "objective":"You will gain professional skills and knowledge to help people with their health and develop community’s wellbeing. You will learn the Finnish language to help manage in different nursing situations in Finnish working life",
+            "qualification":"After the studies, you will have the professional skills and knowledge to work as a registered nurse in health care services in Finland using the Finnish language. As a certified professional, you may also be employed abroad",
+            "structure":"A nurse works in professional care aiming to promote health and well-being. Nursing includes caring, guiding, supporting and rehabilitating the client. Our degree programme consists of core competencies, work placements, thesis and deepening your expertise through profiling competence. The language of the degree programme is English with a strong emphasis on learning Finnish language, and the degree meets the criteria of the EU directives for a General Nurse. You will receive personal guidance from the tutor teachers and study guides throughout the stages of your studies.Core competencies.You will study closely around real-life phenomena from health care, and the content of the studies include getting to know the Finnish health and social care culture. You will study themes like medical nursing, acute and perioperative nursing, mental health, gerontology, family health and management in nursing.Work placements.We will provide work placements for you through HAMK’s partner organisations. Practical training represents one-third of the nursing studies, and it is implemented in several phases in the degree in various health care environments. This allows you to acquire a deep understanding and a wide view of the different possibilities that a career in nursing can offer. When agreed upon, practical training can be conducted during the summer term.Thesis.The bachelor’s thesis is a comprehensive design or development process, or research project, where you will independently utilise the most essential knowledge and practices of nursing. You can choose the topic according to your interests together with work-life partner organisations. You can do the thesis in Finnish or English. The aim of the thesis is to strengthen both your general working life skills and your professional competencies",
+            "specialization options":"In addition to the studies around core competence, work placements and the thesis, nursing studies include profiling studies to advance your expertise in nursing. You may choose profile studies that serve the competence needs of the nursing field.The studies require commitment to academic studies and self-organisation skills. The student must be motivated and committed to learning the Finnish language to reach the required proficiency."
+
+        },
+        {
+            "program":"Construction Engineering",
+            "field of studies": ["Construction","Technology and Traffic"],
+            "degree title": "Bachelor of Engineering (BEng)",
+            "teaching language": "English",
+            "duration": "4 years",
+            "credits": "240 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Hämeenlinna",
+            "objective":"Become a construction professional with a handle on the latest design and production technologies. In our Construction Engineering programme you learn to design durable and sustainable structures. You get great language skills and international know-how which makes it possible for you to work anywhere in the world.You will learn about structural engineering and the design of load-bearing structures. You learn the latest design, production and management techniques and how to apply them to practical situations in working life",
+            "qualification":"You will become a construction engineer with a focus on structural engineering. You can work with constructing new premises, repairing existing structures or project management in Finland and abroad for example in an engineering design office. Your daily tasks can involve structural design, product development or for example supervision in an official capacity.",
+            "structure":"In Construction Engineering you focus on structural engineering and the design of load-bearing structures. Understanding of the structures and building information modelling (BIM) skills play an important role. These skills are valued in the field and will help your future career in construction.You learn about construction technology, structural systems in buildings and how to plan a building project. You get to dive into the mechanics, mathematics, technical drawing and CAD. You also get an understanding of 3D visualisation and the necessary IT skills.Here at HAMK you learn through practice with actual engineering cases and teamwork. For example, in 2022 new Construction Engineering students began their studies with a team competition on who designed and built the most polished and durable wooden bridge.During your studies you gain the knowledge needed for future sustainable development solutions in the field. By applying your expertise in material choices, optimization, repairability and circular economy you impact the life cycle and the economical, ecological and social sustainability of construction.",
+            "specialization options":"After you complete the core studies that are the base for the expertise as a construction engineer, you can deepen your knowledge with profiling studies. They include topics like concrete structures, structural design and apartment buildings. In addition, you can choose optional studies from any study areas you are interested in.Your studies include work placement and a thesis. In your work placement you have an opportunity to practise in real-life working environments in companies. In your thesis you research a subject that interests you in analytical and solution-oriented way, often for a company in your own field.As the degree is implemented in English, you have a chance to upgrade your English communication skills, as well as practice working in multicultural teams already during your studies."
+
+        },
+        {
+            "program":"Electrical and Automation Engineering",
+            "field of studies": ["Electrical and Automation Engineering","Robotics","Technology and Traffic"],
+            "degree title": "Bachelor of Engineering (BEng)",
+            "teaching language": "English",
+            "duration": "4 years",
+            "credits": "240 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Valkeakoski",
+            "objective":"Learn to create an energy efficient future with renewable energy, sustainable manufacturing and smart living. In Electrical and Automation Engineering programme you learn to develop ecologically sustainable electrical and automation systems. This constantly evolving field offers you interesting design opportunities and excellent chance of employment.You learn to develop energy efficient electrical and automation systems and solutions. You learn to utilise new technologies like simulation, virtualisation and robotics in different ways.",
+            "qualification":"You will become an electrical and automation engineer to the energy or manufacturing industries. Your tasks could include for example design, production or sales as you work as a Design Engineer, an Automation Designer or an Electrical Designer",
+            "structure":"In our Electrical and Automation Engineering programme you familiarise yourself with Finland’s electricity generation and distribution, energy systems in buildings and energy efficiency for example in real estates.You learn to apply information technology, electrical engineering, automation and robotics through practise in different projects and by working in our modern laboratory environments. You get yourself acquainted with designing and utilising electrotechnical equipment and systems with safety in mind. You learn to test automation in new subjects using logic programming, micro controllers and cloud computing. Ecologically sustainable thinking is an important part of your studies. With electrical and automation technology you can create energy for a more sustainable future and advance sustainable development in manufacturing",
+            "specialization options":"After you have completed the core studies, you can choose studies to deepen your knowledge based on your career goals. Your options include for example modern technology applications, process automation, product automation and smart home.Your studies include work placement and a thesis. In your work placement you have an opportunity to practise in real-life working environments in companies. In your thesis you research a subject that interests you in analytical and solution-oriented way, often for a company in your own field"
+
+        },
+        {
+            "program":"Climate Smart Agriculture",
+            "field of studies": ["Agriculture","Natural Resources and Biotechnology"],
+            "degree title": "Bachelor of Natural Resources",
+            "teaching language": "English",
+            "duration": "4 years",
+            "credits": "240 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Mustiala",
+            "objective":"You will learn to analyse, develop and manage effective, safe and sustainable plant and animal production in changing climate, and to work with current uses and developments of diverse technologies, technological applications and digital tools in agriculture.",
+            "qualification":"As a graduate you can work within the agricultural branch in e.g. production, business, services, advisory, education and research. Typical jobs include farm manager, agricultural expert, research technician, teacher or project manager",
+            "structure":"Climate Smart Agriculture programme offers you a broad knowledge of the agricultural branch and rural industries. You will study sustainable plant and animal production, agricultural technology and digitalisation, organic methods, bioeconomy and circular economy as well as rural entrepreneurship in hands-on trials. You can choose to deepen your knowledge in e.g. dairy industry, crop production and rural development. You will learn research work, smart solutions, project development and innovation.Our studies are often based on real situations and problems that are provided by diverse businesses and organizations in the agricultural branch. This gives you a hands-on approach on the studies. A key learning method is teamwork in different projects, and you get to develop your competence in different teams.We also encourage entrepreneurial mindset, and improve your skills needed for running your own company, create entrepreneurship that is based on higher education, and renew and develop existing businesses.Also, you will study in a vary of learning environments, and a major part of studies happen on the campus’ own research- and educational farm. The farm, that has entirely organic production since 2020, includes a cowhouse and 185 ha of fields with different crops",
+            "specialization options":""
+
+        },
+        {
+            "program":"Information and Communication Technology, Robotics",
+            "field of studies": ["Information and Communication Technology","IT and ICT","Robotics"],
+            "degree title": "Bachelor of Engineering (BEng)",
+            "teaching language": "English",
+            "duration": "4 years",
+            "credits": "240 ECTS",
+            "teaching format": "Contact Lessons",
+            "campus":"Riihimäki",
+            "objective":"In our Degree Programme in Information and Communication Technology, Robotics, you learn to use technology to improve people’s lives and advance sustainability.You will learn how to program and integrate robotics in service, business, and industry operations to save resources, boost efficiency, and improve quality. You will understand human-robot interaction and can design collaborative robotics in different sectors from care services and food production to businesses and manufacturing. Upon graduation, you will be a professional who knows how to use ICT and robotics to build smart systems and operations that are better for the planet and the people",
+            "qualification":"You will become an engineer with current and employable skills in ICT and robotics. You can work for example as robotics engineer, software developer, automation specialist or AI consultant",
+            "structure":"In this programme, you learn, for example, coding, software engineering, robotic process automation (RPA), data analytics, machine learning, and artificial intelligence (AI). For example we use RoboDK simulation software for simulation and offline programming of industrial robots. In addition to all the technical skills, you develop creativity, problem-solving abilities, systematic and analytical thinking, and communication skills.During your studies, you will work on hands-on projects, commissioned by business and industry partners, as a member of diverse and international student teams. The robotics campus in the city of Riihimäki offers an ecosystem and an excellent opportunity for developing and applying robotics.",
+            "specialization options":"Your studies at HAMK will include work placement and a thesis. In your work placement, you practice your profession in a company and build connections with potential employers. In your thesis, you research a subject that interests you"
+
+        },
+        {
+            "program":"International Business",
+            "field of studies": ["Business Administration","Entrepreneurship and Business","Marketing"],
+            "degree title": "Bachelor of Business Administration (BBA)",
+            "teaching language": "English",
+            "duration": "3 years 6 months",
+            "credits": "210 ECTS",
+            "teaching format": ["Contact Lessons","Multiform Learning"],
+            "campus":"Valkeakoski",
+            "objective":"You learn critical and analytical thinking and how to utilise data in business decisions with a sustainable point of view. Combined with digital marketing and content creating skills, leadership skills and cross-cultural communication you get a strong base for your international business career",
+            "qualification":"As a Bachelor of Business Administration (BBA), you will be a sustainable, data–driven and entrepreneurial professional who can plan, organise and manage international business operations for example in the fields of digital marketing, international sales or human resources",
+            "structure":"In our International Business degree programme, you learn through real-life cases. You develop both your analytical and business skills by learning how to best use data for example in marketing and business information management. You get to combine business theories with data-driven decision making.You learn to consider sustainability and how to bring environmental consciousness into business. The starting point of your sustainability studies will be UN Sustainable Development Goals which will guide the innovation and business planning processes. With us you learn effective marketing in practise and get to create content such as videos and podcasts in an actual studio environment. You will also get a practical approach to project management through real life projects. We encourage entrepreneurial mindset and provide skills you need to run your own business.  Part-time studies In International Business part-time studies, you will study completely online. We organise teaching sessions online on weekday evenings. Part-time studies are perfect option for you if you are for example already in the working life",
+            "specialization options":"You will shape the direction of your future career by choosing studies based on your interests. Your options include subjects like esports management, global fashion business and human resource management. You can explore European business environment and get insights how to do business in China. Your studies include work placement and a thesis. In your work placement you have an opportunity to practise in real-life working environments in companies. In your thesis you research a subject that interests you in analytical and solution-oriented way, often for a company in your own field"
+
+        },
+        {
+        "program":"Mechanical Engineering and Production Technology",
+        "field of studies": ["Mechanical Engineering","Robotics","Technology and Traffic"],
+        "degree title": "Bachelor of Engineering (BEng)",
+        "teaching language": "English",
+        "duration": "4 years",
+        "credits": "240 ECTS",
+        "teaching format": "Contact Lessons",
+        "campus":"Riihimäki",
+        "objective":"Learn to design machines, solve problems and program robots! Mechanical engineering is a versatile modern field. Mechanical engineering can be seen everywhere in our society from wind turbines to engines to your device on which you are reading this description.If you want to learn how different things are assembled and manufactured or how you could develop more responsible products for the future, mechanical engineering is for you.As a mechanical engineer you are a sought-after professional in the field of technology. In HAMK you use digital design and simulation when you learn to design machines and products in practical working life cases. First you design something new and then materialise your concept with for example 3D printing.You will learn to design and develop intelligent machines, equipment and automated production for the needs of our future. You will focus on the design of machines and mechanical systems, production technology, modern manufacturing methods as well as simulation and modelling. You learn to use digital design, robotics, artificial intelligence, 3D scanning and 3D printing in your work",
+        "qualification":"You will become an engineer who can solve problems, design new and develop the old with a wide range of career choices around the world. A typical employer is a design engineering office, small- or medium-size workshop or a large global company. A common career path may lead to expert tasks, managerial duties or entrepreneurship.",
+        "structure":"Mechanical engineering and production technology is applied and needed in all industries. That is why you will learn strong general engineering skills with us, such as problem solving and analysis skills. At the same time you specialise in the design of machines, devices, products and production in various digital design environments. You study in real projects in close cooperation with local companies in the field. In addition to the design work, you will learn project management and customer-oriented design thinking which are necessary in working life. You also gain the expertise needed for future sustainable development solutions. You will learn how to lead and manage projects and how to plan and develop production, supply chains and industrial services. With material choices, optimization, repairability and recyclability aspects you are able to influence on the economical, ecological and social sustainability of production and manufacturing. In addition to traditional material technology, you will learn modern product development, such as reverse engineering. You will learn to utilize developing technologies such as 3D modelling, robotics, virtual and augmented reality (VR/AR) and artificial intelligence (AI) applications. The first two years of your studies, the core competence is the same for all Mechanical Engineering and Production Technology students",
+        "specialization options":"After you have completed the core competence studies, you start your profiling studies by choosing two or more of the profiling modules based on your own interests:  3D Engineering,Design of Industrial Appliances ,Manufacturing Automation in a Workshop ,Robotics,Structural Analysis"
+
+    },
+    {
+        "program":"Professional Horticulture",
+        "field of studies": ["Horticulture","Natural Resources and Biotechnology"],
+        "degree title": "Bachelor of Natural Resources",
+        "teaching language": "English",
+        "duration": "4 years",
+        "credits": "240 ECTS",
+        "teaching format": "Contact Lessons",
+        "campus":"Lepaa",
+        "objective":"HAMK is the only higher education provider in Finland from the field of horticulture. Horticulture is cultivation, selling and marketing of plants, vegetables, fruits and mushrooms. You can study horticulture in Lepaa campus, located in a beautiful manor park with beautiful scenery, gardens, and parks, not to mention our very own greenhouse. There are great employment opportunities in the field of horticulture both in Finland and abroad.You will learn good biological and technical skills for commercial plant production and to work with entrepreneurial thinking. You will also learn how to develop business’ responsibility and sustainable development aspects by utilising digitalisation, innovations and international networks",
+        "qualification":"After graduation you can find employment as an expert in commerce, counselling, education and administration. Typical employers are companies, cities and associations. The branch is very international which offers great opportunities for career development.",
+        "structure":"During your studies, you will gather a wide knowledge about horticulture both from technical and biological point of view. Studies include also subjects from business, such as cost calculations, entrepreneurial working, marketing, and developing businesses and commerce in the field. You will also learn how to innovate new products and services.From the biological perspective, different cultivars will become familiar to you as well as different cultivation systems suitable for your purpose. You will study how to time your crop, direct its quality and quantity and how to handle the crop correctly. You will learn different actions to store your crop and how this might affect the end result.Lepaa campus has its own greenhouse, which produces tomatoes for commercial purposes every year. There are also several research studies conducted in the greenhouse. The greenhouse is utilized during the studies, and it give a great practical approach to horticulture. The campus has also various parks and gardens, that are also used for this purpose.Responsibility is one of the main elements of Finnish production, and it is, together with sustainable development, underlined in this degree programme as well.",
+        "specialization options":"" 
+    },
+    {
+        "program":"Sustainable Forest Management",
+        "field of studies": ["Forestry","Natural Resources and Biotechnology"],
+        "degree title": "Bachelor of Natural Resources",
+        "teaching language": "English",
+        "duration": "4 years",
+        "credits": "240 ECTS",
+        "teaching format": "Contact Lessons",
+        "campus":"Evo",
+        "objective":"In our degree programme, you will achieve an extensive knowledge in forestry, which highlights sustainable planning, caring and utilization of forest resources. And the best part of the studies is that they are widely done outdoors, in the fresh air of our demonstration forest.In your forestry studies, you will acquire a broad knowledge of the sustainable use of forest resources. You will learn multi-objective forest planning, management and utilisation. Through your studies, you will learn how to take into account factors affecting climate change, biodiversity and the carbon cycle in forest nature and forest utilisation. You will learn how to use applications and open data in the forest sector. You will also be able to navigate in the field and apply your forestry skills in practice. The teaching emphasises teamwork, which will help you develop important working life skills. In addition, team learning gives you peer support from other students in learning new things",
+        "qualification":"Most common work tasks in the field are among wood procurement, forest services, and planning or management of forest resources. Your work title could be for example forest expert, procurement supervisor, senior planning officer or forest entrepreneur",
+        "structure":"In the compulsory core studies, you will learn about forest nature, forest measurement, forest management, wood procurement, sustainable forest management and forest property management. After that, you will deepen your knowledge in optional, profiling studies, for example, on challenges and conflicts in the forestry sector, wood processing in future forest environments and projects working on changing topical issues.After the first year, you can choose profiling studies according to your own interest. This a great way to mold the degree to suit your interests and future career plans! In the profiling studies, you can choose to deepen your knowledge for example in wood procurement, planning and management of forest resources and production of services in forestry, GIS, recreational usage of forests and renewable energy resources. You can also choose profiling studies from our other degree programmes in HAMK, or other higher education institutes in Finland or abroad. We offer you strong contacts to the industry and forestry stakeholders.In Sustainable Forest Management, you will study in Evo campus, both independently and in teams with other students. We have a demonstration forest of 1800 hectares in Evo campus, right beside the classrooms, where you can observe forest areas and enjoy nature. The aim is to spend less time inside indoors and more outside, in the demonstration forest. For example, a lecturer can give you a task in the classroom, and after you will go into the demonstration forest with other students to work on that task. Practical learning in the nature goes on throughout the year, but as seasons change the amount of time spent in the nature is modified. This means that in the winter when there is snow in the ground, you’ll spend less time outdoors",
+        "specialization options":""
+    },
+    {
+        "program":"Sustainable Urban Design",
+        "field of studies": ["Construction","Sustainable development,Technology and Traffic","Traffic and Transportation"],
+        "degree title": "Bachelor of Engineering (BEng)",
+        "teaching language": "English",
+        "duration": "4 years",
+        "credits": "240 ECTS",
+        "teaching format": "Contact Lessons",
+        "campus":"Riihimäki",
+        "objective":"in our Degree Programme in Sustainable Urban Design (B.Eng.), where you learn to shape mobility services, plan resource-wise infrastructure, and use data and technology to plan sustainable cities.You will learn to design environmentally friendly urban environments and transport systems using tools like service design, AI and data analysis.",
+        "qualification":"You become an engineer who can design sustainable cities with a specialisation in mobility, infrastructure or data management. You will work with professionals from different fields and act as a specialist in sustainable design in international companies in Finland or abroad",
+        "structure":"Your studies centre around urban environments and how these can be used to promote peoples’ and the planet´s wellbeing. You will learn to engineer cities that are equitable, economically viable, and environmentally sustainable. Within the programme, you will learn about creating safe and resilient cities by focusing on infrastructure, mobility, and the use of data in urban design.During your studies, you will combine creativity with cutting-edge technology. You will learn to apply artificial intelligence (AI), Internet of Things (IoT), data analysis, data modelling and visualisation as well as service design in urban systems.During your studies, you will apply your knowledge and skills in projects with our partner cities and companies, working with students and professionals from diverse fields. The degree programme collaborates with the city of Riihimäki to facilitate learning in sustainable urban design",
+        "specialization options":"You can deepen your knowledge by choosing to specialize in one of the three fields:Developing sustainable mobility service,Innovating sustainable urban infrastructure,Applying data technologies in urban planning, management, and maintenance.Your studies at HAMK will include work placement and a thesis. In your thesis, you research a subject that interests you"
+    }
+    ],
+    "master's degree":
+        [
+            {
+                "program":"Management in Sustainable Business",
+                "field of studies": ["Business Administration","Entrepreneurship and Business","Leadership and Administration","Sustainable development"],
+                "degree title": "Master of Business Administration (MBA)",
+                "teaching language": "English",
+                "duration": "1 year 6 months",
+                "credits": "90 ECTS",
+                "teaching format": "Online Learning",
+                "campus":"Online",
+                "objective":"Upon graduation, you have competencies to lead the sustainable transition within your organization or gain the experience and confidence to drive your career shift towards sustainability-related roles. In addition, you will be able to integrate sustainability across your organization’s value chain to ensure long-term value creation.By completing the degree, you will gain specialized knowledge in management and sustainability practices, forming a solid foundation for research and development work. Furthermore, the competencies acquired during your education will prepare you for engaging in challenging development projects related to sustainable business practices",
+                "qualification":"After graduation:You are able lead the sustainable transition within your organization,You can take responsibility and leadership with professional knowledge and practice for company’s sustainable development,You are confident when working in multidisciplinary and multinational teams,You have specialized knowledge in the field of study, which forms your basis for research and development work.The competences gained during your education respond to the direct needs of companies and other organizations and prepare you for challenging development projects in relation to sustainable business.A master’s degree qualifies you for positions that require a higher education degree. The degree is a fully recognized university degree in Finland as well as abroad, and upon completion provides you with the eligibility to apply for a doctoral degree",
+                "structure":"Our Management in Sustainable Business programme is a comprehensive introduction to sustainable, data-driven, and innovative business management.The competences gained during your education respond to the requirements of companies and other organizations and prepare you for challenging development projects in relation to sustainable business.You will network with experienced professors and enthusiastic students from all over the world via inspiring group discussions and reflections, lectures, and business presentations. As teamwork is an essential part of the studies, you will be equipped with excellent co-operational skills in a multicultural environment.A Master’s thesis (30 credits) is a research-based development task on a topic suitable for the degree programme and is based on both theoretical and work-based knowledge. Your thesis aims at solving a question or challenge arising from the world of work, and it is based on research-based development activities. You can complete your thesis work in your work organisation, for example. You will implement the study independently as a work-based project for which you will receive guidance from experienced thesis supervisors. The thesis process includes planning, interim and final seminars, which are carried out online",
+                "specialization options":""
+            }
+        ]
+    ,
+    "campuses": [
+        {
+            "campus":"Hämeenlinna",
+            "address": "Vankanlähde 9, 13100, Hämeenlinna",
+            "description":"Our evolving, growing and modern main campus, Hämeenlinna University Centre brings together thousands of students and hundreds of employees.Our extensive campus area offers a wide range of facilities and services for studying and researching in different fields.The Hämeenlinna University Centre has around 30 educations and is also the home campus of all HAMK’s research units. In addition, the campus is a great place to organize a variety of events for both internal and external actors, so the campus is often a hive of activity and activity.The Innopark, a business cluster located right next to HAMK’s premises, also enables us to carry out various business cooperation projects.The Hämeenlinna University Centre is located in the Visamäki district, close to highways 3 and 10, a few kilometres from the city centre. We are easy to reach by car, public transport or even by bike. The campus and its surroundings offer a variety of services, including a grocery store, lunch restaurants, a sports hall and student housing.",
+            "housing":"Hämeenlinna has the Hämeenlinna Region Student Housing Foundation (HOPS), which rents apartments in Visakylä and Kampuskaarte, near the university centre, and in Hattelmala.",
+            "sport":"The campus has its own sports hall and a well-equipped gym, which are available to students for the price of an affordable gym pass. The pass can be purchased for one semester or one year at a time. The pass entitles you to use the gym, which includes daily use of the gym from 6am to 10pm, guided fitness classes and trial sports courses, and ball game"
+        },
+        {
+            "campus":"Forssa",
+            "address": "Wahreninkatu 11, 30100 Forssa",
+            "description":"Our Forssa campus is located in an 1850s cotton mill, which has been renovated with respect for cultural history. The vibrant campus area is close to the city centre and other services. The campus park area, the Loimijoki River and the old red brick buildings combine to create one of the most beautiful campus areas in Finland.The study facilities are bright and comfortable. The campus offers teaching and independent study facilities of different sizes. Social and health care students have access to a variety of simulation classes, which aim to create the most authentic learning environment possible, for example in a hospital or home care setting.In addition to the Häme University of Applied Sciences, the spinning mill area has become a centre for culture and education and is home to the Wahren School, Pikku-Wahren kindergarten, Axelin Eskari, a fine arts school, a music school, museums, businesses, a library, a bowling alley and a restaurant. In Forssa, campus cooperation is carried out with the Forssa Vocational Institute and the upper secondary school.",
+            "housing": "Forssa is a city of around 17 000 inhabitants with good transport connections. Student housing in Forssa is provided by Forssa-asunnot Oy (only in Finnish).There are also apartments available from private landlord",
+            "sport": "Unfortunately, there is no gym or sports hall at the Forssa campus, but alternative sports facilities have been arranged for students and staff near the campus.HAMK students have access to two ball games per week at the Forssa Community School and discount prices for the swimming pool and gym at the Vesihelmi Swimming Pool"
+        },
+        {
+            "campus":"Evo",
+            "address":"Saarelantie 1​​​​, 16970 Evo",
+            "description":"Our unique forest campus offers students high quality forest studies in Finnish and English, both in the classroom and in the forest.The Evo campus is a centre for forest education and research with a history dating back to 1862. Its long tradition provides a solid foundation for an education that looks to the future and meets the changing needs of the forestry sector.Our main learning environment is the approximately 1 800 hectares of observation forest surrounding the campus, which allows for a natural transition from classroom teaching directly into the field. In addition, Evo campus has a close-knit and welcoming community where fellow students and staff are sure to get to know each other.Among other things, the campus has a wonderful lakeside sauna, which is heated by students every night at best. The campus and the educational forest are part of the national Evo hiking area. So nature is a real presence throughout the campus and a wide range of hiking trails of different lengths are just around the corner. The nearest services, such as a grocery store, can be found a few tens of kilometres away.The campus is also home to the Häme Vocational Institute’s forestry education, which contributes to the education in forestry. In addition, there has been a lot of cooperation with the Finnish Natural Resources Institute (LUKE) over the years. LUKE is an important research partner for Evo and students are constantly working on theses for the evolving forestry sector",
+            "sport":"The campus has its own sports hall and a well-equipped gym, which are free for students to use. There are also plenty of outdoor sports facilities in the immediate vicinity of the campus. There are hiking trails, floodlit and unlit jogging paths and ski trails, inviting you to exercise all year round. There is also a large grass field and a 9-hole frisbee golf course on campus.",
+            "housing":"At Evo, you’ll live in the beautiful lakeside scenery of Rautjärvi, in the immediate vicinity of the school. Full-time students can live either in cells, studio flats, two-bed flats or single rooms"
+        },
+        {
+            "campus":"Lepaa",
+            "address":"Lepaantie 129, 14610 Lepaa",
+            "description":"",
+            "sport":"The campus has its own gym and fitness centre. For example, the gym has its own ball games reserved for students.In addition to indoor sports facilities, Lepaa has excellent outdoor sports facilities. Next to the campus is the 9-hole Lepaa golf course and frisbee and football golf courses.There are also jogging trails and swimming areas right on or near the campus",
+            "housing":"In Lepaa, you will live in a beautiful campus area, in the immediate vicinity of the school."
+        },
+        {
+            "campus":"Mustiala",
+            "address":"Mustialantie 105, 31310 Mustiala (Tammela)",
+            "description":"Our story began in Mustiala in 1840, when Finland’s first agricultural college was established on the campus.Today, the old and idyllic buildings are surrounded by an advanced organic teaching and research farm, providing students with a hands-on learning environment. The campus has its own barn, more than 50 cows and up to 185 hectares of arable land.In Mustiala, students study rural agriculture in both Finnish and English. In addition, the campus offers training for the basic agricultural degree of the Häme Vocational Institute.The campus’ teaching and research farm also provides a good framework for applied research on a farm scale. Research cooperation is carried out with the Natural Resources Institute of Finland (Luke), extension services, industry and trade, strengthening the knowledge of the natural resources sector and the bio- and circular economy at national level",
+            "sport":"",
+            "housing":"In Mustiala, you will live in a green campus area in the immediate vicinity of the school."
+        },
+        {
+            "campus":"Riihimäki",
+            "address":"Kaartokatu 2, 11100 Riihimäki",
+            "description":"The campus offers both Finnish and English-language engineering courses, which will produce the multiskilled professionals of the future.In addition to teaching, the campus also does a lot of research. The campus is an excellent setting for both theoretical and practical study and research, with a wide range of facilities from a mechanical engineering workshop to an auditorium and from a video studio to computer classes. For example, the 3D printers and robots used in the courses provide excellent support for practical learning.In addition to HAMK, the campus is home to Business Park Riihimäki, the Finnish Environmental School Sykli and the City of Riihimäki’s Robotics Campus. Did you know that Riihimäki is the robotics capital of Finland.The campus also works in close cooperation with the neighbouring secondary schools Hyria Education and Riihimäki High School. The schools have signed a cooperation agreement for the Riihimäki campus area, which aims to further develop the services for Riihimäki students. In practice, the cooperation means joint studies, projects and services, such as a shared gym at Hyria’s premises",
+            "sport":"Unfortunately, the Riihimäki campus does not have a separate sports facility, but alternative sports facilities have been arranged for students and staff in the vicinity of the campus. HAMK students have the opportunity to go swimming or to the gym three times a week at the Riihimäki swimming pool at a reduced price.In addition, the Hyria campus next to the campus offers HAMK students a great place to exercise. The Hyria sports hall and gym are open to HAMK students on weekdays at certain times.",
+            "housing":"In Riihimäki, student housing is provided by the Hämeenlinnan Seudun Opiskelija-asuntosäätiö (HOPS)."
+        },
+        {
+            "campus":"Valkeakoski",
+            "address":"Tietotie 1, 37630 Valkeakoski / Lotilantie 16, 37630 Valkeakoski",
+            "description":"Our Valkeakoski campus, located in South Pirkanmaa, is modern and community-oriented.In the corridors of the campus, you can get to know fellow students from all over the world, as the campus offers both international, English-language education and Finnish-language study programmes.The study environment is comfortable with a variety of teaching and independent work spaces. In addition, the Valkeakoski campus has a HAMK Gaming Lab for student gaming and a studio for video production.The campus is located in the immediate vicinity of two secondary schools, Valkeakoski upper secondary school and Valkeakoski Vocational and Adult Education College. Valkeakoski offers a unique cooperation between the vocational and adult education college, the upper secondary school and local businesses.The campus is only a few kilometres from the city centre and services",
+            "sport":"",
+            "housing":""
+        }
+    ],
+    "tution fees scholarships":[
+        {
+            "bachelor’s degree":[
+                {
+                    "fee":" 9 700€ / Academic Yer",
+                    "scholarship program":"Scholarship based on Finnish Language Skills. No full-scholarships.Students can be awarded with a scholarship two times during their studies, based on their level of Finnish language and provided that their progress fulfills 60 ECTS credits per academic year at HAMK. The Finnish language skills are evaluated by exam results.When calculating the credits for scholarship, only the ones passed during the study period in HAMK will be taken into consideration. Earlier credits from another institute are not valid and not being taken into account.You can prove your Finnish language skills by taking a Finnish Language test at HAMK or with a National Certificate of Language Proficiency (YKI certificate)",
+                    "scholarships":[
+                        {
+                            "name": "Basic User of Finnish language (CERF level-A2)",
+                            "amount": "€ 3200",
+                            "conditions":["Paid once, the earliest after the first academic year","Gain level A2 by taking part in Finnish language studies offered by HAMK and studying independently"]
+
+
+                        },
+                        {
+                            "name":" Independent User of Finnish language – (CERF level B1)",
+                            "amount":"€ 6500",
+                            "conditions":["Paid once, the earliest after the second academic year","HAMK encourages students to aim to level B1 and will support and offer guidance on how to achieve the level needed. B1 is an advanced level requiring long-term commitment to studying Finnish"]
+                        }
+                    ],
+                    "early bird discount":"Students who pay their annual tuition fee in one instalment by the given dates will get a €800 discount.The Early Bird discount is available only for students who will be accepted to HAMK first time . Students will have at least a 3-week time to make the payment after receiving the selection letter"
+                }
+            ]
+        },
+        {
+            "master’s degree":[
+                {
+                    "fee":" 11700€ / Academic Yer",
+                    "scholarship program":"Student can be awarded with a one scholarship at the end of their studies, based on their level of Finnish language and provided that their studies progress with 45 ECTS credits per academic year at HAMK",
+                    "scholarships":[
+                        {
+                            "name": "Basic User of Finnish language (CERF level-A2)",
+                            "amount":"€ 2500",
+                            "conditions":["Paid once, the earliest after the first academic year","There are no Finnish language studies included in HAMK’s Master’s degree programmes. Students have an opportunity to take part in Finnish language studies offered for Bachelor students (10 credits) to gain the level A2. These studies are voluntary and free of charge"]
+                        }
+                    ],
+                    "early bird discount":"Students who pay their annual tuition fee in one instalment by the given dates will get a €1000 discount.The Early Bird discount is available only for students who will be accepted to HAMK first time . Students will have at least a 3-week time to make the payment after receiving the selection letter"
+                }
+            ]
+        }
+        
+    ],
+    "refund policy": "To ensure that studies start on time, the applicant needs to start the process of applying for the residence permit as soon as possible (within max. 14 days), after receiving the notification of admission by email and paying the tuition fee.The tuition fee can only be refunded if the student receives a negative residence permit decision. In this case, the negative residence permit decision is requested to be submitted to HAMK. An office fee of 500 € will always be deducted. If the student has not received a residence permit by the beginning of 2. module, the start of studies will be postponed to the beginning of the next academic year and the tuition fee will be transferred to the next academic year.If a student enrolls as present for the semester but does not start the studies or drops out for any other reason, than related to residence permit issues, he/she always pays the fee for the beginning semester fully",
+    "contact": [
+        {
+            
+            "visting address":"Visamäentie 35 A, 13100 Hämeenlinna",
+            "postal address":"PO Box 230, 13101 Hämeenlinna"
+
+        }
+    ]
+}
+
+
+
