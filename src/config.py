@@ -1,7 +1,6 @@
 import os
 import json
 from dataclasses import dataclass, field
-from typing import Dict, Any
 from transformers import BitsAndBytesConfig
 import torch
 
@@ -143,7 +142,7 @@ class Config:
                 f"Please ensure all required keys are present in the '{self.api_keys_file}' file."
             )
         
-    def get_config_string(self) -> str:
+    def get_config_str(self) -> str:
         """
         Generate a string representation of the configuration.
         
