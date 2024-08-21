@@ -1,5 +1,5 @@
 import streamlit as st
-from src.engine import Engine
+from engine import Engine
 
 # Set the page configuration
 st.set_page_config(page_title='Edvisor', page_icon='🎓')

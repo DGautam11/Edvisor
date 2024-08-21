@@ -1,6 +1,4 @@
-# src/model.py
-
-from src.config import Config
+from config import Config
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class Model:

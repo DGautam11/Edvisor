@@ -144,7 +144,7 @@ class Config:
         
     def get_config_str(self) -> str:
         """
-        Generate a string representation of the configuration.
+        Generate a string representation of the configuration
         
         Returns:
             str: A formatted string containing all non-sensitive configuration details.

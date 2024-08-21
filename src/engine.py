@@ -1,5 +1,5 @@
 import transformers
-from src.model import Model
+from model import Model
 
 class Engine:
     """
