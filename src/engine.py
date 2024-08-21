@@ -31,7 +31,7 @@ class Engine:
         Returns:
             transformers.Pipeline: The initialized text generation pipeline.
         """
-        model, tokenizer = self.model.get_model_and_tokenizer()
+        model, tokenizer = self.model.get_model_tokenizer()
         return transformers.pipeline(
             "text-generation",
             model=model,
