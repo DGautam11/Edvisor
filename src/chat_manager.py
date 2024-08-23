@@ -5,7 +5,7 @@ from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 from config import Config
 from sentence_transformers import SentenceTransformer
-from datetime import datetime
+from datetime import datetime, timezone
 
 class ChatManager:
     """
@@ -52,8 +52,8 @@ class ChatManager:
         chat_id = str(uuid.uuid4())
         self.active_chats[chat_id] = {
             "messages": [],
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat()
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
         }
         return chat_id
 
