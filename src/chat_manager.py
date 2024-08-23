@@ -75,7 +75,7 @@ class ChatManager:
             raise ValueError(f"Chat {chat_id} does not exist.")
         
         message = {"role": role, "content": content}
-        self.active_chats[chat_id].append(message)
+        self.active_chats[chat_id]["messages"].append(message)
         self.active_chats[chat_id]["updated_at"] = datetime.now().isoformat()
         
         # Limit chat history to prevent excessive memory usage
