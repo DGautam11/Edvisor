@@ -2,6 +2,7 @@ import uuid
 from typing import List, Dict
 import chromadb
 from chromadb.config import Settings
+from chromadb.utils import embedding_functions
 from config import Config
 from sentence_transformers import SentenceTransformer
 from datetime import datetime
@@ -29,23 +30,17 @@ class ChatManager:
         self.chroma_client = chromadb.Client(Settings(
             persist_directory=self.config.chroma_persist_directory
         ))
+        
+        # Create an embedding function using Chroma's utility
+        self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name=self.config.embedding_model
+        )
         # Get or create a collection for storing chat history
-        self.collection = self.chroma_client.get_or_create_collection( name = "chat_history",embedding_function = self.embed_function)
+        self.collection = self.chroma_client.get_or_create_collection( name = "chat_history",embedding_function = self.embedding_function)
         # Dictionary to store active chat sessions in memory
         self.active_chats: Dict[str, List[Dict[str, str]]] = {}
-        self.embedding_model = SentenceTransformer(self.config.embedding_model)
+       
         
-    def embed_function(self, input: List[str]) -> List[List[float]]:
-        """
-        Convert input texts to vector embeddings.
-
-        Args:
-            input (List[str]): List of text strings to be embedded.
-
-        Returns:
-            List[List[float]]: List of vector embeddings.
-        """
-        return self.embedding_model.encode(input).tolist()
 
     def create_new_chat(self) -> str:
         """
