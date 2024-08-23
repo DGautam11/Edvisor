@@ -1,6 +1,7 @@
 import transformers
 from model import Model
 from chat_manager import ChatManager
+from config import Config
 
 class Engine:
     """
@@ -90,7 +91,7 @@ class Engine:
                 {"role": "user", "content": user_message}
             ]
         else:
-            recent_messages = chat_history[-self.config.chat_history_limit:]
+            recent_messages = chat_history[-self.chat_manager.config.chat_history_limit:]
             relevant_context = self.chat_manager.get_relevant_context(chat_id, user_message)
             context_str = "".join(relevant_context)
 
