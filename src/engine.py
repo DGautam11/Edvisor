@@ -1,5 +1,6 @@
 import transformers
 from model import Model
+from chat_manager import ChatManager
 
 class Engine:
     """
@@ -23,6 +24,7 @@ class Engine:
         """Initialize the Engine with a Model instance and set up the pipeline."""
         self.model = Model()
         self.pipeline = self.set_pipeline()
+        self.chat_manager = ChatManager()
 
     def set_pipeline(self):
         """
@@ -68,7 +70,7 @@ class Engine:
         print(terminators)  # Debug print, consider removing in production
         return terminators
 
-    def generate_response(self, messages):
+    def generate_response(self, chat_id:str,user_message:str):
         """
         Generate a response based on the conversation history.
 
@@ -78,6 +80,27 @@ class Engine:
         Returns:
             str: Generated response text.
         """
+        chat_history = self.chat_manager.get_chat_history(chat_id)
+        is_first_message = len(chat_history) == 0
+        self.chat_manager.add_message(chat_id,"user",user_message)
+
+        if is_first_message:
+            messages = [
+                {"role": "system", "content": "You are an AI assistant. Provide helpful and accurate information."},
+                {"role": "user", "content": user_message}
+            ]
+        else:
+            recent_messages = chat_history[-self.config.chat_history_limit:]
+            relevant_context = self.chat_manager.get_relevant_context(chat_id, user_message)
+            context_str = "".join(relevant_context)
+
+            messages = [
+                {"role": "system", "content": f"You are an AI assistant. Provide helpful and accurate information. Use the following context to inform your responses: {context_str}"},
+                *recent_messages,
+                {"role": "user", "content": user_message}
+            ]
+            
+
         prompt = self.format_prompt(messages)
         terminators = self.get_terminators()
         outputs = self.pipeline(
@@ -89,4 +112,6 @@ class Engine:
             top_p=0.9,
         )
         # Extract the generated text, excluding the input prompt
-        return outputs[0]["generated_text"][len(prompt):]
+        response = outputs[0]["generated_text"][len(prompt):].strip()
+        self.chat_manager.add_message(chat_id,"assistant",response)
+        return response

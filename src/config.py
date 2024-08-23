@@ -62,6 +62,11 @@ class Config:
     #Name of the API keys file
     api_keys_file: str = "api_keys.json"
 
+    chroma_persist_directory: str = field(default="",init=False)
+    max_context_length: int = 2048
+    chat_history_limit: int = 20
+
+
     def __post_init__(self):
         """
         Initialize the configuration after the dataclass is instantiated.
@@ -93,10 +98,10 @@ class Config:
         Set up necessary directory structures for the project.
         """
         self.dataset_path = os.path.join(self.base_path, "dataset","rag")
-        self.chroma_db_path = os.path.join(self.base_path, "chroma_db")
+        self.chroma_persist_directory = os.path.join(self.base_path, "chroma_persist")
 
         os.makedirs(self.dataset_path, exist_ok=True)
-        os.makedirs(self.chroma_db_path, exist_ok=True)
+        os.makedirs(self.chroma_persist_directory, exist_ok=True)
     
     def load_api_keys(self):
         """
@@ -153,9 +158,11 @@ class Config:
 Edvisor Configuration:
 Base Path: {self.base_path}
 Dataset Path: {self.dataset_path}
-Chroma DB Path: {self.chroma_db_path}
+Chroma DB Path: {self.chroma_persist_directory}
 Base Model: {self.base_model}
 Embedding Model: {self.embedding_model}
+Max Context Length: {self.max_context_length}
+Chat History Limit: {self.chat_history_limit}
 API Keys File: {self.api_keys_file}
 
 API Keys Status:
