@@ -35,17 +35,17 @@ class ChatManager:
         self.active_chats: Dict[str, List[Dict[str, str]]] = {}
         self.embedding_model = SentenceTransformer(self.config.embedding_model)
         
-    def embed_function(self, texts: List[str]) -> List[List[float]]:
+    def embed_function(self, input: List[str]) -> List[List[float]]:
         """
         Convert input texts to vector embeddings.
 
         Args:
-            texts (List[str]): List of text strings to be embedded.
+            input (List[str]): List of text strings to be embedded.
 
         Returns:
             List[List[float]]: List of vector embeddings.
         """
-        return self.embedding_model.encode(texts).tolist()
+        return self.embedding_model.encode(input).tolist()
 
     def create_new_chat(self) -> str:
         """
