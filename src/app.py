@@ -26,7 +26,7 @@ previous_conversations= chatbot.chat_manager.get_all_conversations()
 
 st.sidebar.title("Previous Conversations")
 for chat in previous_conversations:
-    col1,col2 = st.sidebar.beta_columns([4,1])
+    col1,col2 = st.sidebar.columns([4,1])
     date_str = datetime.fromisoformat(chat["created_at"]).strftime("%Y-%m-%d")
     if col1.button(f"{date_str}-{chat['title']},key=chat['id']"):
         st.session_state.chat_id = chat['id']
