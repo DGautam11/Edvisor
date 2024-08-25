@@ -17,7 +17,12 @@ chatbot = initialize_engine()
 #Sideba for chat history
 st.sidebar.title("Edvisor")
 
-#creatte a new chat button
+# Initialize chat session if it doesn't exist
+if "chat_id" not in st.session_state or st.session_state.chat_id not in chatbot.chat_manager.active_chats:
+    st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
+    st.session_state.messages = []
+
+#create a new chat button
 if st.sidebar.button("New Chat"):
    st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
    st.session_state.messages = []
@@ -39,10 +44,6 @@ for chat in previous_conversations:
         st.rerun()
 
         
-# Initialize chat session if it doesn't exist
-if "chat_id" not in st.session_state or st.session_state.chat_id not in chatbot.chat_manager.active_chats:
-    st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
-    st.session_state.messages = []
 
 # Create a container for the chat messages
 chat_container = st.container()
@@ -51,24 +52,23 @@ chat_container = st.container()
 user_query = st.chat_input("Message Edvisor")
 
 if user_query:
-    # Check if this is the first message in a new chat
-    is_new_chat = len(st.session_state.messages) == 0
-    
-    # Add user message to the chat history
-    st.session_state.messages.append({"role": "user", "content": user_query})
-    
-    # Generate bot response
-    response = chatbot.generate_response(st.session_state.chat_id, user_query)
-    
-    # Add bot response to the chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
-    
-    # Update the chat history in the ChatManager
-    chatbot.chat_manager.add_message(st.session_state.chat_id, "user", user_query)
-    chatbot.chat_manager.add_message(st.session_state.chat_id, "assistant", response)
+    if user_query.strip() == "":
+        st.warning("Please enter a non-empty message.")
+    else:
+        # Add user message to the chat history
+        st.session_state.messages.append({"role": "user", "content": user_query})
+        
+        # Generate bot response
+        response = chatbot.generate_response(st.session_state.chat_id, user_query)
+        
+        # Add bot response to the chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        
+        # Update the chat history in the ChatManager
+        chatbot.chat_manager.add_message(st.session_state.chat_id, "user", user_query)
+        chatbot.chat_manager.add_message(st.session_state.chat_id, "assistant", response)
 
-    # Force a rerun only if this was the first message in a new chat
-    if is_new_chat:
+        # Force a rerun to update the UI
         st.rerun()
 
 # Display chat history and new messages
