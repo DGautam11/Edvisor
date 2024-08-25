@@ -16,7 +16,7 @@ class ChatData:
     def add_message(self, role: str, content: str) -> None:
         self.messages.append({"role": role, "content": content})
 
-    def get_recent_messages(self, limit: int = 5) -> List[Dict[str, str]]:
+    def get_recent_messages(self, limit: int) -> List[Dict[str, str]]:
         return self.messages[-limit:]
 
     @property
@@ -44,8 +44,7 @@ class ChatManager:
 
     def create_new_chat(self) -> str:
         chat_id = str(uuid.uuid4())
-        created_at = datetime.now(timezone.utc).isoformat()
-        self.active_chats[chat_id] = ChatData(created_at=created_at)
+        self.active_chats[chat_id] = ChatData()
         return chat_id
 
     def add_message(self, chat_id: str, role: str, content: str):
@@ -77,7 +76,9 @@ class ChatManager:
             self.active_chats[chat_id] = ChatData(messages=messages)
         return self.active_chats[chat_id].messages
 
-    def get_relevant_context(self, chat_id: str, query: str, k: int = 5) -> List[str]:
+    def get_relevant_context(self, chat_id: str, query: str) -> List[str]:
+        # Use max_context_length to determine the number of relevant messages to fetch
+        k = max(1, self.config.max_context_length // 100)  # Rough estimate, adjust as needed
         results = self.collection.query(
             query_texts=[query],
             n_results=k,
@@ -89,16 +90,20 @@ class ChatManager:
         if chat_id not in self.active_chats:
             self.get_chat_history(chat_id)
         
-        recent_history = self.active_chats[chat_id].get_recent_messages()
+        recent_messages = self.active_chats[chat_id].get_recent_messages(self.config.chat_history_limit)
         relevant_context = self.get_relevant_context(chat_id, query)
         
         formatted_context = "Previous conversation:\n"
-        for message in recent_history:
+        for message in recent_messages:
             formatted_context += f"{message['role'].capitalize()}: {message['content']}\n"
         
         formatted_context += "\nRelevant context:\n"
         for context in relevant_context:
             formatted_context += f"{context}\n"
+        
+        # Ensure the total context doesn't exceed max_context_length
+        if len(formatted_context) > self.config.max_context_length:
+            formatted_context = formatted_context[:self.config.max_context_length]
         
         return formatted_context
 
@@ -115,17 +120,13 @@ class ChatManager:
         chats = defaultdict(list)
         for metadata, document in zip(all_messages['metadatas'], all_messages['documents']):
             chat_id = metadata['chat_id']
-            chats[chat_id].append({
-                'role': metadata['role'],
-                'content': document
-            })
+            chats[chat_id].append({"role": metadata['role'], "content": document})
 
         all_conversations = []
         for chat_id, messages in chats.items():
             title = next((msg['content'] for msg in messages if msg['role'] == 'user'), "New Chat")
             title = title[:30] + "..." if len(title) > 30 else title
             
-            # Get the created_at timestamp from active_chats if available, otherwise use current time
             created_at = self.active_chats[chat_id].created_at if chat_id in self.active_chats else datetime.now(timezone.utc).isoformat()
 
             all_conversations.append({
