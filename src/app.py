@@ -1,3 +1,4 @@
+from utils import Utils
 import streamlit as st
 from engine import Engine
 from dateutil import parser
@@ -31,17 +32,25 @@ previous_conversations= chatbot.chat_manager.get_all_conversations()
 
 st.sidebar.title("Previous Conversations")
 for chat in previous_conversations:
-    col1,col2 = st.sidebar.columns([4,1])
-    date_str = parser.parse(chat["created_at"]).strftime("%Y-%m-%d")
-    if col1.button(f"{date_str}-{chat['title']},key=chat['id']"):
-        st.session_state.chat_id = chat['id']
-        st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'])
-    if col2.button("🗑️",key=f"delete_{chat['id']}"):
-        chatbot.chat_manager.del_conversation(chat['id'])
-        if st.session_state.chat_id == chat['id']:
-            st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
-            st.session_state.messages = []
-        st.rerun()
+    col1,col2,col3 = st.sidebar.columns([1,3,1])
+    relative_time = Utils.get_relative_time(chat["created_at"])
+    with col1:
+        if chat['id'] == st.session_state.chat_id:
+            st.write("🟢") #green circle for active chats
+        else:
+            st.write(" ") #empty space for alignment
+    with col2:
+        if st.button(chat['title'], key=f"chat_{chat['id']}"):
+            st.session_state.chat_id = chat['id']
+            st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'])
+            st.caption(f"<small>{relative_time}</small>", unsafe_allow_html=True)
+    with col3:
+        if st.button("🗑️",key=f"delete_{chat['id']}"):
+            chatbot.chat_manager.del_conversation(chat['id'])
+            if st.session_state.chat_id == chat['id']:
+                st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
+                st.session_state.messages = []
+            st.rerun()
 
         
 
