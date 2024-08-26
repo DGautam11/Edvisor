@@ -1,7 +1,6 @@
-from utils import Utils
 import streamlit as st
 from engine import Engine
-from dateutil import parser
+from utils import Utils
 
 # Set the page configuration
 st.set_page_config(page_title='Edvisor', page_icon='🎓')
@@ -41,17 +40,21 @@ chatbot = initialize_engine()
 # Sidebar for chat history
 st.sidebar.title("Edvisor")
 
-# Initialize chat session if it doesn't exist
-if "chat_id" not in st.session_state or st.session_state.chat_id not in chatbot.chat_manager.active_chats:
+# Initialize session state variables
+if "chat_id" not in st.session_state:
     st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
     st.session_state.messages = []
 
+if "widget_clicked" not in st.session_state:
+    st.session_state.widget_clicked = None
+
 # Create a new chat button
 if st.sidebar.button("New Chat"):
-   st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
-   st.session_state.messages = []
-   st.rerun()
+    st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
+    st.session_state.messages = []
+    st.rerun()
 
+# Display previous conversations
 previous_conversations = chatbot.chat_manager.get_all_conversations()
 
 st.sidebar.title("Previous Conversations")
@@ -60,14 +63,12 @@ for chat in previous_conversations:
     relative_time = Utils.get_relative_time(chat["created_at"])
     with col1:
         if chat['id'] == st.session_state.chat_id:
-            st.write("🟢") # Green circle for active chats
+            st.write("🟢")  # Green circle for active chats
         else:
-            st.write(" ") # Empty space for alignment
+            st.write(" ")  # Empty space for alignment
     with col2:
         # Use markdown for clickable text
-        if st.markdown(f"<div class='conversation-title' onclick=\"handleClick('{chat['id']}')\">{chat['title']}</div>", unsafe_allow_html=True):
-            st.session_state.chat_id = chat['id']
-            st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'])
+        st.markdown(f"<div class='conversation-title' onclick=\"handleClick('{chat['id']}')\">{chat['title']}</div>", unsafe_allow_html=True)
         st.caption(f"{relative_time}")
     with col3:
         # Use custom HTML for red trash button
@@ -77,26 +78,28 @@ for chat in previous_conversations:
 st.markdown("""
 <script>
 function handleClick(chatId) {
-    Streamlit.setComponentValue({'type': 'select', 'chatId': chatId});
+    Streamlit.setComponentValue({type: 'select', chatId: chatId});
 }
 function handleDelete(chatId) {
-    Streamlit.setComponentValue({'type': 'delete', 'chatId': chatId});
+    Streamlit.setComponentValue({type: 'delete', chatId: chatId});
 }
 </script>
 """, unsafe_allow_html=True)
 
 # Handle chat selection and deletion
-if st.session_state.widget_clicked:
+if st.session_state.widget_clicked is not None:
     action = st.session_state.widget_clicked
     if action['type'] == 'select':
         st.session_state.chat_id = action['chatId']
         st.session_state.messages = chatbot.chat_manager.get_chat_history(action['chatId'])
+        st.session_state.widget_clicked = None
         st.rerun()
     elif action['type'] == 'delete':
         chatbot.chat_manager.del_conversation(action['chatId'])
         if st.session_state.chat_id == action['chatId']:
             st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
             st.session_state.messages = []
+        st.session_state.widget_clicked = None
         st.rerun()
 
 # Create a container for the chat messages
@@ -146,3 +149,10 @@ user_query = st.chat_input("Message Edvisor")
 if user_query:
     process_user_input(user_query)
     st.rerun()
+
+# Capture component value changes
+if st.session_state.widget_clicked is None:
+    component_value = st.empty()
+    st.session_state.widget_clicked = component_value.get_component_value()
+    if st.session_state.widget_clicked is not None:
+        st.rerun()
