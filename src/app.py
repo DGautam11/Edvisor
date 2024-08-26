@@ -10,22 +10,21 @@ st.write('Chatbot for Finland Study and Visa Services')
 # Custom CSS for styling
 st.markdown("""
 <style>
-    .conversation-title {
-        cursor: pointer;
-        color: #4F8BF9;
+    .stButton > button {
         background: none;
         border: none;
         padding: 0;
         font: inherit;
+        color: inherit;
         text-align: left;
     }
     .red-trash-button {
-        color: white;
-        background-color: red;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        cursor: pointer;
+        color: red;
+        font-size: 1.2em;
+    }
+    .caption {
+        color: rgba(49, 51, 63, 0.6);
+        font-size: 0.8em;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -44,9 +43,6 @@ st.sidebar.title("Edvisor")
 if "chat_id" not in st.session_state:
     st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
     st.session_state.messages = []
-
-if "widget_clicked" not in st.session_state:
-    st.session_state.widget_clicked = None
 
 # Create a new chat button
 if st.sidebar.button("New Chat"):
@@ -67,40 +63,19 @@ for chat in previous_conversations:
         else:
             st.write(" ")  # Empty space for alignment
     with col2:
-        # Use markdown for clickable text
-        st.markdown(f"<div class='conversation-title' onclick=\"handleClick('{chat['id']}')\">{chat['title']}</div>", unsafe_allow_html=True)
-        st.caption(f"{relative_time}")
+        # Use button for clickable text with embedded caption
+        if st.button(f"<span class='conversation-title'>{chat['title']}</span><br><span class='caption'>{relative_time}</span>", key=f"chat_{chat['id']}", use_container_width=True):
+            st.session_state.chat_id = chat['id']
+            st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'])
+            st.rerun()
     with col3:
-        # Use custom HTML for red trash button
-        st.markdown(f"<button class='red-trash-button' onclick=\"handleDelete('{chat['id']}')\">🗑️</button>", unsafe_allow_html=True)
-
-# JavaScript for handling clicks
-st.markdown("""
-<script>
-function handleClick(chatId) {
-    Streamlit.setComponentValue({type: 'select', chatId: chatId});
-}
-function handleDelete(chatId) {
-    Streamlit.setComponentValue({type: 'delete', chatId: chatId});
-}
-</script>
-""", unsafe_allow_html=True)
-
-# Handle chat selection and deletion
-if st.session_state.widget_clicked is not None:
-    action = st.session_state.widget_clicked
-    if action['type'] == 'select':
-        st.session_state.chat_id = action['chatId']
-        st.session_state.messages = chatbot.chat_manager.get_chat_history(action['chatId'])
-        st.session_state.widget_clicked = None
-        st.rerun()
-    elif action['type'] == 'delete':
-        chatbot.chat_manager.del_conversation(action['chatId'])
-        if st.session_state.chat_id == action['chatId']:
-            st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
-            st.session_state.messages = []
-        st.session_state.widget_clicked = None
-        st.rerun()
+        # Use button for delete action, styled as a red trash icon
+        if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True):
+            chatbot.chat_manager.del_conversation(chat['id'])
+            if st.session_state.chat_id == chat['id']:
+                st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
+                st.session_state.messages = []
+            st.rerun()
 
 # Create a container for the chat messages
 chat_container = st.container()
@@ -149,16 +124,3 @@ user_query = st.chat_input("Message Edvisor")
 if user_query:
     process_user_input(user_query)
     st.rerun()
-
-# Capture component value changes
-if 'widget_clicked' not in st.session_state:
-    st.session_state.widget_clicked = None
-
-component_value = st.empty()
-widget_value = component_value.text_input("Hidden Input for Widget Handling", key="widget_value", label_visibility="hidden")
-if widget_value:
-    try:
-        st.session_state.widget_clicked = eval(widget_value)
-        st.rerun()
-    except:
-        st.error("Invalid widget value")
