@@ -151,8 +151,14 @@ if user_query:
     st.rerun()
 
 # Capture component value changes
-if st.session_state.widget_clicked is None:
-    component_value = st.empty()
-    st.session_state.widget_clicked = component_value.get_component_value()
-    if st.session_state.widget_clicked is not None:
+if 'widget_clicked' not in st.session_state:
+    st.session_state.widget_clicked = None
+
+component_value = st.empty()
+widget_value = component_value.text_input("Hidden Input for Widget Handling", key="widget_value", label_visibility="hidden")
+if widget_value:
+    try:
+        st.session_state.widget_clicked = eval(widget_value)
         st.rerun()
+    except:
+        st.error("Invalid widget value")
