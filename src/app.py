@@ -49,7 +49,7 @@ for chat in previous_conversations:
             st.rerun()
     with col3:
         # Use button for delete action, styled as a red trash icon
-        if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True,unsafe_allow_html = True):
+        if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True):
             chatbot.chat_manager.del_conversation(chat['id'])
             if st.session_state.chat_id == chat['id']:
                 st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
