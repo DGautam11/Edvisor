@@ -64,13 +64,13 @@ for chat in previous_conversations:
             st.write(" ")  # Empty space for alignment
     with col2:
         # Use button for clickable text with embedded caption
-        if st.button(f"<span class='conversation-title'>{chat['title']}</span><br><span class='caption'>{relative_time}</span>", key=f"chat_{chat['id']}", use_container_width=True):
+        if st.button(f"<span class='conversation-title'>{chat['title']}</span><br><span class='caption'>{relative_time}</span>", key=f"chat_{chat['id']}", use_container_width=True,unsafe_allow_html=True):
             st.session_state.chat_id = chat['id']
             st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'])
             st.rerun()
     with col3:
         # Use button for delete action, styled as a red trash icon
-        if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True):
+        if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True,unsafe_allow_html = True):
             chatbot.chat_manager.del_conversation(chat['id'])
             if st.session_state.chat_id == chat['id']:
                 st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
