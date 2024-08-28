@@ -7,28 +7,6 @@ st.set_page_config(page_title='Edvisor', page_icon='🎓')
 st.title('Edvisor 🤖')
 st.write('Chatbot for Finland Study and Visa Services')
 
-# Custom CSS for styling
-st.markdown("""
-<style>
-    .stButton > button {
-        background: none;
-        border: none;
-        padding: 0;
-        font: inherit;
-        color: inherit;
-        text-align: left;
-    }
-    .red-trash-button {
-        color: red;
-        font-size: 1.2em;
-    }
-    .caption {
-        color: rgba(49, 51, 63, 0.6);
-        font-size: 0.8em;
-    }
-</style>
-""", unsafe_allow_html=True)
-
 # Initialize the chatbot engine
 @st.cache_resource
 def initialize_engine():
@@ -64,7 +42,8 @@ for chat in previous_conversations:
             st.write(" ")  # Empty space for alignment
     with col2:
         # Use button for clickable text with embedded caption
-        if st.button(f"<span class='conversation-title'>{chat['title']}</span><br><span class='caption'>{relative_time}</span>", key=f"chat_{chat['id']}", use_container_width=True,unsafe_allow_html=True):
+        if st.button(f"{chat['title']}", key=f"chat_{chat['id']}", use_container_width=True):
+            st.write(f"{relative_time}")
             st.session_state.chat_id = chat['id']
             st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'])
             st.rerun()
