@@ -95,9 +95,8 @@ if not user_email:
     auth_url, state = chatbot.get_authorization_url()
     
     # Store the state in session state
-    # Initialization
-    if 'oauth_state' not in st.session_state:
-        st.session_state.oauth_state = state
+   
+    st.session_state.oauth_state = state
     
     # Display the sign-in button
     st.markdown(f'''
