@@ -2,7 +2,16 @@ import streamlit as st
 from engine import Engine
 from utils import Utils
 from session_manager import SessionManager
+from oauth_state_storage import OAuthStateStorage
 import urllib.parse
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Initialize OAuth State Storage
+oauth_state_storage = OAuthStateStorage()
 
 # Set the page configuration
 st.set_page_config(page_title='Edvisor', page_icon='🎓')
@@ -26,12 +35,14 @@ if not user_email:
     # Get authorization URL from the chatbot
     auth_url, state = chatbot.get_authorization_url()
     
-    # Store the state in session state
+    # Store the state in both session state and file storage
     st.session_state.oauth_state = state
+    oauth_state_storage.save_state(state)
+    logger.debug(f"Generated new OAuth state: {state}")
     
     # Create a button for sign-in
     if st.button("Sign in with Google"):
-        # Open the authorization URL in the current tab
+        logger.debug(f"Sign-in button clicked. Redirecting to: {auth_url}")
         st.markdown(f'<meta http-equiv="refresh" content="0;url={auth_url}">', unsafe_allow_html=True)
         st.stop()
 
@@ -42,9 +53,15 @@ if not user_email:
             # Extract the authorization code and state
             code = params.get("code")
             received_state = params.get("state")
+            logger.debug(f"Received OAuth callback. State: {received_state}")
 
-            # Verify the state
-            if received_state != st.session_state.oauth_state:
+            # Verify the state using both session state and file storage
+            session_state_valid = received_state == st.session_state.get('oauth_state')
+            file_state_valid = oauth_state_storage.validate_state(received_state)
+            logger.debug(f"Session state valid: {session_state_valid}, File state valid: {file_state_valid}")
+
+            if not (session_state_valid or file_state_valid):
+                logger.error("Invalid OAuth state")
                 st.error("Invalid state. Please try logging in again.")
                 st.stop()
 
@@ -55,20 +72,25 @@ if not user_email:
             user_info = chatbot.get_user_info(authorization_response, received_state)
 
             if user_info and 'email' in user_info:
+                logger.info(f"Successfully authenticated user: {user_info['email']}")
                 # Save the user's email in the session and clear the OAuth state
                 SessionManager.set_session(user_info['email'])
-                del st.session_state.oauth_state
+                if 'oauth_state' in st.session_state:
+                    del st.session_state.oauth_state
                 st.query_params.clear()  # Clear the query parameters
                 st.rerun()
             else:
+                logger.error("Failed to get user information")
                 st.error("Failed to get user information. Please try again.")
                 st.stop()
 
         except Exception as e:
+            logger.exception("Error during authentication")
             st.error(f"An error occurred during authentication: {str(e)}")
             st.stop()
 
 else:
+    logger.info(f"User already authenticated: {user_email}")
     # Sidebar for chat history
     st.sidebar.title("Edvisor")
 
@@ -150,6 +172,7 @@ else:
         st.rerun()
 
     if st.sidebar.button("Logout"):
+        logger.info(f"User logged out: {user_email}")
         SessionManager.clear_session()
         st.query_params.clear()  # Clear any query parameters
         st.rerun()
