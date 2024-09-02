@@ -17,9 +17,9 @@ def initialize_engine():
 chatbot = initialize_engine()
 
 # Check for OAuth callback
-if "code" in st.query_params():
+if "code" in st.query_params:
     try:
-        authorization_response = st.query_params()["code"][0]
+        authorization_response = st.query_params["code"][0]
         user_info = chatbot.get_user_info(authorization_response)
         if user_info and 'email' in user_info:
             SessionManager.set_session(user_info['email'])
