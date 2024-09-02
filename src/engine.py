@@ -138,8 +138,8 @@ class Engine:
     def get_authorization_url(self):
         return self.oauth.get_authorization_url()
     
-    def get_user_info(self, authorization_response):
-        return self.oauth.get_user_info(authorization_response)
+    def get_user_info(self, authorization_response,state):
+        return self.oauth.get_user_info(authorization_response,state)
     
     def add_message(self, chat_id: str, role: str, content: str, user_email:str):
         return self.chat_manager.add_message(chat_id,role,content,user_email)
