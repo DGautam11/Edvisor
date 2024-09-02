@@ -36,103 +36,102 @@ class ChatManager:
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
             model_name=self.config.embedding_model
         )
-        self.collection = self.chroma_client.get_or_create_collection(
-            name="chat_history",
-            embedding_function=self.embedding_function
-        )
-        self.active_chats: Dict[str, ChatData] = {}
+        self.user_collection = {}
+        self.active_chats: Dict[str,Dict[str, ChatData] ] = {}
+
+    def get_user_collection(self, user_email: str):
+        if user_email not in self.user_collections:
+            collection_name = f"chat_history_{user_email.replace('@', '_at_')}"
+            self.user_collections[user_email] = self.chroma_client.get_or_create_collection(
+                name=collection_name,
+                embedding_function=self.embedding_function
+            )
+        return self.user_collections[user_email]
 
     def create_new_chat(self) -> str:
         chat_id = str(uuid.uuid4())
         self.active_chats[chat_id] = ChatData()
         return chat_id
 
-    def add_message(self, chat_id: str, role: str, content: str):
-        if chat_id not in self.active_chats:
-            self.create_new_chat()
+    def add_message(self, chat_id: str, role: str, content: str, user_email:str):
+        collection = self.get_user_collection(user_email)
+        message_id = str(uuid.uuid4())
+        metadata = {
+            "chat_id": chat_id,
+            "role": role,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        collection.add(
+            documents=[content],
+            metadatas=[metadata],
+            ids=[f"{chat_id}_{message_id}"]
+            )
         
         self.active_chats[chat_id].add_message(role, content)
         
-        self.collection.add(
-            documents=[content],
-            metadatas=[{
-                "chat_id": chat_id,
-                "role": role,
-            }],
-            ids=[f"{chat_id}_{len(self.active_chats[chat_id].messages)}"]
-        )
-
-    def get_chat_history(self, chat_id: str) -> List[Dict[str, str]]:
-        if chat_id not in self.active_chats:
+        
+    def get_chat_history(self, chat_id: str,user_email:str) -> List[Dict[str, str]]:
+        if chat_id  not in self.active_chats:
+            
             # Fetch chat history from Chroma if not in active chats
-            results = self.collection.get(
+            collection = self.get_user_collection(user_email)
+            results = collection.get(
                 where={"chat_id": chat_id},
                 include=['metadatas', 'documents']
-            )
+                )
             messages = [
                 {"role": meta['role'], "content": doc}
                 for meta, doc in zip(results['metadatas'], results['documents'])
-            ]
-            self.active_chats[chat_id] = ChatData(messages=messages)
+                ]
+            sorted_messages = sorted(messages, key=lambda x: x['metadatas']['created_at'])
+
+            self.active_chats[chat_id] = ChatData(messages=sorted_messages)
+
         return self.active_chats[chat_id].messages
 
-    def get_relevant_context(self, chat_id: str, query: str) -> List[str]:
-        # Use max_context_length to determine the number of relevant messages to fetch
-        k = max(1, self.config.max_context_length // 100)  # Rough estimate, adjust as needed
-        results = self.collection.query(
-            query_texts=[query],
-            n_results=k,
-            where={"chat_id": chat_id}
-        )
-        return results['documents'][0] if results['documents'] else []
 
-    def format_context(self, chat_id: str, query: str) -> str:
-        if chat_id not in self.active_chats:
-            self.get_chat_history(chat_id)
-        
-        recent_messages = self.active_chats[chat_id].get_recent_messages(self.config.chat_history_limit)
-        relevant_context = self.get_relevant_context(chat_id, query)
-        
-        formatted_context = "Previous conversation:\n"
-        for message in recent_messages:
-            formatted_context += f"{message['role'].capitalize()}: {message['content']}\n"
-        
-        formatted_context += "\nRelevant context:\n"
-        for context in relevant_context:
-            formatted_context += f"{context}\n"
-        
-        # Ensure the total context doesn't exceed max_context_length
-        if len(formatted_context) > self.config.max_context_length:
-            formatted_context = formatted_context[:self.config.max_context_length]
-        
-        return formatted_context
-
-    def del_conversation(self, chat_id: str):
+    def del_conversation(self, chat_id: str,user_email:str):
+        collection = self.get_user_collection(user_email)
+        collection.delete(where={"chat_id": chat_id})
         if chat_id in self.active_chats:
             del self.active_chats[chat_id]
-        self.collection.delete(where={"chat_id": chat_id})
 
-    def get_all_conversations(self) -> List[Dict]:
-        all_messages = self.collection.get(
+
+    def get_all_conversations(self, user_email: str) -> List[Dict]:
+        collection = self.get_user_collection(user_email)
+        results = collection.get(
+            where={},  # Get all documents for this user
             include=['metadatas', 'documents']
         )
-
-        chats = defaultdict(list)
-        for metadata, document in zip(all_messages['metadatas'], all_messages['documents']):
-            chat_id = metadata['chat_id']
-            chats[chat_id].append({"role": metadata['role'], "content": document})
-
-        all_conversations = []
-        for chat_id, messages in chats.items():
-            title = next((msg['content'] for msg in messages if msg['role'] == 'user'), "New Chat")
-            title = title[:30] + "..." if len(title) > 30 else title
+        
+        # Group messages by chat_id
+        chat_messages = defaultdict(list)
+        for meta, doc in zip(results['metadatas'], results['documents']):
+            chat_messages[meta['chat_id']].append({
+                "role": meta['role'],
+                "content": doc,
+                "created_at": meta['created_at']
+            })
+        
+        conversations = []
+        for chat_id, messages in chat_messages.items():
+            # Sort messages by timestamp
+            sorted_messages = sorted(messages, key=lambda x: x['created_at'])
             
-            created_at = self.active_chats[chat_id].created_at if chat_id in self.active_chats else datetime.now(timezone.utc).isoformat()
-
-            all_conversations.append({
+            # Create ChatData object
+            chat_data = ChatData(messages=[
+                {"role": msg['role'], "content": msg['content']}
+                for msg in sorted_messages
+            ])
+            
+            # Get the first message's timestamp as the creation time
+            created_at = sorted_messages[0]['created_at'] if sorted_messages else None
+            
+            conversations.append({
                 "id": chat_id,
-                "title": title,
+                "title": chat_data.title,
                 "created_at": created_at
             })
-
-        return sorted(all_conversations, key=lambda x: x['created_at'], reverse=True)
+        
+        # Sort conversations by creation time, most recent first
+        return sorted(conversations, key=lambda x: x['created_at'], reverse=True)

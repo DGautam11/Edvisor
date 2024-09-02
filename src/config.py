@@ -46,6 +46,12 @@ class Config:
     HF_token: str = field(default="",init=False)
     google_api_key: str = field(default="",init=False)
     google_cse_id: str = field(default="",init=False)
+    client_id: str = field(default="",init=False)
+    client_secret: str = field(default="",init=False)
+    auth_uri: str = field(default="",init=False)
+    token_uri: str = field(default="",init=False)
+    scopes:list = field(default="",init=False)
+    redirect_uris: list = field(default="",init=False)
 
     #Model Configurations
     base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
@@ -66,6 +72,8 @@ class Config:
     max_context_length: int = 2048
     chat_history_limit: int = 20
 
+    oauth_credentials_file: str = "oauth_credentials.json"
+
 
     def __post_init__(self):
         """
@@ -76,6 +84,7 @@ class Config:
         self.base_path = self.get_base_path()
         self.setup_paths()
         self.load_api_keys()
+        self.load_oauth_credentials()
         print(self)  # This will call __repr__ and print the configuration
     
     def __repr__(self) -> str:
@@ -146,6 +155,57 @@ class Config:
                 f"Missing required API keys in {self.api_keys_file}: {', '.join(missing_keys)}"
                 f"Please ensure all required keys are present in the '{self.api_keys_file}' file."
             )
+    
+    def load_oauth_credentials(self):
+        """
+        Load OAuth credentials from the JSON file
+        Raises:
+            FileNotFoundError: If the OAuth credentials file is not found.
+            json.JSONDecodeError: If the OAuth credentials file is not valid JSON.
+        """
+        oauth_credentials_path = os.path.join(self.base_path, 'configs',self.oauth_credentials_file)
+
+        if not os.path.exists(oauth_credentials_path):
+            raise FileNotFoundError(
+                f"OAuth credentials file not found: {oauth_credentials_path}."
+                f"Please create a file named {self.oauth_credentials_file} in the configs directory"
+                "with the required OAuth credentials.")
+        try:
+            with open(oauth_credentials_path,'r') as f:
+                keys = json.load(f)
+        except json.JSONDecodeError:
+            raise json.JSONDecodeError(f"Invalid JSON in OAuth credentials file: {oauth_credentials_path}")
+        self.client_id = keys.get('client_id','')
+        self.client_secret = keys.get('client_secret','')
+        self.auth_uri = keys.get('auth_uri','')
+        self.token_uri = keys.get('token_uri','')
+        self.scopes = keys.get('scopes','')
+        self.redirect_uris = keys.get('redirect_uris','')
+        self.validate_oauth_credentials()
+
+    def validate_oauth_credentials(self):
+        """
+        Ensure all required OAuth credentials are present.
+        Raises:
+            ValueError: If any required OAuth credentials are missing.
+        """
+        missing_keys =[]
+        if not self.client_id:
+            missing_keys.append('client_id')
+        if not self.client_secret:
+            missing_keys.append('client_secret')
+        if not self.auth_uri:
+            missing_keys.append('auth_uri')
+        if not self.token_uri:
+            missing_keys.append('token_uri')
+        if not self.scopes:
+            missing_keys.append('scopes')
+        
+        if missing_keys:
+            raise ValueError(
+                f"Missing required OAuth credentials in {self.oauth_credentials_file}: {', '.join(missing_keys)}"
+                f"Please ensure all required keys are present in the '{self.oauth_credentials_file}' file."
+            )   
         
     def get_config_str(self) -> str:
         """
@@ -164,11 +224,18 @@ Embedding Model: {self.embedding_model}
 Max Context Length: {self.max_context_length}
 Chat History Limit: {self.chat_history_limit}
 API Keys File: {self.api_keys_file}
+OAuth Credentials File: {self.oauth_credentials_file}
 
 API Keys Status:
 HF_token present: {'Yes' if self.HF_token else 'No'}
 Google API key present: {'Yes' if self.google_api_key else 'No'}
 Google CSE ID present: {'Yes' if self.google_cse_id else 'No'}
+
+OAuth Credentials Status:
+Client ID present: {'Yes' if self.client_id else 'No'}
+Client Secret present: {'Yes' if self.client_secret else 'No'}
+Auth URI present: {'Yes' if self.auth_uri else 'No'}
+Token URI present: {'Yes' if self.token_uri else 'No'}
 
 Quantization Config:
 Load in 4-bit: {self.quant_config.load_in_4bit}

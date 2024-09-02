@@ -12,3 +12,7 @@ streamlit
 tiktoken
 torch
 transformers
+sqlalchemy
+google-auth-oauthlib
+google-auth
+google-api-python-client
