@@ -61,7 +61,6 @@ if not user_email:
         }
 
         span.icon {
-            background: url('./identity/g-normal.png') transparent 5px 50% no-repeat;
             display: inline-block;
             vertical-align: middle;
             width: 42px;
@@ -87,7 +86,7 @@ if not user_email:
     st.session.oauth_state = state
     st.markdown(f'''
         <a href="{auth_url}" class="google-button">
-        <span class="icon"></span>
+        <span class="icon"><img src = "../identity/g-normal.png"></span>
         <span class="buttonText">Google</span>
         </a>
     ''', unsafe_allow_html=True)
