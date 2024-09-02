@@ -79,8 +79,13 @@ if not user_email:
     st.write("Please sign in to start chatting.")
 
     auth_url = chatbot.get_authorization_url()
-    st.markdown(f'<a href="{auth_url}" class="google-button"><span class="icon"></span>
-      <span class="buttonText">Google</span></a>', unsafe_allow_html=True)
+    st.markdown(f'''
+        <a href="{auth_url}" class="google-button">
+        <span class="icon"></span>
+        <span class="buttonText">Google</span>
+        </a>
+    ''', unsafe_allow_html=True)
+    
     st.info("Please sign in with your google account .")
 
 else:
