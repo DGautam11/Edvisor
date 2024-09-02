@@ -17,12 +17,17 @@ def initialize_engine():
 chatbot = initialize_engine()
 
 # Check for OAuth callback
-if "code" in st.query_params:
+if "code" in st.query_params() and "state" in st.query_params():
     try:
-        authorization_response = st.query_params["code"][0]
-        user_info = chatbot.get_user_info(authorization_response)
+        authorization_response = f"?code={st.query_params['code'][0]}&state={st.query_params['state'][0]}"
+        if 'oauth_state' not in st.session_state:
+            st.error("OAuth state not found. Please try logging in again.")
+            st.experimental_rerun()
+        state = st.session_state.oauth_state
+        user_info = chatbot.get_user_info(authorization_response, state)
         if user_info and 'email' in user_info:
             SessionManager.set_session(user_info['email'])
+            del st.session_state.oauth_state  # Clear the state after use
             st.experimental_rerun()
         else:
             st.error("Failed to get user information. Please try again.")
@@ -56,7 +61,7 @@ if not user_email:
         }
 
         span.icon {
-            background: url('../identity/g-normal.png') transparent 5px 50% no-repeat;
+            background: url('./identity/g-normal.png') transparent 5px 50% no-repeat;
             display: inline-block;
             vertical-align: middle;
             width: 42px;
@@ -78,14 +83,15 @@ if not user_email:
     )
     st.write("Please sign in to start chatting.")
 
-    auth_url = chatbot.get_authorization_url()
+    auth_url,state = chatbot.get_authorization_url()
+    st.session.oauth_state = state
     st.markdown(f'''
         <a href="{auth_url}" class="google-button">
         <span class="icon"></span>
         <span class="buttonText">Google</span>
         </a>
     ''', unsafe_allow_html=True)
-    
+
     st.info("Please sign in with your google account .")
 
 else:

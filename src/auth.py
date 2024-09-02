@@ -1,7 +1,7 @@
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
-
+import secrets
 from config import Config
 import os 
 
@@ -21,13 +21,17 @@ class OAuth:
             },
             scopes=self.config.scopes,
         )
+        self.state = None
         
     def get_authorization_url(self):
         self.flow.redirect_uri = self.config.redirect_uris
+        self.state = secrets.token_urlsafe(16)
         authorization_url, _ = self.flow.authorization_url(prompt='consent')
-        return authorization_url
+        return authorization_url, self.state
 
-    def get_user_info(self, authorization_response):
+    def get_user_info(self, authorization_response,state):
+        if state != self.state:
+            raise Exception("Invalid state")
         self.flow.fetch_token(authorization_response=authorization_response)
         credentials = self.flow.credentials
         service = build('oauth2', 'v2', credentials=credentials)
