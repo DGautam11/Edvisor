@@ -36,7 +36,7 @@ if "code" in st.query_params and "state" in st.query_params:
             # Save the user's email in the session and clear the OAuth state
             SessionManager.set_session(user_info['email'])
             del st.session_state.oauth_state  # Clear the state after use
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Failed to get user information. Please try again.")
             st.stop()
@@ -95,7 +95,9 @@ if not user_email:
     auth_url, state = chatbot.get_authorization_url()
     
     # Store the state in session state
-    st.session_state.oauth_state = state
+    # Initialization
+    if 'oauth_state' not in st.session_state:
+        st.session_state.oauth_state = state
     
     # Display the sign-in button
     st.markdown(f'''
