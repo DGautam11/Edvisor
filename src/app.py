@@ -20,7 +20,7 @@ chatbot = initialize_engine()
 if "code" in st.query_params and "state" in st.query_params:
     try:
         # Properly construct the authorization response URL
-        authorization_response = f"{st.request_url}?{urllib.parse.urlencode({'code': st.query_params['code'], 'state': st.query_params['state']})}"
+        authorization_response = f"?{urllib.parse.urlencode({'code': st.query_params['code'], 'state': st.query_params['state']})}"
 
         # Check if the state is in session state
         if 'oauth_state' not in st.session_state:
