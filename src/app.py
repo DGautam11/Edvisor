@@ -17,7 +17,7 @@ def initialize_engine():
 chatbot = initialize_engine()
 
 # Check for OAuth callback
-if "code" in st.query_params() and "state" in st.query_params():
+if "code" in st.query_params and "state" in st.query_params:
     try:
         authorization_response = f"?code={st.query_params['code'][0]}&state={st.query_params['state'][0]}"
         if 'oauth_state' not in st.session_state:
@@ -44,8 +44,8 @@ if not user_email:
         """
         <style>
         .google-button {
-            background:white
-            color = #444;
+            background:white;
+            color:#444;
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
