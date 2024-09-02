@@ -22,13 +22,11 @@ if "code" in st.query_params and "state" in st.query_params:
         authorization_response = f"?code={st.query_params['code'][0]}&state={st.query_params['state'][0]}"
         if 'oauth_state' not in st.session_state:
             st.error("OAuth state not found. Please try logging in again.")
-            st.rerun()
         state = st.session_state.oauth_state
         user_info = chatbot.get_user_info(authorization_response, state)
         if user_info and 'email' in user_info:
             SessionManager.set_session(user_info['email'])
             del st.session_state.oauth_state  # Clear the state after use
-            st.rerun()
         else:
             st.error("Failed to get user information. Please try again.")
     except Exception as e:
