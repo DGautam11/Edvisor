@@ -3,9 +3,11 @@ from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 
 from config import Config
+import os 
 
 class OAuth:
     def __init__(self):
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
         self.config = Config()
         self.flow = Flow.from_client_config(
             {
