@@ -83,7 +83,7 @@ if not user_email:
     st.write("Please sign in to start chatting.")
 
     auth_url,state = chatbot.get_authorization_url()
-    st.session.oauth_state = state
+    st.session_state.oauth_state = state
     st.markdown(f'''
         <a href="{auth_url}" class="google-button">
         <span class="icon"><img src = "../identity/g-normal.png"></span>
