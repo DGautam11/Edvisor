@@ -29,8 +29,6 @@ if "code" in st.query_params:
     except Exception as e:
         st.error(f"An error occurred during authentication: {str(e)}")
 
-# Sidebar for chat history
-st.sidebar.title("Edvisor")
 
 #Check for existing session
 user_email = SessionManager.get_session()
@@ -41,20 +39,38 @@ if not user_email:
         """
         <style>
         .google-button {
-            background-color: #34A853;
-            color: white;
+            background:white
+            color = #444;
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
             margin: 4px 2px;
-            cursor: pointer;
-            border: none;
+            border: thin solid #888;
+            box-shadow: 1px 1px 1px grey;
             border-radius: 5px;
         }
         .google-button:hover {
-            background-color: #357AE8;
+            cursor: pointer;
+        }
+
+        span.icon {
+            background: url('../identity/g-normal.png') transparent 5px 50% no-repeat;
+            display: inline-block;
+            vertical-align: middle;
+            width: 42px;
+            height: 42px;
+            }
+        span.buttonText {
+            display: inline-block;
+            vertical-align: middle;
+            padding-left: 42px;
+            padding-right: 42px;
+            font-size: 14px;
+            font-weight: bold;
+            /* Use the Roboto font that is loaded in the <head> */
+            font-family: 'Roboto', sans-serif;
         }
         </style>
         """,
@@ -63,10 +79,14 @@ if not user_email:
     st.write("Please sign in to start chatting.")
 
     auth_url = chatbot.get_authorization_url()
-    st.markdown(f'<a href="{auth_url}" class="google-button">🔒 Sign in with Google</a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{auth_url}" class="google-button"><span class="icon"></span>
+      <span class="buttonText">Google</span></a>', unsafe_allow_html=True)
     st.info("Please sign in with your google account .")
 
 else:
+
+    # Sidebar for chat history
+    st.sidebar.title("Edvisor")
 
     # Initialize session state variables
     if "chat_id" not in st.session_state:
