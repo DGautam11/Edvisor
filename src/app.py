@@ -17,9 +17,9 @@ def initialize_engine():
 chatbot = initialize_engine()
 
 # Check for OAuth callback
-if "code" in st.experimental_get_query_params():
+if "code" in st.query_params():
     try:
-        authorization_response = st.experimental_get_query_params()["code"][0]
+        authorization_response = st.query_params()["code"][0]
         user_info = chatbot.get_user_info(authorization_response)
         if user_info and 'email' in user_info:
             SessionManager.set_session(user_info['email'])
@@ -41,7 +41,7 @@ if not user_email:
         """
         <style>
         .google-button {
-            background-color: #4285F4;
+            background-color: #34A853;
             color: white;
             padding: 10px 20px;
             text-align: center;
@@ -60,7 +60,6 @@ if not user_email:
         """,
         unsafe_allow_html=True
     )
-    st.title("Welcome to Edvisor")
     st.write("Please sign in to start chatting.")
 
     auth_url = chatbot.get_authorization_url()
