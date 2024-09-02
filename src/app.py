@@ -16,97 +16,57 @@ def initialize_engine():
 
 chatbot = initialize_engine()
 
-# Check for OAuth callback
-if "code" in st.query_params and "state" in st.query_params:
-    try:
-        # Properly construct the authorization response URL
-        authorization_response = f"?{urllib.parse.urlencode({'code': st.query_params['code'], 'state': st.query_params['state']})}"
-
-        # Check if the state is in session state
-        if 'oauth_state' not in st.session_state:
-            st.error("OAuth state not found. Please try logging in again.")
-            st.stop()
-
-        state = st.session_state.oauth_state
-
-        # Fetch user info using the authorization code and state
-        user_info = chatbot.get_user_info(authorization_response, state)
-
-        if user_info and 'email' in user_info:
-            # Save the user's email in the session and clear the OAuth state
-            SessionManager.set_session(user_info['email'])
-            del st.session_state.oauth_state  # Clear the state after use
-            st.rerun()
-        else:
-            st.error("Failed to get user information. Please try again.")
-            st.stop()
-
-    except Exception as e:
-        st.error(f"An error occurred during authentication: {str(e)}")
-        st.stop()
-
 # Check for existing session
 user_email = SessionManager.get_session()
 
 # Authentication check
 if not user_email:
-    st.markdown(
-        """
-        <style>
-        .google-button {
-            background: white;
-            color: #444;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            border: thin solid #888;
-            box-shadow: 1px 1px 1px grey;
-            border-radius: 5px;
-        }
-        .google-button:hover {
-            cursor: pointer;
-        }
-
-        span.icon {
-            display: inline-block;
-            vertical-align: middle;
-            width: 42px;
-            height: 42px;
-        }
-        span.buttonText {
-            display: inline-block;
-            vertical-align: middle;
-            padding-left: 42px;
-            padding-right: 42px;
-            font-size: 14px;
-            font-weight: bold;
-            font-family: 'Roboto', sans-serif;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
     st.write("Please sign in to start chatting.")
 
     # Get authorization URL from the chatbot
     auth_url, state = chatbot.get_authorization_url()
     
     # Store the state in session state
-   
     st.session_state.oauth_state = state
     
-    # Display the sign-in button
-    st.markdown(f'''
-        <a href="{auth_url}" class="google-button">
-        <span class="icon"><img src="./identity/g-normal.png"></span>
-        <span class="buttonText">Sign in with Google</span>
-        </a>
-    ''', unsafe_allow_html=True)
+    # Create a button for sign-in
+    if st.button("Sign in with Google"):
+        # Open the authorization URL in the current tab
+        st.markdown(f'<meta http-equiv="refresh" content="0;url={auth_url}">', unsafe_allow_html=True)
+        st.stop()
 
-    st.info("Please sign in with your Google account.")
+    # Check if we've been redirected back from Google
+    params = st.query_params
+    if "code" in params and "state" in params:
+        try:
+            # Extract the authorization code and state
+            code = params.get("code")
+            received_state = params.get("state")
+
+            # Verify the state
+            if received_state != st.session_state.oauth_state:
+                st.error("Invalid state. Please try logging in again.")
+                st.stop()
+
+            # Construct the authorization response
+            authorization_response = f"?code={code}&state={received_state}"
+
+            # Fetch user info
+            user_info = chatbot.get_user_info(authorization_response, received_state)
+
+            if user_info and 'email' in user_info:
+                # Save the user's email in the session and clear the OAuth state
+                SessionManager.set_session(user_info['email'])
+                del st.session_state.oauth_state
+                st.query_params.clear()  # Clear the query parameters
+                st.rerun()
+            else:
+                st.error("Failed to get user information. Please try again.")
+                st.stop()
+
+        except Exception as e:
+            st.error(f"An error occurred during authentication: {str(e)}")
+            st.stop()
 
 else:
     # Sidebar for chat history
@@ -114,16 +74,16 @@ else:
 
     # Initialize session state variables
     if "chat_id" not in st.session_state:
-        st.session_state.chat_id = chatbot.chat_manager.create_new_chat(user_email)
+        st.session_state.chat_id = chatbot.create_new_chat(user_email)
         st.session_state.messages = []
 
     # Create a new chat button
     if st.sidebar.button("New Chat"):
-        st.session_state.chat_id = chatbot.chat_manager.create_new_chat(user_email)
+        st.session_state.chat_id = chatbot.create_new_chat(user_email)
         st.session_state.messages = []
         st.rerun()
 
-    st.subheader("Previous Conversations")
+    st.sidebar.subheader("Previous Conversations")
 
     # Display previous conversations
     previous_conversations = chatbot.get_user_chats(user_email)
@@ -146,7 +106,7 @@ else:
             if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True):
                 chatbot.delete_chat(chat['id'], user_email)
                 if st.session_state.chat_id == chat['id']:
-                    st.session_state.chat_id = chatbot.chat_manager.create_new_chat(user_email)
+                    st.session_state.chat_id = chatbot.create_new_chat(user_email)
                     st.session_state.messages = []
                 st.rerun()
 
@@ -191,4 +151,5 @@ else:
 
     if st.sidebar.button("Logout"):
         SessionManager.clear_session()
+        st.query_params.clear()  # Clear any query parameters
         st.rerun()
