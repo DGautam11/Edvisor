@@ -144,3 +144,5 @@ class Engine:
     def add_message(self, chat_id: str, role: str, content: str, user_email:str):
         return self.chat_manager.add_message(chat_id,role,content,user_email)
     
+    
+    
