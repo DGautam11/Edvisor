@@ -46,16 +46,6 @@ if not user_email:
             received_state = params.get("state")
             logger.debug(f"Received OAuth callback. State: {received_state}")
 
-            # Verify the state using both session state and file storage
-            session_state_valid = received_state == st.session_state.get('oauth_state')
-            file_state_valid = oauth_state_storage.validate_state(received_state)
-            logger.debug(f"Session state valid: {session_state_valid}, File state valid: {file_state_valid}")
-
-            if not (session_state_valid or file_state_valid):
-                logger.error("Invalid OAuth state")
-                st.error("Invalid state. Please try logging in again.")
-                st.stop()
-
             # Construct the authorization response
             authorization_response = f"?code={code}&state={received_state}"
 
@@ -66,8 +56,6 @@ if not user_email:
                 logger.info(f"Successfully authenticated user: {user_info['email']}")
                 # Save the user's email in the session and clear the OAuth state
                 SessionManager.set_session(user_info['email'])
-                if 'oauth_state' in st.session_state:
-                    del st.session_state.oauth_state
                 st.query_params.clear()  # Clear the query parameters
                 st.rerun()
             else:
