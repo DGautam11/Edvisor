@@ -6,6 +6,7 @@ import os
 class OAuth:
     def __init__(self):
         os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Only for development
+        os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'  # Allow scope downgrade
         self.config = Config()
         self.flow = Flow.from_client_config(
             {
