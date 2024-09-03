@@ -2,24 +2,32 @@ import streamlit as st
 from engine import Engine
 from utils import Utils
 from session_manager import SessionManager
+from auth import OAuth
 import logging
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 # Set the page configuration
-st.set_page_config(page_title='Edvisor', page_icon='🎓')
+st.set_page_config(page_title='Edvisor', page_icon='🎓', layout="wide")
 st.title('Edvisor 🤖')
 st.write('Chatbot for Finland Study and Visa Services')
 
-# Initialize the chatbot engine
+# Debug section
+debug_container = st.container()
+
+# Initialize the chatbot engine and OAuth
 @st.cache_resource
 def initialize_engine():
     return Engine()
 
+@st.cache_resource
+def initialize_oauth():
+    return OAuth()
+
 chatbot = initialize_engine()
+oauth = initialize_oauth()
 
 # Check for existing session
 user_email = SessionManager.get_session()
@@ -27,9 +35,19 @@ user_email = SessionManager.get_session()
 # Authentication check
 if not user_email:
     st.write("Please sign in to start chatting.")
+    
+    # Debug display
+    with debug_container:
+        st.subheader("Debug Information")
+        st.write(f"Session State: {st.session_state}")
+        st.write(f"Query Params: {st.query_params}")
 
-    # Get authorization URL from the chatbot
-    auth_url = chatbot.get_authorization_url()
+    # Get authorization URL from OAuth
+    auth_url, state = oauth.get_authorization_url()
+    
+    # Store the state in session state
+    st.session_state.oauth_state = state
+    logger.debug(f"Generated OAuth state: {state}")
     
     # Create a button for sign-in
     if st.button("Sign in with Google"):
@@ -43,18 +61,37 @@ if not user_email:
             # Extract the authorization code and state
             code = params.get("code")
             received_state = params.get("state")
-            logger.debug(f"Received OAuth callback. State: {received_state}")
+            logger.debug(f"Received OAuth callback. Code: {code}, State: {received_state}")
+
+            # Debug display
+            with debug_container:
+                st.write(f"Received Code: {code}")
+                st.write(f"Received State: {received_state}")
+                st.write(f"Stored State: {st.session_state.get('oauth_state', 'Not found')}")
+
+            # Verify the state
+            if received_state != st.session_state.oauth_state:
+                logger.error("State mismatch in OAuth callback")
+                st.error("Authentication failed due to state mismatch. Please try again.")
+                with debug_container:
+                    st.write("State Mismatch!")
+                st.stop()
 
             # Construct the authorization response
             authorization_response = f"?code={code}&state={received_state}"
 
             # Fetch user info
-            user_info = chatbot.get_user_info(authorization_response, received_state)
+            user_info = oauth.get_user_info(authorization_response)
+
+            # Debug display
+            with debug_container:
+                st.write(f"User Info: {user_info}")
 
             if user_info and 'email' in user_info:
                 logger.info(f"Successfully authenticated user: {user_info['email']}")
                 # Save the user's email in the session and clear the OAuth state
                 SessionManager.set_session(user_info['email'])
+                del st.session_state['oauth_state']  # Clear the OAuth state
                 st.query_params.clear()  # Clear the query parameters
                 st.rerun()
             else:
@@ -65,10 +102,14 @@ if not user_email:
         except Exception as e:
             logger.exception("Error during authentication")
             st.error(f"An error occurred during authentication: {str(e)}")
+            with debug_container:
+                st.write(f"Exception: {str(e)}")
             st.stop()
 
 else:
     logger.info(f"User already authenticated: {user_email}")
+    st.success(f"Logged in as: {user_email}")
+
     # Sidebar for chat history
     st.sidebar.title("Edvisor")
 
@@ -154,3 +195,9 @@ else:
         SessionManager.clear_session()
         st.query_params.clear()  # Clear any query parameters
         st.rerun()
+
+# Final debug display
+with debug_container:
+    st.subheader("Final Debug Information")
+    st.write(f"Final Session State: {st.session_state}")
+    st.write(f"Final Query Params: {st.query_params}")
