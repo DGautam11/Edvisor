@@ -35,7 +35,6 @@ if not user_email:
     if st.button("Sign in with Google"):
         logger.debug(f"Sign-in button clicked. Redirecting to: {auth_url}")
         st.markdown(f'<meta http-equiv="refresh" content="0;url={auth_url}">', unsafe_allow_html=True)
-        st.switch_page(auth_url) 
 
     # Check if we've been redirected back from Google
     params = st.query_params
