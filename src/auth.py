@@ -24,7 +24,7 @@ class OAuth:
     def get_authorization_url(self):
         self.flow.redirect_uri = self.config.redirect_uris[0]  # Use the first redirect URI
         authorization_url, self.state = self.flow.authorization_url(prompt='consent')
-        return authorization_url, self.state
+        return authorization_url
 
     def get_user_info(self, authorization_response, state):
         if state != self.state:

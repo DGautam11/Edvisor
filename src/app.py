@@ -2,16 +2,12 @@ import streamlit as st
 from engine import Engine
 from utils import Utils
 from session_manager import SessionManager
-from oauth_state_storage import OAuthStateStorage
-import urllib.parse
 import logging
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Initialize OAuth State Storage
-oauth_state_storage = OAuthStateStorage()
 
 # Set the page configuration
 st.set_page_config(page_title='Edvisor', page_icon='🎓')
@@ -33,18 +29,13 @@ if not user_email:
     st.write("Please sign in to start chatting.")
 
     # Get authorization URL from the chatbot
-    auth_url, state = chatbot.get_authorization_url()
-    
-    # Store the state in both session state and file storage
-    st.session_state.oauth_state = state
-    oauth_state_storage.save_state(state)
-    logger.debug(f"Generated new OAuth state: {state}")
+    auth_url = chatbot.get_authorization_url()
     
     # Create a button for sign-in
     if st.button("Sign in with Google"):
         logger.debug(f"Sign-in button clicked. Redirecting to: {auth_url}")
         st.markdown(f'<meta http-equiv="refresh" content="0;url={auth_url}">', unsafe_allow_html=True)
-        st.stop()
+        st.switch_page(auth_url) 
 
     # Check if we've been redirected back from Google
     params = st.query_params
