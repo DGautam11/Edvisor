@@ -160,8 +160,6 @@ else:
             st.markdown(response)
         
         st.session_state.messages.append({"role": "assistant", "content": response})
-        chatbot.chat_manager.add_message(st.session_state.chat_id, "user", user_query, user_email)
-        chatbot.chat_manager.add_message(st.session_state.chat_id, "assistant", response, user_email)
 
     # Display all messages within the chat container
     with chat_container:

@@ -120,7 +120,7 @@ class Engine:
         )
         # Extract the generated text, excluding the input prompt
         response = outputs[0]["generated_text"][len(prompt):].strip()
-        self.chat_manager.add_message(chat_id,"assistant",response)
+        self.chat_manager.add_message(chat_id,"assistant",response,user_email)
         return response
     
     
