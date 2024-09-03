@@ -103,19 +103,19 @@ else:
 
     # Initialize session state variables
     if "chat_id" not in st.session_state:
-        st.session_state.chat_id = chatbot.create_new_chat(user_email)
+        st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
         st.session_state.messages = []
 
     # Create a new chat button
     if st.sidebar.button("New Chat"):
-        st.session_state.chat_id = chatbot.create_new_chat(user_email)
+        st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
         st.session_state.messages = []
         st.rerun()
 
     st.sidebar.subheader("Previous Conversations")
 
     # Display previous conversations
-    previous_conversations = chatbot.get_user_chats(user_email)
+    previous_conversations = chatbot.chat_manager.get_all_conversations(user_email)
     for chat in previous_conversations:
         col1, col2, col3, col4 = st.sidebar.columns([1, 2, 1, 1])
         relative_time = Utils.get_relative_time(chat["created_at"])
@@ -127,15 +127,15 @@ else:
         with col2:
             if st.button(f"{chat['title']}", key=f"chat_{chat['id']}", use_container_width=True):
                 st.session_state.chat_id = chat['id']
-                st.session_state.messages = chatbot.get_chat_history(chat['id'], user_email)
+                st.session_state.messages = chatbot.chat_manager.get_chat_history(chat['id'], user_email)
                 st.rerun()
         with col3:
             st.write(f"{relative_time}")
         with col4:
             if st.button("🗑️", key=f"delete_{chat['id']}", help="Delete this conversation", use_container_width=True):
-                chatbot.delete_chat(chat['id'], user_email)
+                chatbot.chat_manager.del_conversation(chat['id'], user_email)
                 if st.session_state.chat_id == chat['id']:
-                    st.session_state.chat_id = chatbot.create_new_chat(user_email)
+                    st.session_state.chat_id = chatbot.chat_manager.create_new_chat()
                     st.session_state.messages = []
                 st.rerun()
 
@@ -160,8 +160,8 @@ else:
             st.markdown(response)
         
         st.session_state.messages.append({"role": "assistant", "content": response})
-        chatbot.add_message(st.session_state.chat_id, "user", user_query, user_email)
-        chatbot.add_message(st.session_state.chat_id, "assistant", response, user_email)
+        chatbot.chat_manager.add_message(st.session_state.chat_id, "user", user_query, user_email)
+        chatbot.chat_manager.add_message(st.session_state.chat_id, "assistant", response, user_email)
 
     # Display all messages within the chat container
     with chat_container:

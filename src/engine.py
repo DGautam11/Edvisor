@@ -3,7 +3,7 @@ from model import Model
 from chat_manager import ChatManager
 from config import Config
 from auth import OAuth
-from typing import List, Dict
+
 
 class Engine:
     """
@@ -123,20 +123,6 @@ class Engine:
         self.chat_manager.add_message(chat_id,"assistant",response)
         return response
     
-    def delete_chat(self, chat_id: str, user_email: str):
-        self.chat_manager.del_conversation(chat_id, user_email)
-
-    def get_user_chats(self, user_email: str) -> List[Dict]:
-        return self.chat_manager.get_all_conversations(user_email)
-    
-    def create_new_chat(self, user_email: str) -> str:
-        return self.chat_manager.create_new_chat(user_email)
-    
-    def get_chat_history(self, chat_id: str, user_email: str) -> List[Dict[str, str]]:
-        return self.chat_manager.get_chat_history(chat_id, user_email)
-    
-    def add_message(self, chat_id: str, role: str, content: str, user_email:str):
-        return self.chat_manager.add_message(chat_id,role,content,user_email)
     
     
     
