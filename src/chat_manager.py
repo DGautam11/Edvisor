@@ -42,11 +42,11 @@ class ChatManager:
     def get_user_collection(self, user_email: str):
         if user_email not in self.user_collection:
             collection_name = f"chat_history_{user_email.replace('@', '_at_')}"
-            self.user_collections[user_email] = self.chroma_client.get_or_create_collection(
+            self.user_collection[user_email] = self.chroma_client.get_or_create_collection(
                 name=collection_name,
                 embedding_function=self.embedding_function
             )
-        return self.user_collections[user_email]
+        return self.user_collection[user_email]
 
     def create_new_chat(self) -> str:
         chat_id = str(uuid.uuid4())
