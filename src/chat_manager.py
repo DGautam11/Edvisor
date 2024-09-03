@@ -40,7 +40,7 @@ class ChatManager:
         self.active_chats: Dict[str,Dict[str, ChatData] ] = {}
 
     def get_user_collection(self, user_email: str):
-        if user_email not in self.user_collections:
+        if user_email not in self.user_collection:
             collection_name = f"chat_history_{user_email.replace('@', '_at_')}"
             self.user_collections[user_email] = self.chroma_client.get_or_create_collection(
                 name=collection_name,
