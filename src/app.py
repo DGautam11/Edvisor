@@ -4,6 +4,7 @@ from utils import Utils
 from session_manager import SessionManager
 from auth import OAuth
 import logging
+import uuid
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -40,42 +41,30 @@ if not user_email:
     with debug_container:
         st.subheader("Debug Information")
         st.write(f"Session State: {st.session_state}")
-        st.write(f"Query Params: {st.query_params}")
+        st.write(f"Query Params: {dict(st.query_params)}")
 
-    # Get authorization URL from OAuth
-    auth_url, state = oauth.get_authorization_url()
-    
-    # Store the state in session state
-    st.session_state.oauth_state = state
-    logger.debug(f"Generated OAuth state: {state}")
-    
+    # Generate a new state for each auth attempt
+    state = str(uuid.uuid4())
+    auth_url = oauth.get_authorization_url(state)
+    logger.debug(f"Generated new OAuth state: {state}")
+
     # Create a button for sign-in
     if st.button("Sign in with Google"):
         logger.debug(f"Sign-in button clicked. Redirecting to: {auth_url}")
         st.markdown(f'<meta http-equiv="refresh" content="0;url={auth_url}">', unsafe_allow_html=True)
 
     # Check if we've been redirected back from Google
-    params = st.query_params
-    if "code" in params and "state" in params:
+    if "code" in st.query_params and "state" in st.query_params:
         try:
             # Extract the authorization code and state
-            code = params.get("code")
-            received_state = params.get("state")
+            code = st.query_params["code"]
+            received_state = st.query_params["state"]
             logger.debug(f"Received OAuth callback. Code: {code}, State: {received_state}")
 
             # Debug display
             with debug_container:
                 st.write(f"Received Code: {code}")
                 st.write(f"Received State: {received_state}")
-                st.write(f"Stored State: {st.session_state.get('oauth_state', 'Not found')}")
-
-            # Verify the state
-            if received_state != st.session_state.oauth_state:
-                logger.error("State mismatch in OAuth callback")
-                st.error("Authentication failed due to state mismatch. Please try again.")
-                with debug_container:
-                    st.write("State Mismatch!")
-                st.stop()
 
             # Construct the authorization response
             authorization_response = f"?code={code}&state={received_state}"
@@ -89,9 +78,8 @@ if not user_email:
 
             if user_info and 'email' in user_info:
                 logger.info(f"Successfully authenticated user: {user_info['email']}")
-                # Save the user's email in the session and clear the OAuth state
+                # Save the user's email in the session
                 SessionManager.set_session(user_info['email'])
-                del st.session_state['oauth_state']  # Clear the OAuth state
                 st.query_params.clear()  # Clear the query parameters
                 st.rerun()
             else:
@@ -200,4 +188,4 @@ else:
 with debug_container:
     st.subheader("Final Debug Information")
     st.write(f"Final Session State: {st.session_state}")
-    st.write(f"Final Query Params: {st.query_params}")
+    st.write(f"Final Query Params: {dict(st.query_params)}")

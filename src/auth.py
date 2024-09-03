@@ -20,10 +20,10 @@ class OAuth:
             scopes=self.config.scopes,
         )
 
-    def get_authorization_url(self):
+    def get_authorization_url(self,state):
         self.flow.redirect_uri = self.config.redirect_uris[0]
-        authorization_url, state = self.flow.authorization_url(prompt='consent')
-        return authorization_url, state
+        authorization_url, _ = self.flow.authorization_url(prompt='consent', state=state)
+        return authorization_url
 
     def get_user_info(self, authorization_response):
         self.flow.fetch_token(authorization_response=authorization_response)
