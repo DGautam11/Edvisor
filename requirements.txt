@@ -5,6 +5,7 @@ chromadb
 langchain
 langchain-core
 langchain-text-splitters
+langchain-community
 pydantic
 pydantic_core
 sentence-transformers
