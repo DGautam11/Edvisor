@@ -10,6 +10,7 @@ from transformers import pipeline
 
 
 class Engine:
+
     def __init__(self):
         self.model = Model()
         self.chat_manager = ChatManager()
@@ -84,39 +85,39 @@ class Engine:
             verbose=True
         )
 
-        def _load_chat_history_to_memory(self,chat_id:str,user_email:str):
+    def _load_chat_history_to_memory(self,chat_id:str,user_email:str):
 
-            chat_history = self.chat_manager.get_chat_history(chat_id,user_email)
-            history = ChatMessageHistory()
-            for message in chat_history:
-                if message["role"] == "user":
-                    history.add_user_message(message["content"])
-                else:
-                    history.add_ai_message(message["content"])
+        chat_history = self.chat_manager.get_chat_history(chat_id,user_email)
+        history = ChatMessageHistory()
+        for message in chat_history:
+            if message["role"] == "user":
+                history.add_user_message(message["content"])
+            else:
+                history.add_ai_message(message["content"])
             
-            return ConversationBufferMemory(chat_memory=history,return_messages=True)
+        return ConversationBufferMemory(chat_memory=history,return_messages=True)
         
         
-        def generate_response(self, chat_id: str, user_email: str, user_message: str):
-
-            memory = _load_chat_history_to_memory(chat_id, user_email)
+    def generate_response(self, chat_id: str, user_email: str, user_message: str):
+        
+        memory = self._load_chat_history_to_memory(chat_id, user_email)
 
             # Format chat history for the summarization chain
-            chat_history = "\n".join([f"{msg.type.capitalize()}: {msg.content}" for msg in memory.chat_memory.messages])
+        chat_history = "\n".join([f"{msg.type.capitalize()}: {msg.content}" for msg in memory.chat_memory.messages])
 
             # Generate response using the SequentialChain
-            chain_response = self.conversation_chain({
+        chain_response = self.conversation_chain({
             "chat_history": chat_history,
             "input": user_message
             })
 
-            response = chain_response["response"]
+        response = chain_response["response"]
 
-            # Save the new messages to persistent storage and update active_chats
-            self.chat_manager.add_message(chat_id, "user", user_message, user_email)
-            self.chat_manager.add_message(chat_id, "assistant", response, user_email)
+        # Save the new messages to persistent storage and update active_chats
+        self.chat_manager.add_message(chat_id, "user", user_message, user_email)
+        self.chat_manager.add_message(chat_id, "assistant", response, user_email)
 
-            return response
+        return response
 
 
 
