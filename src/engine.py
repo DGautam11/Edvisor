@@ -1,7 +1,8 @@
-from langchain.llms import HuggingFacePipeline
+from langchain.community.llms import HuggingFacePipeline
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, HumanMessagePromptTemplate
 from langchain.chains import LLMChain, SequentialChain
-from langchain.memory import ConversationBufferMemory,ChatMessageHistory
+from lanhchain.community.chat_message_histories import ChatMessageHistory
+from langchain.memory import ConversationBufferMemory
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from model import Model
 from chat_manager import ChatManager
@@ -111,7 +112,7 @@ class Engine:
 
             response = chain_response["response"]
 
-        # Save the new messages to persistent storage and update active_chats
+            # Save the new messages to persistent storage and update active_chats
             self.chat_manager.add_message(chat_id, "user", user_message, user_email)
             self.chat_manager.add_message(chat_id, "assistant", response, user_email)
 
