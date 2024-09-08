@@ -53,15 +53,16 @@ class Engine:
             else:
                 self.conversation.memory.chat_memory.add_ai_message(message["content"])
 
+        
         # Generate response
-        result = self.conversation({"input": user_message})
+        result = self.conversation.predict(input=user_message)
         print(result)
         
-        # Extract only the most recent AI message
-        response = result['response']
+       
+        
 
         # Save the new messages to persistent storage
         self.chat_manager.add_message(chat_id, "user", user_message, user_email)
         self.chat_manager.add_message(chat_id, "assistant", response, user_email)
 
-        return response
+        return result
