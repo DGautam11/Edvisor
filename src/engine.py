@@ -55,8 +55,8 @@ class Engine:
 
         
         # Generate response
-        result = self.conversation.predict(input=user_message)
-        print(result)
+        response = self.conversation.predict(input=user_message)
+        print(response)
         
        
         
@@ -65,4 +65,4 @@ class Engine:
         self.chat_manager.add_message(chat_id, "user", user_message, user_email)
         self.chat_manager.add_message(chat_id, "assistant", response, user_email)
 
-        return result
+        return response
