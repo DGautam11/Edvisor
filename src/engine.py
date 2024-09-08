@@ -1,5 +1,6 @@
 from langchain_community.llms import HuggingFacePipeline
-from langchain.prompts import PromptTemplate, RunnablePassThrough
+from langchain.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 from langchain.memory import ConversationSummaryMemory
 from langchain_community.chat_message_histories import ChatMessageHistory
 from model import Model
