@@ -1,8 +1,7 @@
 from langchain_community.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.memory import ConversationSummaryMemory
-from langchain.schema import ChatMessageHistory
+from langchain.memory import ConversationSummaryMemory, ChatMessageHistory
 from model import Model
 from chat_manager import ChatManager
 from transformers import pipeline
