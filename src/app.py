@@ -154,7 +154,7 @@ else:
             thinking_placeholder.markdown("Thinking...")
         
             # Use the LangChain-based Engine to generate a response
-            response = chatbot.generate_response(st.session_state.chat_id, user_query, user_email)
+            response = chatbot.generate_response(st.session_state.chat_id, user_email, user_query)
         
             thinking_placeholder.empty()
 
