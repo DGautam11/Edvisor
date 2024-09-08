@@ -1,6 +1,5 @@
 from langchain_community.llms import HuggingFacePipeline
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate, RunnablePassThrough
 from langchain.memory import ConversationSummaryMemory
 from langchain_community.chat_message_histories import ChatMessageHistory
 from model import Model
@@ -35,27 +34,23 @@ class Engine:
         For simple greetings, respond politely and briefly."""
 
         template = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+                        <|start_header_id|>Conversation Summary:<|end_header_id|> {{context}}><|eot_id|>
                       <|start_header_id|>user<|end_header_id|>
                       {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
                     """
 
-        self.prompt = PromptTemplate(
-            input_variables=["user_query"],
-            template=template
-        )
+        self.prompt = PromptTemplate.from_template(template)
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
         # Load chat history and create memory
         memory = self._load_chat_history(chat_id, user_email)
         
         # Create chain with the loaded memory
-        chain = self.prompt | memory | self.llm
+        chain = ({"context":memory.buffer,"user_query":RunnablePassThrough()}) | self.prompt | self.llm
         
         
         # Generate response
-        response = chain.invoke({
-            "user_query": user_message
-        })
+        response = chain.invoke(user_message)
         
         # Save the new interaction to memory
         memory.save_context({"input": user_message}, {"output": response})
@@ -73,7 +68,7 @@ class Engine:
         
         if not chat_history:
             # If chat history is empty, create a new ConversationSummaryMemory
-            return ConversationSummaryMemory(llm=self.llm, max_token_limit=100, return_messages=True)
+            return ConversationSummaryMemory(llm=self.llm, max_token_limit=256)
         else:
             # If there's chat history, use from_messages to create the memory
             history = ChatMessageHistory()
@@ -86,8 +81,7 @@ class Engine:
             return ConversationSummaryMemory.from_messages(
                 llm=self.llm,
                 chat_memory=history,
-                return_messages=True,
-                max_token_limit=100
+                max_token_limit=256
             )
 
     def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
