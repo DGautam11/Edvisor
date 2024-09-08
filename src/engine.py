@@ -32,10 +32,10 @@ class Engine:
 
         #Prompt for summarization
         summarize_prompt = ChatPromptTemplate.from_messages([
-            SystemMessage(content="""Summarize the key points from the conversation history, focusing on information relevant to studying or obtaining a visa in Finland. 
-            Include details about universities, the Finnish education system, student life, application processes, and visa requirements if mentioned."""),
-            MessagesPlaceholder(variable_name="chat_history"),
-            HumanMessagePromptTemplate.from_template("Provide a concise summary of the relevant points discussed so far.")
+        SystemMessage(content="""Summarize the key points from the conversation history, focusing on information relevant to studying or obtaining a visa in Finland. 
+        Include details about universities, the Finnish education system, student life, application processes, and visa requirements if mentioned."""),
+        MessagesPlaceholder(variable_name="chat_history"),
+        HumanMessagePromptTemplate.from_template("Provide a concise summary of the relevant points discussed so far.")
         ])
 
         # Chain for summarization
@@ -102,8 +102,7 @@ class Engine:
         
         memory = self._load_chat_history_to_memory(chat_id, user_email)
 
-            # Format chat history for the summarization chain
-        chat_history = "\n".join([f"{msg.type.capitalize()}: {msg.content}" for msg in memory.chat_memory.messages])
+        chat_history = memory.chat_memory.messages
 
             # Generate response using the SequentialChain
         chain_response = self.conversation_chain({
