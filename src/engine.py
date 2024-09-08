@@ -47,7 +47,7 @@ class Engine:
         memory = self._load_chat_history(chat_id, user_email)
         
         # Create chain with the loaded memory
-        chain = ({"context":memory.buffer,"user_query":RunnablePassThrough()}) | self.prompt | self.llm
+        chain = ({"context":memory.buffer,"user_query":RunnablePassthrough()}) | self.prompt | self.llm
         
         
         # Generate response
