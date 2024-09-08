@@ -57,6 +57,7 @@ class Engine:
         # Generate response
         response = self.conversation.predict(input=user_message)
         print(response)
+        print(type(response))
         
        
         
