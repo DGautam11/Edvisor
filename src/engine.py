@@ -32,8 +32,7 @@ class Engine:
 
         #Prompt for summarization
         summarize_prompt = ChatPromptTemplate.from_messages([
-        SystemMessage(content="""Summarize the key points from the conversation history, focusing on information relevant to studying or obtaining a visa in Finland. 
-        Include details about universities, the Finnish education system, student life, application processes, and visa requirements if mentioned."""),
+        SystemMessage(content="""Summarize the key points from the conversation history to provide context for the user query. Dont't create your own context. if their is none provide a empty string"""),
         MessagesPlaceholder(variable_name="chat_history"),
         HumanMessagePromptTemplate.from_template("Provide a concise summary of the relevant points discussed so far.")
         ])
@@ -49,7 +48,7 @@ class Engine:
         #Prompt for query generation with previous context
         query_prompt = ChatPromptTemplate.from_messages([
             SystemMessage(content="""Based on the conversation summary and the current user query, create a comprehensive query that captures the user's intent and relevant context. 
-            Focus on extracting information related to universities, studying in Finland, visa processes, or living in Finland as a student."""),
+           """),
             HumanMessagePromptTemplate.from_template("Context summary: {context_summary}\nCurrent query: {input}\n\nGenerate a detailed query that encompasses the user's question and relevant background information.")
         ])
 
