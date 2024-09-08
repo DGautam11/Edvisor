@@ -1,7 +1,8 @@
 from langchain_community.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.memory import ConversationSummaryMemory, ChatMessageHistory
+from langchain.memory import ConversationSummaryMemory
+from langchain_community.chat_message_histories import ChatMessageHistory
 from model import Model
 from chat_manager import ChatManager
 from transformers import pipeline
@@ -33,14 +34,14 @@ class Engine:
         If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
         For simple greetings, respond politely and briefly."""
 
-        template = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}<|eot_id|>
+        template = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
                       <|start_header_id|>user<|end_header_id|>
-                      {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+                      {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
                     """
 
         self.prompt = PromptTemplate(
-            input_variables=["system_prompt", "user_query"],
-            template=template,
+            input_variables=["user_query"],
+            template=template
         )
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
@@ -48,16 +49,11 @@ class Engine:
         memory = self._load_chat_history(chat_id, user_email)
         
         # Create chain with the loaded memory
-        chain = LLMChain(
-            llm=self.llm,
-            prompt=self.prompt,
-            verbose=True,
-            memory=memory
-        )
+        chain = self.prompt | memory | self.llm
+        
         
         # Generate response
         response = chain.invoke({
-            "system_prompt": self._system_prompt,
             "user_query": user_message
         })
         
