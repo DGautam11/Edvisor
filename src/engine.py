@@ -51,7 +51,7 @@ class Engine:
         
         
         # Generate response
-        response = chain.invoke(user_message)
+        response = chain.invoke({"user_query":user_message})
         
         # Save the new interaction to memory
         memory.save_context({"input": user_message}, {"output": response})
