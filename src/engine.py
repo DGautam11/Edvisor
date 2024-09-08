@@ -1,19 +1,20 @@
 from langchain_community.llms import HuggingFacePipeline
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, HumanMessagePromptTemplate
-from langchain.chains import ConversationChain
-from langchain.memory import ConversationBufferMemory
-from langchain.schema import SystemMessage, AIMessage
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+from langchain.memory import ConversationSummaryMemory
+from langchain.schema import ChatMessageHistory
 from model import Model
 from chat_manager import ChatManager
 from transformers import pipeline
+from typing import List, Dict
 
 class Engine:
     def __init__(self):
         self.model = Model()
         self.chat_manager = ChatManager()
-        self._conversation_pipeline()
+        self._setup_llm()
     
-    def _conversation_pipeline(self):
+    def _setup_llm(self):
         model, tokenizer = self.model.get_model_tokenizer()
         hf_pipeline = pipeline(
             "text-generation",
@@ -27,43 +28,74 @@ class Engine:
         )
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
 
-        prompt = ChatPromptTemplate.from_messages([
-            SystemMessage(content="""You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
-            Provide helpful and accurate information only about studying in Finland, Finnish education system, student visas, and living in Finland as a student. 
-            If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
-            For simple greetings, respond politely and briefly."""),
-            MessagesPlaceholder(variable_name="history"),
-            HumanMessagePromptTemplate.from_template("{input}")
-        ])
+        self._system_prompt = """You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
+        Provide helpful and accurate information only about studying in Finland, Finnish education system, student visas, and living in Finland as a student. 
+        Use the conversation summary to inform your responses and maintain context. If you don't know the answer, politely inform the user that you are unable to assist with the query.
+        If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
+        For simple greetings, respond politely and briefly."""
 
-        self.conversation = ConversationChain(
-            llm=self.llm,
-            prompt=prompt,
-            verbose=True,
-            memory=ConversationBufferMemory(return_messages=True)
+        template = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}<|eot_id|>
+                      <|start_header_id|>user<|end_header_id|>
+                      {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+                    """
+
+        self.prompt = PromptTemplate(
+            input_variables=["system_prompt", "user_query"],
+            template=template,
         )
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
-        # Load chat history into memory
-        chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
-        self.conversation.memory.chat_memory.clear()  # Clear existing memory
-        for message in chat_history:
-            if message["role"] == "user":
-                self.conversation.memory.chat_memory.add_user_message(message["content"])
-            else:
-                self.conversation.memory.chat_memory.add_ai_message(message["content"])
-
+        # Load chat history and create memory
+        memory = self._load_chat_history(chat_id, user_email)
+        
+        # Create chain with the loaded memory
+        chain = LLMChain(
+            llm=self.llm,
+            prompt=self.prompt,
+            verbose=True,
+            memory=memory
+        )
         
         # Generate response
-        response = self.conversation.predict(input=user_message)
-        print(response)
-        print(type(response))
+        response = chain.invoke({
+            "system_prompt": self._system_prompt,
+            "user_query": user_message
+        })
         
-       
+        # Save the new interaction to memory
+        memory.save_context({"input": user_message}, {"output": response})
         
+        # Save the new message to chat manager
+        self._save_message(chat_id, user_email, user_message, response)
 
-        # Save the new messages to persistent storage
+        print(response)
+
+        return "Hello"
+    
+
+    def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
+        chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
+        
+        if not chat_history:
+            # If chat history is empty, create a new ConversationSummaryMemory
+            return ConversationSummaryMemory(llm=self.llm, max_token_limit=100, return_messages=True)
+        else:
+            # If there's chat history, use from_messages to create the memory
+            history = ChatMessageHistory()
+            for message in chat_history:
+                if message["role"] == "user":
+                    history.add_user_message(message["content"])
+                elif message["role"] == "assistant":
+                    history.add_ai_message(message["content"])
+
+            return ConversationSummaryMemory.from_messages(
+                llm=self.llm,
+                chat_memory=history,
+                return_messages=True,
+                max_token_limit=100
+            )
+
+    def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
         self.chat_manager.add_message(chat_id, "user", user_message, user_email)
         self.chat_manager.add_message(chat_id, "assistant", response, user_email)
 
-        return response
