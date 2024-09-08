@@ -41,17 +41,19 @@ class Engine:
                     """
 
         self.prompt = PromptTemplate.from_template(template)
+        print(self.prompt)
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
         # Load chat history and create memory
         memory = self._load_chat_history(chat_id, user_email)
+        print(memory.buffer)
         
         # Create chain with the loaded memory
-        chain = ({"context":memory.buffer,"user_query":RunnablePassthrough()}) | self.prompt | self.llm
+        chain =  self.prompt | self.llm
         
         
         # Generate response
-        response = chain.invoke({"user_query":user_message})
+        response = chain.invoke({"context": memory.buffer, "user_query": user_message})
         
         # Save the new interaction to memory
         memory.save_context({"input": user_message}, {"output": response})
