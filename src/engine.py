@@ -51,20 +51,21 @@ class Engine:
         # Create chain with the loaded memory
         chain =  self.prompt | self.llm
         
-        
-        # Generate response
-        response = chain.invoke({"context": memory.buffer, "user_query": user_message})
-        
-        # Save the new interaction to memory
-        memory.save_context({"input": user_message}, {"output": response})
-        
-        # Save the new message to chat manager
-        self._save_message(chat_id, user_email, user_message, response)
-
-        print(response)
-
-        return response
+       # Generate response
+        full_response = chain.invoke({"context": memory.buffer, "user_query": user_message})
     
+    # Extract only the assistant's response
+        assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
+    
+    # Save the new interaction to memory
+        memory.save_context({"input": user_message}, {"output": assistant_response})
+    
+    # Save the new message to chat manager
+        self._save_message(chat_id, user_email, user_message, assistant_response)
+
+        print(assistant_response)
+
+        return assistant_response
 
     def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
         chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
