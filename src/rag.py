@@ -1,6 +1,7 @@
 import json
 import os
 from typing import List, Dict, Any
+from config import Config
 from langchain.docstore.document import Document
 from chromadb.utils import embedding_functions
 import chromadb
@@ -8,15 +9,15 @@ from chromadb.config import Settings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 class RAG:
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        self.config = Config()
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
             separators=["\n\n", "\n", " ", ""]
         )
         self.chroma_client = chromadb.Client(Settings(
-            persist_directory=self.config.rag_persist_directory,
+            persist_directory=self.config.rag_persist_chroma_directory,
         ))
         
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(

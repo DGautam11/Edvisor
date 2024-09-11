@@ -1,0 +1,153 @@
+{
+    "university":"LAB University of Applied Sciences",
+    "short name":"LAB",
+    "about":"The LAB University of Applied Sciences is a higher education institution specialising in innovation, business and industry.It operates in Lahti and Lappeenranta, Finland, and also online. We offer education in five fields: health care and social services, technology, business, hospitality, and design, fine arts and visual communication. Our strengths include the circular economy, design, innovations and health. We have 9800 students and 550 teachers and RDI experts, which makes us the sixth largest university of applied sciences in Finland.LAB represents the vision and operating culture of the new university of applied sciences focusing on supporting responsible, regenerative growth through intangible value creation, multipurpose materials, and human well-being. It depicts an active approach where different people and experts create something new together with business enterprises. The name LAB is easy to pronounce in both Finnish and English and establishes a link to the LUT Universities.Lahti University of Applied Sciences and Saimaa University of Applied Sciences merged end of the year of 2019, establishing a completely new institution: the LAB University of Applied Sciences. LAB started its operation on 1 January 2020.",
+    "bachelor's degree":[
+        {
+            "program":"Industrial Mechanical Engineering",
+            "degree title":"Bachelor of Engineering",
+            "duration":"4 years",
+            "language":"English",
+            "campus":"Lappeenranta",
+            "credits":"240 ECTS",
+            "description":"The degree programme in Industrial Mechanical Engineering prepares you for an international career in the fields of machine and automation design, production planning, and research and development. You will learn how to design, develop and manufacture products and mechatronics equipment, design and dimension machine elements, develop modern automation, control information systems, act as a project manager or leader of teams and individuals, and communicate, work and negotiate with people from different cultural and linguistic backgrounds.As a graduate of this programme, you can work as a technological expert, manager, designer, developer and sales engineer in the metal and forest industries, automation and information technology. With this degree, you can find work from Finland, Europe and all around the world.At LAB University of Applied Sciences, you will study industrial mechanical engineering in an international environment. You can complete part of your studies at our partner institutions in different countries around the world or do your practical training abroad. Every year, we welcome a large number of students from different countries, so the programme is genuinely international. " 
+        },
+        {
+            "program":"Tourism and Hospitality Management",
+            "degree title":"Bachelor of Hospitality Management",
+            "duration":"3.5 years",
+            "language":"English",
+            "campus":"Lappenranta",
+            "credits":"210 ECTS",
+            "description":"The Degree Programme in Tourism and Hospitality Management prepares you to provide high-class, innovative services that customers today require. It helps you to build a solid foundation for a successful career.Studying at the LAB University of Applied Sciences gives you a wide understanding of the tourism and hospitality business. The degree programme helps you combine true practical service skills with professional and innovative knowledge of accommodation, restaurant and hospitality services. Your studies aim to enhance your teamwork, communication and project management skills, which are all essential in building a successful career in the field of tourism and hospitality.Knowing and truly understanding hospitality services as a whole is the path to becoming a successful leader and manager. We will help you develop your organising and problem-solving skills to survive also in the most surprising circumstances. LAB’s education will enable you to work in different organisations or companies as either a leader or an expert developing hospitality services – not excluding the possibility of entrepreneurship.Study methods on LAB courses include lectures, individual and group assignments, and online learning. Our facilities comprise restaurant facilities with the latest equipment and software in the restaurant business. This setting enables project-based learning where you can truly test your know-how by producing service experiences in cooperation with real companies. The main language of the studies is English, but your studies also include getting to know the Finnish language and culture."
+
+        },
+        {
+            "program":"International Business",
+            "degree title":"Bachelor of Business Administration",
+            "duration":"3.5 years",
+            "language":"English",
+            "campus":["Lappeenranta","Lahti"],
+            "credits":"210 ECTS",
+            "description":"The Bachelor’s Degree Programme in International Business introduces you to the world of contemporary business in a modern, international learning environment. The programme combines theory and practice, and you will develop into an international business professional with strong business management skills, communication skills and the ability to work in multicultural environments. Future experts, leaders and entrepreneurs need good leadership skills but also ethical thinking and sustainable business enterprise knowledge. Designing services for international businesses requires creativity and innovativeness. The content of the studies is continuously updated together with potential employers to meet the skill requirements for future professionals. The studies are carried out entirely in English in an international environment, and they include an exchange period or work placement abroad. The Faculty of Business has over 100 partner institutions and universities around the world.We believe in innovative ways to develop surrounding business world. Based on this, we have created the International Business programme in close cooperation with businesses and other partners. Our goal is to ensure that you will be well prepared to work in different international business settings and roles around the world.During the first year, you will develop a solid foundation for different areas of business knowhow. You will learn what every Bachelor of Business Administration needs to learn, i.e. the basics of international business, international marketing, supply chain networks, financial management etc.From the second year onwards, you have the opportunity to start personalizing your study path by carrying out complementary competence studies and deepening your expertise. You will get answers e.g. to the following practical questions: How to create sustainable business models and digital value networks? How to leverage the latest analytics methods and tools in business? How to lead an innovative growth company in the competitive global market? The LAB University of Applied Sciences offers the keys to success in working life and in your own business."
+        },
+        {
+            "program":"Business Information Technology",
+            "degree title":"Bachelor of Business Administration",
+            "duration":"3.5 years",
+            "language":"English",
+            "campus":"Lahti",
+            "credits":"210 ECTS",
+            "description":"The Bachelor’s Degree Programme in Business Information Technology trains you to become a specialist of digital solutions and digitalization in businesses. The programme gives you a new perspective on how information technology can be integrated with business processes, and how digitalization can improve business productivity.Combination of business and technology:The programme combines theory and practice and equips you for a range of roles in the Business Information Technology field. The programme prepares students for digital business expert roles. You will also gain skills and knowledge to continue your studies further towards a master’s degree.Upon successful completion of this programme, you will have a comprehensive understanding of future-oriented, innovative business operations. You will be able to automate business processes and implement service chains with the latest technologies while taking into account customer needs. You will have a command of agile and flexible methods and the ability to organise and lead projects based on analysed information. The programme also gives you the expertise needed to work as an entrepreneur.Career opportunities:Upon graduation, you will be qualified for a range of roles requiring digital competencies. Depending on your personal learning path, you will be able to do the following: provide ICT support to end users, build new applications, draw up digital service process descriptions, deliver agile projects, build user-centred online stores, and design value-added digital solutions for businesses."
+
+        },
+        {
+            "program":"Industrial Information Technology",
+            "degree title":"Bachelor of Engineering",
+            "duration":"4 years",
+            "language":"English",
+            "campus":"Lahti",
+            "credits":"240 ECTS",
+            "description":"The Degree Programme in Industrial Information Technology prepares you for an international industrial IT career, especially in software production, networks, embedded systems, IoT, research and development. You will learn how to design and develop digital solutions in industrial environments using new IT technologies and methods.LAB University of Applied Sciences has trained IT specialists for over 20 years for local and global industries and businesses. As a graduate of this programme, you can find work as a technological expert, manager, designer, developer or sales engineer in industries and information technology in Finland and globally. The aim of this degree programme is to study in close co-operation with local partners.At LAB, you will study industrial information technology in an international and innovative environment on a modern campus. During your studies, students are able to act as project managers or leaders of individuals and larger teams, communicating, working and negotiating with people from different cultural and linguistic backgrounds."
+
+        },
+        {
+            "program":"Sustainable Solutions Engineering",
+            "degree title":"Bachelor of Engineering",
+            "duration":"4 years",
+            "language":"English",
+            "campus":"E-Campus",
+            "credits":"240 ECTS",
+            "description":"The degree programme in Sustainable Solutions Engineering offers you tools to manage the major challenges of our time, such as climate change and sustainability. The approach is holistic; you will learn to manage technologies in a sustainable way by adopting a circular economy perspective.LAB University of Applied Sciences is one of the leading actors in Finland in the fields of environmental technology and circular economy. As a graduate of this programme, you will work as a technological expert, project manager, quality and security developer or sales engineer in Finland and globally. Entrepreneurship is also a career alternative.In this degree programme, we encourage you to complete your studies with different methods of learning. The structure of our curriculum is flexible and the whole degree is possible to be studied online. However, we will also organize 15 ECTS modules as optional studies in which you can participate in our Lahti campus, Finland. Each of these modules is arranged in two-month periods, which makes the entry more flexible. The wide variety of different online courses will help you to arrange your own schedule."
+
+        },
+        {
+            "program":"Sustainable Design Business",
+            "degree title":"Bachelor of Culture and Arts",
+            "duration":"4 years",
+            "language":"English",
+            "campus":"Lahti",
+            "credits":"240 ECTS",
+            "description":"This programme combines design, business, and sustainability to educate future creative professionals. As today’s labour market is highly demanding, we will need more professionals who can participate in multidisciplinary teams to identify innovation opportunities, generate creative ideas and develop and implement sustainable strategies, products and services. The Sustainable Design Business programme will prepare the students to become a design thinker, a strategic ambassador for design and a facilitator between business and design for sustainable development. The programme offers a wide range of opportunities for future employment, depending on the student's professional interests.Sustainable Design Business is a four-year program (BA) for people aiming to contribute to improving the world through user-friendly, sustainably feasible and viable solutions"
+
+        },
+        {
+            "program":"Public Health Nurse",
+            "degree title":"Bachelor of Health Care",
+            "duration":"4 years",
+            "language":"English",
+            "campus":"Lappeenranta",
+            "credits":"240 ECTS",
+            "description":"As a Public Health Nurse, you can promote the health, functional capacity, and well-being of people and families of different ages in a wide range of areas. You can identify clients and their families who are part of risk groups. You support and help them and guide them to the necessary help resources.At LAB University of Applied Sciences, in the Public Health Nurse degree programme, you will gain qualifications as both a Registered Nurse and a Public Health Nurse. As a Registered Nurse, you can work in all areas of medical care.he job opportunities of a Public Health Nurse are versatile.Based on theoretical learning and clinical training, the Public Health Nurse is a versatile expert in public health nursing, general nursing, and preventive health care. After graduation, you can work for example in:  maternity and children's counselling, health care for school-aged children and adolescents,occupational health care,home nursing care.After graduating as a Public Health Nurse, you can also apply for nursing positions in both public and private medical care units and organizations. The education provides excellent skills for working abroad and the opportunity to work as an entrepreneur. After completing the Bachelor of Health Care degree programme in Public Health Nursing, you can work either as a Public Health Nurse or a Registered Nurse (RN) throughout the European Union.Theoretical studies and clinical training :A large part of Registered Nurse and Public Health Nurse studies is clinical training in a genuine nursing environment. You will do clinical practice in hospitals, sheltered housing, schools, mental health services, maternity clinics etc.Clinical training requires you to study full-time. You may not be able to find all your clinical placements in Lappeenranta. You might need to move to another city for a few weeks. These costs are not included in the academic year fee, so you must pay them yourself.Teaching takes place on campus approximately five days a week"
+
+        },
+        {
+            "program":"Paramedic Nurse",
+            "degree title":"Bachelor of Health Care",
+            "duration":"4 years",
+            "language":"English",
+            "campus":"Lappeenranta",
+            "credits":"240 ECTS",
+            "description":"As a Paramedic Nurse, you will help trauma patients or people who suddenly fall ill and need urgent care, both in and out of the hospital. You recognise and anticipate situations threatening the patient's life, and know how to act as the situation requires. In addition to alert tasks, your job will include non-urgent care: examining patients, mapping situations, and planning follow-up care.The work of a Paramedic Nurse requires pressure tolerance, as well as the readiness to act consistently even in difficult and unexpected situations. In addition, good physical and mental workability is required at work. As a Paramedic Nurse, you must be able to make quick independent decisions based on researched information and care guidelines. Many paramedics work in ambulances, but you can also find work in, for example, a hospital emergency room or intensive care unit.Versatile learning possibilities and international working opportunities.Paramedic Nurse studies at the LAB University of Applied Sciences meet the competence requirements of future nursing and paramedic skills. Our modern health care labs and simulation environment enable you to develop your skills, knowledge and decision-making abilities to become an expert in paramedics and nursing. The Degree Programme in Paramedic Nursing (RN) will open up a wide range of possibilities to work as a Paramedic Nurse or a Registered Nurse in Finland and elsewhere in the European Union."
+
+        }
+    ],
+    "master's degree":[
+        {
+            "program":"Urban Sustainability",
+            "degree title":"Master of Engineering",
+            "duration":"2 years",
+            "language":"English",
+            "campus":"E-Campus",
+            "credits":"60 ECTS",
+            "description":"As a global challenge, urbanization and smart city concepts are major development themes. There is a growing need for multidisciplinary approaches in the planning and management of urban environment development processes. This programme invites applicants to work together in dealing with practical challenges on the theme of urban sustainability.  The aim of the study programme is to adopt a multidisciplinary knowledge base, as well as development tools, supporting sustainability management.  The programme is based on online teaching and learning. The thesis work is an opportunity to adapt current academic research to practical needs and situations in the sustainable city.  Professional studies concentrate on the co-development of urban environments, environmental challenges and management of change. The student can choose complementary studies provided by other master programmes, or from other Master level courses in other higher education institutes. "
+        },
+        {
+            "program":"Business Inovation Culture and Creativity",
+            "degree title":"Master of Business Administration",
+            "duration":"2,5 years",
+            "language":"English",
+            "campus":"E-Campus",
+            "credits":"90 ECTS",
+            "description":"The Online Master's Degree Programme in Business Innovation Culture and Creativity is intended for students who wish to develop their professional capabilities, leadership skills, strategic management, innovation and process management competences to enhance the competitive advantages and resilience of their organization.Applicants are required to have at least two years of work experience in a related field (working full time). Both Finnish and international students are strongly encouraged to apply. Also, applicants who are currently in a stage of career transition can invest in their future skillset to re-enter the employment sector.Students in the programme can immediately apply their attained skills and knowhow in their workplace. Many of the graduates capitalize on new opportunities either within their current organization, or in new professional careers.Gaining skills and capabilities for developing the Business Innovation Culture and Creativity approach to the working environment helps our graduates expand their professional opportunities and bridge gained knowledge and knowhow with the future business environment. These studies also provide the student an excellent possibility to improve spoken and written English skills and a possibility to network with students from across different business sectors and nationalities."
+        }
+    ],
+    "tution fees":[
+        {
+            "bachelor's degree":"€ 8000"
+        },
+        {
+            "Master's Degree":"€ 9000"
+        }
+    ],
+    "early bird discount":[
+        {
+            "discount": "20 %",
+            "conditions" : "When you are accepted to study at LAB University of Applied Sciences, you must pay the tuition fee in three weeks’ time to receive the Early bird discount of 20% for first year. If the tuition is paid after the deadline, the tuition fee must be paid in full."
+        }
+    ],
+    "scholarship":"In the first academic year, no one will be granted a scholarship by LAB University of Applied Sciences. The scholarship is a 50% reduction on the annual tuition fee. A student must complete 60 credits per academic year to be eligible for the scholarship. This policy will be applied until the end of the study time.The credits must accumulate steadily over the duration of your studies:Bachelor's degree programmes: 60 credits after the first year, 120 credits after the second year and 180 credits after the third year.Master's degree programmes: 20 credits after the first year, 40 credits after the second year",
+    "campuses":{
+        "lahti campus":{
+            "description":"The Lahti campus is a modern learning environment which is built on former factory premises. Mixing old and new provides a unique and inspiring setting for learning and working.You can find LUT Academic Library on both campuses and online. The academic library has a vast collection of both print and electronic materials to help with your studies.  LUT Academic Library is the joint library of LUT University and LAB University of Applied Sciences.",
+            "address":["Mukkulankatu 19, FI-15210 Lahti","Niemenkatu 73, FI-15140 Lahti"],
+            "admission services":[
+                {
+                    "phone":"+358 44 7081386",
+                    "email":"admissions@lab.fi"
+                }
+            ]
+    },
+    "lappenranta campus":{
+        "description":"Lappeenranta campus, shared by LAB University of Applied Sciences and LUT University, is the largest higher education campus in Southeast Finland. 10 000 people work there, 3 400 of them being LAB students.Excellent facilities for studying The learning environment in Lappeenranta is state-of-the-art. For example, the technology and health care and social services laboratories are among the most advanced in Finland, and a brand new teaching kitchen and restaurant was recently opened for tourism and hospitality management students.Over 8 500 students study on the campus shared with LUT University, which makes it the largest higher education campus in Southeast Finland. To make students feel at home, the campus offers extensive services: an academic library, cafeterias and cafes, a new and well-equipped gym, and a general store, just to mention a few.Truly international learning environment.LAB’s newly renovated Lappeenranta campus is located in the district of Skinnarila, 7 kilometres from the city centre and neighboured by LUT University. LAB has 3 400 students in Lappeenranta, 450 of whom are international degree students, giving the campus a strong international presence.Lappeenranta is easy to access.Lappeenranta is only a two-hour train ride from Helsinki. Lappeenranta also has its own international airport. The city has a cosy small-town atmosphere and is easy to get around, yet offers a wide range of services, cultural events and recreational activities.The student union KOE and other organisations arrange activities on campus, and the tutors will introduce you to life in Lappeenranta, the campus, and your fellow students.Lappeenranta feels like your home away from home",
+        "address":"Yliopistonkatu 36, FI-53850 Lappeenranta",
+        "admission services": [
+            {
+                "phone":"+358 40 7406735",
+                "email":"admissions@lab.fi"
+            }
+            ]
+        },
+    "e-campus":"The e-campus enables you to study flexibly online, wherever better suits you. At the e-campus, we use various learning methods, such as online meetings, teamwork and independent exercises, and work placement is also employed."
+    }
+}

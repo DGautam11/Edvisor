@@ -106,7 +106,7 @@ class Config:
         """
         Set up necessary directory structures for the project.
         """
-        self.dataset_path = os.path.join(self.base_path, "dataset","rag")
+        self.rag_dataset_path = os.path.join(self.base_path, "dataset","rag")
 
         if os.getenv("COLAB_RELEASE_TAG"):
             base_dir = "/content/drive/MyDrive/Edvisor/ChromaDB"
@@ -229,8 +229,10 @@ class Config:
         return f"""
 Edvisor Configuration:
 Base Path: {self.base_path}
-Dataset Path: {self.dataset_path}
+Rag Dataset Path: {self.rag_dataset_path}
 Chroma DB Path: {self.chroma_persist_directory}
+Rag Persist Chroma Directory: {self.rag_persist_chroma_directory}
+Chat History Chroma Persist Directory: {self.chat_history_chroma_persist_directory}
 Base Model: {self.base_model}
 Embedding Model: {self.embedding_model}
 Max Context Length: {self.max_context_length}
