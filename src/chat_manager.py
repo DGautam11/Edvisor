@@ -30,7 +30,7 @@ class ChatManager:
     def __init__(self):
         self.config = Config()
         self.chroma_client = chromadb.Client(Settings(
-            persist_directory=self.config.chroma_persist_directory
+            persist_directory=self.config.chat_history_chroma_persist_directory,
         ))
         
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(

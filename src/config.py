@@ -107,10 +107,22 @@ class Config:
         Set up necessary directory structures for the project.
         """
         self.dataset_path = os.path.join(self.base_path, "dataset","rag")
-        self.chroma_persist_directory = os.path.join(self.base_path, "chroma_persist")
+
+        if os.getenv("COLAB_RELEASE_TAG"):
+            base_dir = "/content/drive/MyDrive/Edvisor/ChromaDB"
+        else:
+            base_dir = os.path.join(self.base_path, "chromadb")
+        
+        self.rag_persist_chroma_directory = os.path.join(base_dir, "rag")
+        self.chat_history_chroma_persist_directory = os.path.join(base_dir, "chat_history")
+
+        # Ensure the directories exist
+        os.makedirs(self.rag_persist_chroma_directory, exist_ok=True)
+        os.makedirs(self.chat_history_chroma_persist_directory, exist_ok=True)
+            
 
         os.makedirs(self.dataset_path, exist_ok=True)
-        os.makedirs(self.chroma_persist_directory, exist_ok=True)
+        
     
     def load_api_keys(self):
         """

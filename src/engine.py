@@ -46,7 +46,10 @@ class Engine:
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
         # Load chat history and create memory
         memory = self._load_chat_history(chat_id, user_email)
-        print(memory.buffer)
+         # Retrieve the conversation history
+        memory_variables = memory.load_memory_variables({})
+        conversation_history = memory_variables.get('history', '')
+        print(conversation_history)
         
         # Create chain with the loaded memory
         chain =  self.prompt | self.llm
@@ -86,6 +89,7 @@ class Engine:
                 llm=self.llm,
                 chat_memory=history,
                 max_token_limit=256
+
             )
 
     def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
