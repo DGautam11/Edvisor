@@ -1,8 +1,8 @@
 {
-    "university name": "Häme University of Applied Sciences",
+    "university": "Häme University of Applied Sciences",
     "short name": "HAMK",
     "about":"Häme University of Applied Sciences (HAMK) is a learning and research community of people driven to make a positive impact on the world. We are a team of approximately 9,000 people shaping the future of bioeconomy, health, education, business, design, and technology. Our presence spans across seven campuses, online, and internationally. We provide exceptional tools and environments to our students, staff, and partners to work and collaborate together to accomplish useful actions.Studying is teamwork – both with fellow students and with our partners at HAMK. As our student, you will have the opportunity to tackle real-world workplace problems right from the beginning of your studies through various business collaboration projects. The world and the workplaces are constantly evolving, which is why continuous learning is essential. You will find plenty of opportunities to develop your skills with us in both Finnish and English.At HAMK, we know that you can save the world with both feet on the ground. That's what bettermakers do.",
-    "bachelor’s degree": [
+    "bachelor’s programs": [
         {
             "program": "Computer Applications",
             "field of studies": ["Computer Applications", "IT and ICT"],
@@ -195,7 +195,7 @@
         "specialization options":"You can deepen your knowledge by choosing to specialize in one of the three fields:Developing sustainable mobility service,Innovating sustainable urban infrastructure,Applying data technologies in urban planning, management, and maintenance.Your studies at HAMK will include work placement and a thesis. In your thesis, you research a subject that interests you"
     }
     ],
-    "master's degree":
+    "master's programs":
         [
             {
                 "program":"Management in Sustainable Business",

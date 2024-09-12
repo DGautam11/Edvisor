@@ -42,7 +42,7 @@ class RAG:
 
     def process_json_data(self, data: Dict, file_name: str) -> List[Document]:
         documents = []
-        university_name = data['university name']
+        university_name = data['university']
 
         # Process university info
         university_info = {

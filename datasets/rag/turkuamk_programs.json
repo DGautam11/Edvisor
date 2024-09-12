@@ -2,7 +2,7 @@
     "university": "Turku University of Applied Sciences",
     "short name": "TurkuAMK",
     "about": "Turku University of Applied Sciences is a community of over 10 000 experts and one of the biggest Universities of Applied Sciences in Finland. We create solutions for a better tomorrow with you – both regionally and globally. Our graduates are practice-oriented professionals with top competencies.Studies at Turku UAS are working life oriented, combining theoretical studies with professional skills. We also provide high quality and flexible training and consulting services for both individuals and organizations in the public and private sector. You can also update your knowledge and skills at Turku UAS Open University of Applied Sciences",
-    "bachelor's degree": [
+    "bachelor's programs": [
         {
             "program": "Business Administration",
             "degree title":"Bachelor of Business Administration (BBA)",
@@ -71,7 +71,7 @@
         }
 
     ],
-    "master's degree":[
+    "master's programs":[
         {
             "program":"Master of Business Administration in Interactive Technologies",
             "degree title":"Master of Business Administration (MBA)",
