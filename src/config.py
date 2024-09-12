@@ -109,12 +109,12 @@ class Config:
         self.rag_dataset_path = os.path.join(self.base_path, "dataset","rag")
 
         if os.getenv("COLAB_RELEASE_TAG"):
-            base_dir = "/content/drive/MyDrive/Edvisor/ChromaDB"
+            chroma_persist_directory = "/content/drive/MyDrive/Edvisor/ChromaDB"
         else:
-            base_dir = os.path.join(self.base_path, "chromadb")
+            chroma_persist_directory = os.path.join(self.base_path, "chromadb")
         
-        self.rag_persist_chroma_directory = os.path.join(base_dir, "rag")
-        self.chat_history_chroma_persist_directory = os.path.join(base_dir, "chat_history")
+        self.rag_persist_chroma_directory = os.path.join(chroma_persist_directory, "rag")
+        self.chat_history_chroma_persist_directory = os.path.join(chroma_persist_directory, "chat_history")
 
         # Ensure the directories exist
         os.makedirs(self.rag_persist_chroma_directory, exist_ok=True)
