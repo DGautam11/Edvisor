@@ -121,7 +121,7 @@ class Config:
         os.makedirs(self.chat_history_chroma_persist_directory, exist_ok=True)
             
 
-        os.makedirs(self.dataset_path, exist_ok=True)
+        os.makedirs(self.rag_dataset_path, exist_ok=True)
         
     
     def load_api_keys(self):
