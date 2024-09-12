@@ -59,18 +59,14 @@ class RAG:
             if degree_type in data:
                 for program in data[degree_type]:
                     program_info = {
-                        "degree_type": degree_type,
-                        "university": university_name,
-                        "university_short_name": short_name,
                         **program
                     }
                     print(program.get('program'))
                     documents.append(Document(
                         page_content=self.dict_to_string(program_info),
                         metadata={
-                            "type": "degree_program",
-                            "degree_type": degree_type,
                             "university": university_name,
+                            "type of degree": degree_type,
                             "program": program.get('program'),
                             "source": file_name
                         }
