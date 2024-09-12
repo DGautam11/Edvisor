@@ -106,7 +106,7 @@ class Config:
         """
         Set up necessary directory structures for the project.
         """
-        self.rag_dataset_path = os.path.join(self.base_path, "dataset","rag")
+        self.rag_dataset_path = os.path.join(self.base_path, "datasets","rag")
 
         if os.getenv("COLAB_RELEASE_TAG"):
             chroma_persist_directory = "/content/drive/MyDrive/Edvisor/ChromaDB"
