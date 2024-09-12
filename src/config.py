@@ -55,7 +55,7 @@ class Config:
 
     #Model Configurations
     base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
-    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    embedding_model: str = "sentence-transformers/all-mpnet-base-v2"
 
     #Quantization Configurations
     quant_config: BitsAndBytesConfig = field(default_factory=lambda: BitsAndBytesConfig(

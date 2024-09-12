@@ -66,6 +66,7 @@ class RAG:
                         page_content=self.dict_to_string(program_info),
                         metadata={
                             "university": university_name,
+                            "university_short_name": short_name,
                             "type of degree": degree_type,
                             "program": program.get('program'),
                             "source": file_name
@@ -80,6 +81,7 @@ class RAG:
                     metadata={
                         "type": key,
                         "university": university_name,
+                        "university_short_name": short_name,
                         "source": file_name
                     }
                 ))
