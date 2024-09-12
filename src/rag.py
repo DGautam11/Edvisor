@@ -23,10 +23,6 @@ class RAG:
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
             model_name=self.config.embedding_model
         )
-        self.rag_collection = self.chroma_client.get_or_create_collection(
-            name="rag",
-            embedding_function=self.embedding_function
-        )
 
     def load_json_data(self, file_path: str) -> Dict:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -41,13 +37,16 @@ class RAG:
             return str(data)
 
     def process_json_data(self, data: Dict, file_name: str) -> List[Document]:
+
         documents = []
-        university_name = data['university']
+
+        university_name = data.get('university')
+        short_name = data.get('short name')
 
         # Process university info
         university_info = {
             k: v for k, v in data.items() 
-            if k in ['university name', 'short name', 'about'] or k.startswith('contact')
+            if k in ['university', 'short name', 'about'] or k.startswith('contact')
         }
         if university_info:
             documents.append(Document(
@@ -55,34 +54,39 @@ class RAG:
                 metadata={"type": "university_info", "university": university_name, "source": file_name}
             ))
 
-        # Process all other key-value pairs
+        # Process degree programs
+        for degree_type in ['bachelor\'s programs', 'master\'s programs']:
+            if degree_type in data:
+                for program in data[degree_type]:
+                    program_info = {
+                        "degree_type": degree_type,
+                        "university": university_name,
+                        "university_short_name": short_name,
+                        **program
+                    }
+                    print(program.get('program'))
+                    documents.append(Document(
+                        page_content=self.dict_to_string(program_info),
+                        metadata={
+                            "type": "degree_program",
+                            "degree_type": degree_type,
+                            "university": university_name,
+                            "program": program.get('program'),
+                            "source": file_name
+                        }
+                    ))
+
+        # Process other sections
         for key, value in data.items():
-            if key not in university_info:
-                if isinstance(value, list):
-                    for item in value:
-                        metadata = {"type": key, "university": university_name, "source": file_name}
-                        if isinstance(item, dict):
-                            if 'program' in item:
-                                metadata['program'] = item['program']
-                            documents.append(Document(
-                                page_content=self.dict_to_string(item),
-                                metadata=metadata
-                            ))
-                        else:
-                            documents.append(Document(
-                                page_content=str(item),
-                                metadata={"type": key, "university": university_name, "source": file_name}
-                            ))
-                elif isinstance(value, dict):
-                    documents.append(Document(
-                        page_content=self.dict_to_string(value),
-                        metadata={"type": key, "university": university_name, "source": file_name}
-                    ))
-                else:
-                    documents.append(Document(
-                        page_content=str(value),
-                        metadata={"type": key, "university": university_name, "source": file_name}
-                    ))
+            if key not in ['university name', 'short name', 'about', 'bachelor\'s degree', 'master\'s degree'] and not key.startswith('contact'):
+                documents.append(Document(
+                    page_content=self.dict_to_string(value),
+                    metadata={
+                        "type": key,
+                        "university": university_name,
+                        "source": file_name
+                    }
+                ))
 
         return documents
 
@@ -144,6 +148,20 @@ class RAG:
             )
 
     def build_rag_store(self, directory_path: str):
+
+        existing_collections = self.chroma_client.list_collections()
+        if any(collection.name == "rag" for collection in existing_collections):
+            self.chroma_client.delete_collection("rag")
+            print("Deleted existing 'rag' collection.")
+
+        # Create a new 'rag' collection
+        self.rag_collection = self.chroma_client.create_collection(
+            name="rag",
+            embedding_function=self.embedding_function
+        )
+
+        print("Created new 'rag' collection.")
+
         all_documents = []
 
         for filename in os.listdir(directory_path):
