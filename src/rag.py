@@ -157,7 +157,7 @@ class RAG:
         self.create_vector_store(all_documents)
         
         print(f"RAG vector store created with {len(all_documents)} documents.")
-        print(f"Vector store saved to {self.config.rag_persist_directory}")
+        print(f"Vector store saved to {self.config.rag_persist_chroma_directory}")
         
     def query_vector_store(self, query: str, k: int = 5):
         results = self.rag_collection.query(
