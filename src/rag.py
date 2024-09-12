@@ -60,15 +60,13 @@ class RAG:
             if key not in university_info:
                 if isinstance(value, list):
                     for item in value:
+                        metadata = {"type": key, "university": university_name, "source": file_name}
                         if isinstance(item, dict):
+                            if 'program' in item:
+                                metadata['program'] = item['program']
                             documents.append(Document(
                                 page_content=self.dict_to_string(item),
-                                metadata={
-                                    "type": key,
-                                    "university": university_name,
-                                    "source": file_name,
-                                    "program": item['program'] 
-                                }
+                                metadata=metadata
                             ))
                         else:
                             documents.append(Document(
