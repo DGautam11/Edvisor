@@ -35,6 +35,18 @@ class RAG:
             return "\n".join(f"{indent}- {self.dict_to_string(item, indent + '  ')}" for item in data)
         else:
             return str(data)
+    
+    def preprocess_text(self, text: str) -> str:
+        # Convert to lowercase
+        text = text.lower()
+        
+        # Remove special characters and digits, but keep spaces
+        text = re.sub(r'[^a-z\s]', '', text)
+        
+        # Remove extra whitespace
+        text = ' '.join(text.split())
+        
+        return text
 
     def process_json_data(self, data: Dict, file_name: str) -> List[Document]:
 
@@ -50,7 +62,7 @@ class RAG:
         }
         if university_info:
             documents.append(Document(
-                page_content=self.dict_to_string(university_info),
+                page_content=self.preprocess_text(self.dict_to_string(university_info)),
                 metadata={"type": "university_info", "university": university_name, "source": file_name}
             ))
 
@@ -63,7 +75,7 @@ class RAG:
                     }
                     print(program.get('program'))
                     documents.append(Document(
-                        page_content=self.dict_to_string(program_info),
+                        page_content=self.preprocess_text(self.dict_to_string(program_info)),
                         metadata={
                             "university": university_name,
                             "university_short_name": short_name,
@@ -77,7 +89,7 @@ class RAG:
         for key, value in data.items():
             if key not in ['university name', 'short name', 'about', 'bachelor\'s degree', 'master\'s degree'] and not key.startswith('contact'):
                 documents.append(Document(
-                    page_content=self.dict_to_string(value),
+                    page_content=self.preprocess_text(self.dict_to_string(value)),
                     metadata={
                         "type": key,
                         "university": university_name,
@@ -107,7 +119,7 @@ class RAG:
         for line in content.split('\n'):
             if line.startswith("Context:"):
                 if current_text:
-                    chunks = self.text_splitter.split_text(current_text)
+                    chunks = self.text_splitter.split_text(self.preprocess_text(current_text))
                     for i, chunk in enumerate(chunks):
                         documents.append(Document(
                             page_content=chunk,
@@ -124,7 +136,7 @@ class RAG:
 
         # Process the last section
         if current_text:
-            chunks = self.text_splitter.split_text(current_text)
+            chunks = self.text_splitter.split_text(self.preprocess_text(current_text))
             for i, chunk in enumerate(chunks):
                 documents.append(Document(
                     page_content=chunk,
@@ -176,8 +188,9 @@ class RAG:
         print(f"Vector store saved to {self.config.rag_persist_chroma_directory}")
         
     def query_vector_store(self, query: str, k: int = 5):
+        processed_query = self.preprocess_text(query)
         results = self.rag_collection.query(
-            query_texts=[query],
+            query_texts=[processed_query],
             n_results=k
         )
         
