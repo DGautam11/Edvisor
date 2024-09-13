@@ -63,7 +63,7 @@ class Config:
 
     #Model Configurations
     base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
-    embedding_model: str = "sentence-transformers/all-mpnet-base-v2"
+    embedding_model: str = "sentence-transformers/multi-qa-mpnet-base-cos-v1"
 
     #Name of the API keys file
     api_keys_file: str = "api_keys.json"
