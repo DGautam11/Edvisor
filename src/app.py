@@ -162,16 +162,12 @@ else:
         st.query_params.clear()  # Clear any query parameters
         st.rerun()
 
-# Add the disclaimer at the bottom of the page
+
+# Add the  disclaimer at the bottom of the page
 st.markdown("""
-<div style="font-size: 0.8em; color: #888;">
-    <p><strong>Disclaimer:</strong></p>
-    <ul>
-        <li>I'm an AI assistant focused on Finland study and visa services.</li>
-        <li>My knowledge cutoff is April 2024. For the most current information, please consult official Finnish government websites.</li>
-        <li>While I strive for accuracy, I can make mistakes. Please verify critical information from official sources.</li>
-        <li>I cannot access external websites, process personal data, or provide real-time information.</li>
-        <li>This service is for informational purposes only and does not constitute legal or official advice.</li>
-    </ul>
+<div style="font-size: 0.7em; color: #888; text-align: center; padding: 10px;">
+    Disclaimer: I'm an AI assistant focused on Finland study and visa services as of April 2024. 
+    I may make mistakes, so please verify critical information from official Finnish government sources. 
+    This service is for informational purposes only and does not constitute legal or official advice.
 </div>
 """, unsafe_allow_html=True)
