@@ -53,10 +53,6 @@ class Config:
     scopes:list = field(default="",init=False)
     redirect_uris: list = field(default="",init=False)
 
-    #Model Configurations
-    base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
-    embedding_model: str = "sentence-transformers/all-mpnet-base-v2"
-
     #Quantization Configurations
     quant_config: BitsAndBytesConfig = field(default_factory=lambda: BitsAndBytesConfig(
         load_in_4bit=True,
@@ -64,6 +60,10 @@ class Config:
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.bfloat16,
     ))
+
+    #Model Configurations
+    base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
+    embedding_model: str = "sentence-transformers/all-mpnet-base-v2"
 
     #Name of the API keys file
     api_keys_file: str = "api_keys.json"
