@@ -6,17 +6,11 @@ from auth import OAuth
 import logging
 import uuid
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
 # Set the page configuration
 st.set_page_config(page_title='Edvisor', page_icon='🎓', layout="wide")
 st.title('Edvisor 🤖')
 st.write('Chatbot for Finland Study and Visa Services')
 
-# Debug section
-debug_container = st.container()
 
 # Initialize the chatbot engine and OAuth
 @st.cache_resource
@@ -36,21 +30,14 @@ user_email = SessionManager.get_session()
 # Authentication check
 if not user_email:
     st.write("Please sign in to start chatting.")
-    
-    # Debug display
-    with debug_container:
-        st.subheader("Debug Information")
-        st.write(f"Session State: {st.session_state}")
-        st.write(f"Query Params: {dict(st.query_params)}")
 
     # Generate a new state for each auth attempt
     state = str(uuid.uuid4())
     auth_url = oauth.get_authorization_url(state)
-    logger.debug(f"Generated new OAuth state: {state}")
 
     # Create a button for sign-in
     if st.button("Sign in with Google"):
-        logger.debug(f"Sign-in button clicked. Redirecting to: {auth_url}")
+
         st.markdown(f'<meta http-equiv="refresh" content="0;url={auth_url}">', unsafe_allow_html=True)
 
     # Check if we've been redirected back from Google
@@ -59,12 +46,9 @@ if not user_email:
             # Extract the authorization code and state
             code = st.query_params["code"]
             received_state = st.query_params["state"]
-            logger.debug(f"Received OAuth callback. Code: {code}, State: {received_state}")
+            
 
-            # Debug display
-            with debug_container:
-                st.write(f"Received Code: {code}")
-                st.write(f"Received State: {received_state}")
+    
 
             # Construct the authorization response
             authorization_response = f"?code={code}&state={received_state}"
@@ -72,30 +56,25 @@ if not user_email:
             # Fetch user info
             user_info = oauth.get_user_info(authorization_response)
 
-            # Debug display
-            with debug_container:
-                st.write(f"User Info: {user_info}")
 
             if user_info and 'email' in user_info:
-                logger.info(f"Successfully authenticated user: {user_info['email']}")
                 # Save the user's email in the session
                 SessionManager.set_session(user_info['email'])
                 st.query_params.clear()  # Clear the query parameters
                 st.rerun()
             else:
-                logger.error("Failed to get user information")
+                
                 st.error("Failed to get user information. Please try again.")
                 st.stop()
 
         except Exception as e:
-            logger.exception("Error during authentication")
+            
             st.error(f"An error occurred during authentication: {str(e)}")
-            with debug_container:
-                st.write(f"Exception: {str(e)}")
+
             st.stop()
 
 else:
-    logger.info(f"User already authenticated: {user_email}")
+   
     st.success(f"Logged in as: {user_email}")
 
     # Sidebar for chat history
@@ -178,13 +157,8 @@ else:
         st.rerun()
 
     if st.sidebar.button("Logout"):
-        logger.info(f"User logged out: {user_email}")
+
         SessionManager.clear_session()
         st.query_params.clear()  # Clear any query parameters
         st.rerun()
 
-# Final debug display
-with debug_container:
-    st.subheader("Final Debug Information")
-    st.write(f"Final Session State: {st.session_state}")
-    st.write(f"Final Query Params: {dict(st.query_params)}")
