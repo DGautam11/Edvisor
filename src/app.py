@@ -46,10 +46,6 @@ if not user_email:
             # Extract the authorization code and state
             code = st.query_params["code"]
             received_state = st.query_params["state"]
-            
-
-    
-
             # Construct the authorization response
             authorization_response = f"?code={code}&state={received_state}"
 

@@ -2,7 +2,7 @@ import json
 import os
 import re
 from typing import List, Dict, Any
-from config import Config
+from src.config import Config
 from langchain.docstore.document import Document
 from chromadb.utils import embedding_functions
 import chromadb
@@ -61,6 +61,17 @@ class RAG:
             k: v for k, v in data.items()
             if k in ['university', 'short name', 'about'] or k.startswith('contact')
         }
+        # Add program names to university info
+        bachelor_programs = [program.get('program') for program in data.get('bachelor\'s programs', [])]
+        master_programs = [program.get('program') for program in data.get('master\'s programs', [])]
+
+
+
+        university_info['bachelor\'s programs'] = bachelor_programs
+        university_info['master\'s programs'] = master_programs
+        
+        print(f"University info: {university_info}")
+        
         if university_info:
             context = f"University Information: {university_name} ({short_name})"
             content = self.dict_to_string(university_info)
