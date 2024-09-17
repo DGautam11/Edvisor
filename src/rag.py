@@ -45,15 +45,18 @@ class RAG:
             return str(data)
 
     def preprocess_text(self, text: str) -> str:
-        text = text.lower()
-        text = re.sub(r'[^a-z0-9\s]', ' ', text)
+        # Remove extra whitespace
         text = ' '.join(text.split())
+        # Convert to lowercase
+        text = text.lower()
+        # Remove special characters except periods and commas
+        text = re.sub(r'[^a-z0-9\s.,]', '', text)
         return text
 
     def process_json_data(self, data: Dict, file_name: str) -> List[Document]:
         documents = []
-        university_name = data.get('university', '')
-        short_name = data.get('short name', '')
+        university_name = data.get('university').lower()
+        short_name = data.get('short name').lower()
         print(f"Processing JSON data for {university_name} ({short_name})")
 
         # Process university info
@@ -61,23 +64,36 @@ class RAG:
             k: v for k, v in data.items()
             if k in ['university', 'short name', 'about'] or k.startswith('contact')
         }
-        # Add program names to university info
+        # Create separate documents for bachelor's and master's program lists
         bachelor_programs = [program.get('program') for program in data.get('bachelor\'s programs', [])]
         master_programs = [program.get('program') for program in data.get('master\'s programs', [])]
+        print(f"Found {len(bachelor_programs)} bachelor's programs and {len(master_programs)} master's programs")
+        documents.append(Document(
+            page_content=(f"bachelor's programs at {university_name} ({short_name}):\n\n" + "\n".join(bachelor_programs)).lower(),
+            metadata={"context": f"bachelor's programs at {university_name}({short_name})",
+                        "university": university_name,
+                        "short name": short_name,
+                        "source": file_name}
+        ))
 
-
-
-        university_info['bachelor\'s programs'] = bachelor_programs
-        university_info['master\'s programs'] = master_programs
-        
-        print(f"University info: {university_info}")
+        documents.append(Document(
+            page_content=(f"master's programs at {university_name} ({short_name}):\n\n" + "\n".join(master_programs)).lower(),
+            metadata={"context": (f"master's programs  at {university_name} ({short_name})").lower(), 
+                      "university": university_name,
+                      "short name": short_name,
+                      "source": file_name}
+        ))
         
         if university_info:
-            context = f"University Information: {university_name} ({short_name})"
-            content = self.dict_to_string(university_info)
+            context = (f"about {university_name} ({short_name})").lower()
+            content = self.dict_to_string(university_info).lower()
             documents.append(Document(
                 page_content=f"{context}\n\n{content}",
-                metadata={"context": context, "source": file_name}
+                metadata={"context": context,
+                          "content_type": "about university",
+                           "university": university_name,
+                           "short name": short_name,
+                           "source": file_name}
             ))
             print(f"Created document for university information")
 
@@ -86,40 +102,36 @@ class RAG:
             if degree_type in data:
                 for program in data[degree_type]:
                     program_name = program.get('program')
-                    credits = program.get('credits')
-                    duration = program.get('duration')
-                    language = program.get('language')
+                    degree_title = program.get('degree title')
+                
                     
-                    context = (f"{degree_type.capitalize()} at {university_name} ({short_name}): "
-                               f"{program_name}")
+                    context = (f"{degree_title} in {program_name} at {university_name} ({short_name})").lower()
 
-                    additional_info = []
-                    if credits:
-                        additional_info.append(f"{credits} credits")
-                    if duration:
-                        additional_info.append(f"{duration}")
-                    if language:
-                        additional_info.append(f"Language: {language}")
-
-                    if additional_info:
-                        context += " - " + ", ".join(additional_info)
 
                     print(f"Creating document for program: {context}")
 
-                    content = self.dict_to_string(program)
+                    content = self.dict_to_string(program).lower()
                     documents.append(Document(
                         page_content=f"{context}\n\n{content}",
-                        metadata={"context": context, "source": file_name}
+                        metadata={"context": context,
+                                  "degree title": degree_title,
+                                  "program": program_name,
+                                  "degree type": degree_type.split("'")[0],
+                                  "source": file_name}
                     ))
 
         # Process other sections
         for key, value in data.items():
             if key not in ['university', 'short name', 'about', 'bachelor\'s programs', 'master\'s programs'] and not key.startswith('contact'):
-                context = f"{key.capitalize()} at {university_name} ({short_name})"
+                context = (f"{key} at {university_name} ({short_name})").lower()
                 content = self.dict_to_string(value)
                 documents.append(Document(
                     page_content=f"{context}\n\n{content}",
-                    metadata={"context": context, "source": file_name}
+                    metadata={"context": context,
+                              "university": university_name,
+                               "short name": short_name,
+                               "content_type": key,
+                              "source": file_name}
                 ))
                 print(f"Created document for section: {key}")
 
@@ -145,10 +157,12 @@ class RAG:
                     page_content=f"{context}\n\n{chunk}",
                     metadata={
                         "context": context,
-                        "source": os.path.basename(file_path)
+                        "source": os.path.basename(file_path),
+                        'chunk_id':f"chunk_{j}"
                     }
                 ))
             print(f"Created {len(chunks)} chunks for context: {context}")
+
 
         print(f"Total documents created from {file_path}: {len(documents)}")
         return documents
@@ -156,11 +170,38 @@ class RAG:
     def create_vector_store(self, documents: List[Document]):
         print(f"Creating vector store with {len(documents)} documents")
         for i, doc in enumerate(documents):
-            self.rag_collection.add(
-                documents=[doc.page_content],
-                metadatas=[doc.metadata],
-                ids=[f"doc_{i}"]
-            )
+            print(f"Processing document {i+1}/{len(documents)}")
+            
+            # Check if metadata exists and is not empty
+            if not doc.metadata:
+                print(f"Warning: Document {i} has no metadata")
+                continue
+
+            # Check for None values in metadata
+            none_fields = [k for k, v in doc.metadata.items() if v is None]
+            if none_fields:
+                print(f"Warning: Document {i} has None values in metadata fields: {', '.join(none_fields)}")
+                # Replace None values with "N/A"
+                doc.metadata = {k: (v if v is not None else "N/A") for k, v in doc.metadata.items()}
+
+            try:
+                self.rag_collection.add(
+                    documents=[doc.page_content],
+                    metadatas=[doc.metadata],
+                    ids=[f"doc_{i}"]
+                )
+            except Exception as e:
+                print(f"Error adding document {i} to vector store:")
+                print(f"Metadata: {doc.metadata}")
+                print(f"Content preview: {doc.page_content[:100]}...")
+                print(f"Error: {str(e)}")
+                # Optionally, you can choose to continue with the next document instead of raising the exception
+                # continue
+                raise  # Remove this if you want to continue processing despite errors
+
+            if (i + 1) % 50 == 0:  # Print progress every 50 documents
+                print(f"Processed {i + 1} documents")
+
         print("Vector store creation completed")
 
     def build_rag_store(self, directory_path: str):
@@ -201,17 +242,41 @@ class RAG:
     def query_vector_store(self, query: str, k: int = 5):
         print(f"Querying vector store with: '{query}'")
         processed_query = self.preprocess_text(query)
+        
+        # Create embedding for the query
+        query_embedding = self.embedding_function([processed_query])[0]
+        
         results = self.rag_collection.query(
-            query_texts=[processed_query],
-            n_results=k
+            query_embeddings=[query_embedding],
+            n_results=k,
+            include=["documents", "metadatas", "distances"]
         )
         
         documents = [
-            Document(page_content=doc, metadata=meta)
-            for doc, meta in zip(results['documents'][0], results['metadatas'][0])
+            Document(
+                page_content=doc, 
+                metadata={
+                    **meta, 
+                    "similarity_score": 1 - dist  # Convert distance to similarity score
+                }
+            )
+            for doc, meta, dist in zip(results['documents'][0], results['metadatas'][0], results['distances'][0])
         ]
         print(f"Retrieved {len(documents)} documents from vector store")
         return documents
+
+    def search(self, query: str, k: int = 5):
+        results = self.query_vector_store(query, k)
+        print(f"\nSearch results for query: '{query}'")
+        for i, doc in enumerate(results, 1):
+            print(f"\nResult {i}:")
+            print(f"Context: {doc.metadata['context']}")
+            print(f"Source: {doc.metadata['source']}")
+            print(f"Similarity Score: {doc.metadata['similarity_score']:.4f}")
+            print(f"Content: {doc.page_content[:200]}...")
+            print("---")
+        
+        return results
 
     def inspect_vector_store(self):
         total_docs = self.rag_collection.count()
@@ -223,14 +288,4 @@ class RAG:
         for id, metadata in zip(sample['ids'], sample['metadatas']):
             print(f"ID: {id}")
             print(f"Metadata: {metadata}")
-            print("---")
-
-    def search(self, query: str, k: int = 5):
-        results = self.query_vector_store(query, k)
-        print(f"\nSearch results for query: '{query}'")
-        for i, doc in enumerate(results, 1):
-            print(f"\nResult {i}:")
-            print(f"Context: {doc.metadata['context']}")
-            print(f"Source: {doc.metadata['source']}")
-            print(f"Content: {doc.page_content[:200]}...")
             print("---")
