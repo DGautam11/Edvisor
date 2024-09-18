@@ -12,7 +12,7 @@ from langchain.docstore.document import Document
 import re
 import chromadb
 from chromadb.config import Settings
-from config import Config
+from config import Config   
 
 class Engine:
     def __init__(self):
@@ -24,7 +24,7 @@ class Engine:
         # Initialize ChatManager and RAG with the same Chroma client
         self.chat_manager = ChatManager(self.chroma_client)
         self.rag = RAG(self.chroma_client)
-
+        self.config = Config()
         self._setup_llm()
     
     def _setup_llm(self):
