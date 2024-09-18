@@ -243,11 +243,8 @@ class RAG:
         print(f"Querying vector store with: '{query}'")
         processed_query = self.preprocess_text(query)
         
-        # Create embedding for the query
-        query_embedding = self.embedding_function([processed_query])[0]
-        
         results = self.rag_collection.query(
-            query_embeddings=[query_embedding],
+            query_texts=[processed_query],
             n_results=k,
             include=["documents", "metadatas", "distances"]
         )

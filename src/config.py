@@ -6,40 +6,7 @@ import torch
 
 @dataclass
 class Config:
-    """
-    Configuration class for the Edvisor project.
 
-    This class manages the configuration settings for the Edvisor chatbot,
-    including API keys, model settings, and file paths. It is responsible for
-    loading API keys from a JSON file and setting up necessary directory structures.
-
-    Attributes:
-        base_path (str): The root directory of the project.
-        HF_token (str): The HuggingFace API token.
-        google_api_key (str): The Google API key.
-        google_cse_id (str): The Google Custom Search Engine ID.
-        base_model (str): The name/path of the base language model.
-        embedding_model (str): The name/path of the embedding model.
-        dataset_path (str): Path to the dataset directory.
-        chroma_db_path (str): Path to the Chroma DB directory.
-        api_keys_file (str): Name of the file containing API keys.
-
-    Methods:
-        get_base_path(): Determines the base path of the project.
-        setup_paths(): Sets up necessary directory structures.
-        load_api_keys(): Loads API keys from the JSON file.
-        validate_api_keys(): Ensures all required API keys are present.
-        to_dict(): Converts the configuration to a dictionary.
-
-    Raises:
-        FileNotFoundError: If the API keys file is not found.
-        ValueError: If required API keys are missing from the file.
-
-    Usage:
-        config = Config()
-        hf_token = config.HF_token
-        dataset_dir = config.dataset_path
-    """
     base_path: str = field(default="",init=False)
 
     #API Keys (initalized later)
