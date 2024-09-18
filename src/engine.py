@@ -9,6 +9,7 @@ from rag import RAG
 from transformers import pipeline
 from typing import List, Dict
 from langchain.docstore.document import Document
+import re
 
 class Engine:
     def __init__(self):
@@ -95,8 +96,16 @@ class Engine:
         return assistant_response
 
     def _is_greeting(self, message: str) -> bool:
-        greetings = ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening']
-        return any(greeting in message.lower() for greeting in greetings)
+        greeting_patterns = [
+            r'\b(hello|hi|hey|greetings)\b',
+            r'\b(good\s(morning|afternoon|evening))\b',
+            r'\bhow\s(are\syou|are\sthings|is\sit\sgoing)\b',
+            r'\bwhat\'s\sup\b',
+            r'\bnice\sto\smeet\syou\b'
+        ]
+        
+        message_lower = message.lower()
+        return any(re.search(pattern, message_lower) for pattern in greeting_patterns)
 
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
         return " ".join([doc.page_content for doc in docs])
