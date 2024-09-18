@@ -36,7 +36,7 @@ class Config:
     api_keys_file: str = "api_keys.json"
 
     chroma_persist_directory: str = field(default="",init=False)
-    max_context_length: int = 2048
+    max_context_length: int = 4096
     chat_history_limit: int = 20
 
     oauth_credentials_file: str = "oauth_credentials.json"
@@ -76,16 +76,13 @@ class Config:
         self.rag_dataset_path = os.path.join(self.base_path, "datasets","rag")
 
         if os.getenv("COLAB_RELEASE_TAG"):
-            chroma_persist_directory = "/content/drive/MyDrive/Edvisor/ChromaDB"
+            self.chroma_persist_directory = "/content/drive/MyDrive/Edvisor/ChromaDB"
         else:
-            chroma_persist_directory = os.path.join(self.base_path, "chromadb")
-        
-        self.rag_persist_chroma_directory = os.path.join(chroma_persist_directory, "rag")
-        self.chat_history_chroma_persist_directory = os.path.join(chroma_persist_directory, "chat_history")
+            self.chroma_persist_directory = os.path.join(self.base_path, "chromadb")
+
 
         # Ensure the directories exist
-        os.makedirs(self.rag_persist_chroma_directory, exist_ok=True)
-        os.makedirs(self.chat_history_chroma_persist_directory, exist_ok=True)
+        os.makedirs(self.chroma_persist_directory, exist_ok=True)
             
 
         os.makedirs(self.rag_dataset_path, exist_ok=True)
@@ -198,8 +195,6 @@ Edvisor Configuration:
 Base Path: {self.base_path}
 Rag Dataset Path: {self.rag_dataset_path}
 Chroma DB Path: {self.chroma_persist_directory}
-Rag Persist Chroma Directory: {self.rag_persist_chroma_directory}
-Chat History Chroma Persist Directory: {self.chat_history_chroma_persist_directory}
 Base Model: {self.base_model}
 Embedding Model: {self.embedding_model}
 Max Context Length: {self.max_context_length}

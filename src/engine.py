@@ -24,7 +24,7 @@ class Engine:
         # Initialize ChatManager and RAG with the same Chroma client
         self.chat_manager = ChatManager(self.chroma_client)
         self.rag = RAG(self.chroma_client)
-        
+
         self._setup_llm()
     
     def _setup_llm(self):
@@ -81,7 +81,7 @@ class Engine:
             retrieved_docs = self.rag.search(user_message, k=3)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
             
-            max_tokens = 4096
+            max_tokens = self.config.max_context_length
             system_prompt_tokens = len(self.tokenizer.encode(self._system_prompt))
             user_message_tokens = len(self.tokenizer.encode(user_message))
             retrieved_docs_tokens = len(self.tokenizer.encode(retrieved_docs_text))
