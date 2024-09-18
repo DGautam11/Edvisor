@@ -10,12 +10,21 @@ from transformers import pipeline
 from typing import List, Dict
 from langchain.docstore.document import Document
 import re
+import chromadb
+from chromadb.config import Settings
+from config import Config
 
 class Engine:
     def __init__(self):
         self.model = Model()
-        self.chat_manager = ChatManager()
-        self.rag = RAG()
+        # Create a single Chroma client
+        self.chroma_client = chromadb.Client(Settings(
+            persist_directory=self.config.chroma_persist_directory,
+        ))
+        # Initialize ChatManager and RAG with the same Chroma client
+        self.chat_manager = ChatManager(self.chroma_client)
+        self.rag = RAG(self.chroma_client)
+        
         self._setup_llm()
     
     def _setup_llm(self):

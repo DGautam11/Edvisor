@@ -10,16 +10,14 @@ from chromadb.config import Settings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 class RAG:
-    def __init__(self):
+    def __init__(self,chroma_client):
         self.config = Config()
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
             separators=["\n\n", "\n", " ", ""]
         )
-        self.chroma_client = chromadb.Client(Settings(
-            persist_directory=self.config.rag_persist_chroma_directory,
-        ))
+        self.chroma_client = chroma_client
 
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
             model_name=self.config.embedding_model

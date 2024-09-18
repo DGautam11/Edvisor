@@ -27,11 +27,9 @@ class ChatData:
         return "New Chat"
 
 class ChatManager:
-    def __init__(self):
+    def __init__(self,chroma_client):
         self.config = Config()
-        self.chroma_client = chromadb.Client(Settings(
-            persist_directory=self.config.chat_history_chroma_persist_directory,
-        ))
+        self.chroma_client = chroma_client
         
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
             model_name=self.config.embedding_model
