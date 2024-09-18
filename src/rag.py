@@ -2,7 +2,7 @@ import json
 import os
 import re
 from typing import List, Dict, Any
-from src.config import Config
+from config import Config
 from langchain.docstore.document import Document
 from chromadb.utils import embedding_functions
 import chromadb
@@ -254,7 +254,8 @@ class RAG:
                 page_content=doc, 
                 metadata={
                     **meta, 
-                    "similarity_score": 1 - dist  # Convert distance to similarity score
+                    "similarity_score": 1 - dist  
+                    # Convert distance to similarity score
                 }
             )
             for doc, meta, dist in zip(results['documents'][0], results['metadatas'][0], results['distances'][0])
