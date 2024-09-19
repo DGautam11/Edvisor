@@ -1,6 +1,10 @@
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timezone
+import chromadb
+from chromadb.config import Settings
+from rag import RAG
+from config import Config
 
 class Utils:
     @staticmethod
@@ -27,3 +31,46 @@ class Utils:
             relative_time = f"{delta.years} year{'s' if delta.years > 1 else ''} ago"
         
         return relative_time
+    
+    @staticmethod
+    def build_rag_database():
+        config = Config()
+        
+        # Create a Chroma client
+        chroma_client = chromadb.Client(Settings(
+            persist_directory=config.chroma_persist_directory,
+        ))
+        
+        try:
+            # Initialize RAG
+            rag = RAG(chroma_client)
+            
+            # Build the RAG store
+            rag.build_rag_store(config.rag_dataset_path)
+            
+            print(f"RAG database built successfully.")
+            print(f"Vector store saved to {config.chroma_persist_directory}")
+
+            # Optionally, you can add some test queries here
+            test_queries = [
+                "Why Finland?",
+                "Programs at LAB University of Applied Sciences",
+                "Tution fee at Turku University of Applied Sciences",
+            ]
+
+            print("\nTesting RAG database with sample queries:")
+            for query in test_queries:
+                print(f"\nQuery: {query}")
+                results = rag.search(query, k=3)
+                for i, doc in enumerate(results, 1):
+                    print(f"Result {i}:")
+                    print(f"Context: {doc.metadata['context']}")
+                    print(f"Source: {doc.metadata['source']}")
+                    print(f"Similarity Score: {doc.metadata['similarity_score']:.4f}")
+                    print(f"Content: {doc.page_content[:200]}...")
+                    print("---")
+
+        finally:
+            # Ensure the Chroma client is closed, even if an error occurs
+            chroma_client.close()
+            print("Chroma client closed.")
