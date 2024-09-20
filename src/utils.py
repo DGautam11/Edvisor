@@ -9,9 +9,6 @@ import os
 import shutil
 
 class Utils:
-
-    def __init__(self):
-        self.config = Config()
     @staticmethod
     def get_relative_time(date_str):
         now = datetime.now(timezone.utc)
@@ -38,11 +35,13 @@ class Utils:
         return relative_time
     
     @staticmethod
-    def build_rag_database(self):
+    def build_rag_database():
+        
+        config = Config()
         
         # Create a Chroma client
         chroma_client = chromadb.Client(Settings(
-            persist_directory=self.config.chroma_persist_directory,
+            persist_directory=config.chroma_persist_directory,
         ))
         
         try:
@@ -79,13 +78,14 @@ class Utils:
         
     @staticmethod
     
-    def backup_chroma_db(self):
+    def backup_chroma_db():
         """
         Manually backup the local ChromaDB to Google Drive.
     
         """
-        local_path = self.chroma_persist_directory
-        backup_path = self.chroma_db_backup_path
+        config = Config()
+        local_path = config.chroma_persist_directory
+        backup_path = config.chroma_db_backup_path
 
         print(f"Backing up ChromaDB from {local_path} to {backup_path}")
         if not os.path.exists(local_path) or not os.listdir(local_path):
@@ -104,8 +104,9 @@ class Utils:
         """
         Restore the ChromaDB from Google Drive backup to local path.
         """
-        local_path = Config().chroma_persist_directory
-        backup_path = Config().chroma_db_backup_path
+        config = Config()
+        local_path = config.chroma_persist_directory
+        backup_path = config.chroma_db_backup_path
 
         if not os.path.exists(backup_path) or not os.listdir(backup_path):
             print(f"No backup found at {backup_path} or backup directory is empty.")
