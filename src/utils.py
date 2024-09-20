@@ -8,7 +8,7 @@ from config import Config
 import os
 import shutil
 
-class Utils():
+class Utils:
 
     def __init__(self):
         self.config = Config()
