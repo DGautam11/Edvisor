@@ -5,8 +5,13 @@ import chromadb
 from chromadb.config import Settings
 from rag import RAG
 from config import Config
+import os
+import shutil
 
-class Utils:
+class Utils():
+
+    def __init__(self):
+        self.config = Config()
     @staticmethod
     def get_relative_time(date_str):
         now = datetime.now(timezone.utc)
@@ -33,12 +38,11 @@ class Utils:
         return relative_time
     
     @staticmethod
-    def build_rag_database():
-        config = Config()
+    def build_rag_database(self):
         
         # Create a Chroma client
         chroma_client = chromadb.Client(Settings(
-            persist_directory=config.chroma_persist_directory,
+            persist_directory=self.config.chroma_persist_directory,
         ))
         
         try:
@@ -46,10 +50,10 @@ class Utils:
             rag = RAG(chroma_client)
             
             # Build the RAG store
-            rag.build_rag_store(config.rag_dataset_path)
+            rag.build_rag_store(self.config.rag_dataset_path)
             
             print(f"RAG database built successfully.")
-            print(f"Vector store saved to {config.chroma_persist_directory}")
+            print(f"Vector store saved to {self.config.chroma_persist_directory}")
 
             # Optionally, you can add some test queries here
             test_queries = [
@@ -72,3 +76,48 @@ class Utils:
 
         finally:
             print("Chroma client closed.")
+        
+    @staticmethod
+    
+    def backup_chroma_db(self):
+        """
+        Manually backup the local ChromaDB to Google Drive.
+    
+        """
+        local_path = self.chroma_persist_directory
+        backup_path = self.chroma_db_backup_path
+
+        print(f"Backing up ChromaDB from {local_path} to {backup_path}")
+        if not os.path.exists(local_path) or not os.listdir(local_path):
+            print(f"No ChromaDB found at {local_path} or directory is empty. Nothing to backup.")
+            return False
+        try:
+            if os.path.exists(backup_path):
+                shutil.rmtree(backup_path)
+            shutil.copytree(local_path, backup_path)
+            print(f"Backup completed. Files copied to: {backup_path}")
+        except Exception as e:
+            print(f"Error during backup: {str(e)}")
+    
+    @staticmethod
+    def restore_chroma_db():
+        """
+        Restore the ChromaDB from Google Drive backup to local path.
+        """
+        local_path = Config().chroma_persist_directory
+        backup_path = Config().chroma_db_backup_path
+
+        if not os.path.exists(backup_path) or not os.listdir(backup_path):
+            print(f"No backup found at {backup_path} or backup directory is empty.")
+            return False
+
+        print(f"Restoring ChromaDB from {backup_path} to {local_path}")
+        try:
+            if os.path.exists(local_path):
+                shutil.rmtree(local_path)
+            shutil.copytree(backup_path, local_path)
+            print(f"Restore completed. Files copied to: {local_path}")
+            return True
+        except Exception as e:
+            print(f"Error during restore: {str(e)}")
+            return False

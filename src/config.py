@@ -41,6 +41,8 @@ class Config:
 
     oauth_credentials_file: str = "oauth_credentials.json"
 
+    chroma_db_backup_path:str = "/content/drive/MyDrive/Edvisor/ChromaDB_Backup"
+
 
     def __post_init__(self):
         """
@@ -75,10 +77,8 @@ class Config:
         """
         self.rag_dataset_path = os.path.join(self.base_path, "datasets","rag")
 
-        if os.getenv("COLAB_RELEASE_TAG"):
-            self.chroma_persist_directory = "/content/drive/MyDrive/Edvisor/ChromaDB"
-        else:
-            self.chroma_persist_directory = os.path.join(self.base_path, "chromadb")
+       
+        self.chroma_persist_directory = os.path.join(self.base_path, "chromadb")
 
 
         # Ensure the directories exist
