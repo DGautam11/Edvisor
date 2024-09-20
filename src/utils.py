@@ -71,6 +71,4 @@ class Utils:
                     print("---")
 
         finally:
-            # Ensure the Chroma client is closed, even if an error occurs
-            chroma_client.close()
             print("Chroma client closed.")
