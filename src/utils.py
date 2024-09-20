@@ -49,10 +49,10 @@ class Utils:
             rag = RAG(chroma_client)
             
             # Build the RAG store
-            rag.build_rag_store(self.config.rag_dataset_path)
+            rag.build_rag_store(config.rag_dataset_path)
             
             print(f"RAG database built successfully.")
-            print(f"Vector store saved to {self.config.chroma_persist_directory}")
+            print(f"Vector store saved to {config.chroma_persist_directory}")
 
             # Optionally, you can add some test queries here
             test_queries = [
