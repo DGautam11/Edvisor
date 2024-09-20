@@ -22,13 +22,6 @@ class RAG:
         self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
             model_name=self.config.embedding_model
         )
-        # Connect to the existing 'rag' collection
-        self.rag_collection = self.chroma_client.get_or_create_collection(
-            name="rag",
-            embedding_function=self.embedding_function
-        )
-        print(f"Connected to existing RAG collection with {self.rag_collection.count()} documents")
-        print(f"RAG initialized with embedding model: {self.config.embedding_model}")
 
     def load_json_data(self, file_path: str) -> Dict:
         try:
@@ -244,6 +237,8 @@ class RAG:
         print(f"Vector store saved to {self.config.rag_persist_chroma_directory}")
 
     def query_vector_store(self, query: str, k: int = 5):
+        collection_name = "rag"
+        self.rag_collection = self.chroma_client.get_collection(name=collection_name)
         print(f"Querying vector store with: '{query}'")
         processed_query = self.preprocess_text(query)
         
