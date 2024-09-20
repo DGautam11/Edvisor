@@ -23,7 +23,7 @@ class RAG:
             model_name=self.config.embedding_model
         )
         # Connect to the existing 'rag' collection
-        self.rag_collection = self.chroma_client.get_collection(
+        self.rag_collection = self.chroma_client.get_or_create_collection(
             name="rag",
             embedding_function=self.embedding_function
         )
