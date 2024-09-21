@@ -79,7 +79,7 @@ class Engine:
         else:
             # For ongoing conversations, use the full context and RAG
             memory = self._load_chat_history(chat_id, user_email)
-            retrieved_docs = self.rag.search(user_message, k=3)
+            retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
             
             max_tokens = self.config.max_context_length
