@@ -238,7 +238,7 @@ class RAG:
 
     def query_vector_store(self, query: str, k: int = 5):
         collection_name = "rag"
-        self.rag_collection = self.chroma_client.get_collection(name=collection_name)
+        self.rag_collection = self.chroma_client.get_collection(name=collection_name,embedding_function=self.embedding_function)
         print(f"Querying vector store with: '{query}'")
         processed_query = self.preprocess_text(query)
         
