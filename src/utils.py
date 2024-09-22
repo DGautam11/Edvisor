@@ -77,48 +77,21 @@ class Utils:
             print("Chroma client closed.")
         
     @staticmethod
-    
-    def backup_chroma_db():
-        """
-        Manually backup the local ChromaDB to Google Drive.
-    
-        """
+    def initialize_chroma_db():
         config = Config()
-        local_path = config.chroma_persist_directory
-        backup_path = config.chroma_db_backup_path
-
-        print(f"Backing up ChromaDB from {local_path} to {backup_path}")
-        if not os.path.exists(local_path) or not os.listdir(local_path):
-            print(f"No ChromaDB found at {local_path} or directory is empty. Nothing to backup.")
-            return False
+        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory)
+        
+        # Try to create a test collection to ensure the database is initialized
         try:
-            if os.path.exists(backup_path):
-                shutil.rmtree(backup_path)
-            shutil.copytree(local_path, backup_path)
-            print(f"Backup completed. Files copied to: {backup_path}")
+            test_collection = chroma_client.create_collection("test_collection")
+            test_collection.add(
+                documents=["This is a test document"],
+                metadatas=[{"source": "test"}],
+                ids=["test1"]
+            )
+            print("ChromaDB initialized successfully.")
+            
+            # Clean up the test collection
+            chroma_client.delete_collection("test_collection")
         except Exception as e:
-            print(f"Error during backup: {str(e)}")
-    
-    @staticmethod
-    def restore_chroma_db():
-        """
-        Restore the ChromaDB from Google Drive backup to local path.
-        """
-        config = Config()
-        local_path = config.chroma_persist_directory
-        backup_path = config.chroma_db_backup_path
-
-        if not os.path.exists(backup_path) or not os.listdir(backup_path):
-            print(f"No backup found at {backup_path} or backup directory is empty.")
-            return False
-
-        print(f"Restoring ChromaDB from {backup_path} to {local_path}")
-        try:
-            if os.path.exists(local_path):
-                shutil.rmtree(local_path)
-            shutil.copytree(backup_path, local_path)
-            print(f"Restore completed. Files copied to: {local_path}")
-            return True
-        except Exception as e:
-            print(f"Error during restore: {str(e)}")
-            return False
+            print(f"Error initializing ChromaDB: {str(e)}")

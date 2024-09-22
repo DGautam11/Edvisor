@@ -18,10 +18,9 @@ class Engine:
     def __init__(self):
         self.model = Model()
         self.config = Config()
-        # Create a single Chroma client
-        self.chroma_client = chromadb.Client(Settings(
-            persist_directory=self.config.chroma_persist_directory,
-        ))
+       # Create a single Chroma client
+        self.chroma_client = chromadb.PersistentClient(path=self.config.chroma_persist_directory)
+
         # Initialize ChatManager and RAG with the same Chroma client
         self.chat_manager = ChatManager(self.chroma_client)
         self.rag = RAG(self.chroma_client)

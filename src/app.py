@@ -26,6 +26,7 @@ oauth = initialize_oauth()
 
 # Check for existing session
 user_email = SessionManager.get_session()
+print(user_email)
 
 # Authentication check
 if not user_email:
