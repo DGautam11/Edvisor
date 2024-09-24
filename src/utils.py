@@ -75,23 +75,4 @@ class Utils:
 
         finally:
             print("Chroma client closed.")
-        
-    @staticmethod
-    def initialize_chroma_db():
-        config = Config()
-        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory)
-        
-        # Try to create a test collection to ensure the database is initialized
-        try:
-            test_collection = chroma_client.create_collection("test_collection")
-            test_collection.add(
-                documents=["This is a test document"],
-                metadatas=[{"source": "test"}],
-                ids=["test1"]
-            )
-            print("ChromaDB initialized successfully.")
-            
-            # Clean up the test collection
-            chroma_client.delete_collection("test_collection")
-        except Exception as e:
-            print(f"Error initializing ChromaDB: {str(e)}")
+            del chroma_client

@@ -166,40 +166,30 @@ class RAG:
 
     def create_vector_store(self, documents: List[Document]):
         print(f"Creating vector store with {len(documents)} documents")
-        for i, doc in enumerate(documents):
-            print(f"Processing document {i+1}/{len(documents)}")
+        
+        batch_size = 100
+        for i in range(0, len(documents), batch_size):
+            batch = documents[i:i+batch_size]
             
-            # Check if metadata exists and is not empty
-            if not doc.metadata:
-                print(f"Warning: Document {i} has no metadata")
-                continue
-
-            # Check for None values in metadata
-            none_fields = [k for k, v in doc.metadata.items() if v is None]
-            if none_fields:
-                print(f"Warning: Document {i} has None values in metadata fields: {', '.join(none_fields)}")
-                # Replace None values with "N/A"
-                doc.metadata = {k: (v if v is not None else "N/A") for k, v in doc.metadata.items()}
-
+            ids = [f"doc_{j}" for j in range(i, i+len(batch))]
+            contents = [doc.page_content for doc in batch]
+            metadatas = [doc.metadata for doc in batch]
+            
             try:
                 self.rag_collection.add(
-                    documents=[doc.page_content],
-                    metadatas=[doc.metadata],
-                    ids=[f"doc_{i}"]
+                    ids=ids,
+                    documents=contents,
+                    metadatas=metadatas
                 )
+                print(f"Added batch of {len(batch)} documents to the vector store")
             except Exception as e:
-                print(f"Error adding document {i} to vector store:")
-                print(f"Metadata: {doc.metadata}")
-                print(f"Content preview: {doc.page_content[:100]}...")
-                print(f"Error: {str(e)}")
-                # Optionally, you can choose to continue with the next document instead of raising the exception
-                # continue
-                raise  # Remove this if you want to continue processing despite errors
-
-            if (i + 1) % 50 == 0:  # Print progress every 50 documents
-                print(f"Processed {i + 1} documents")
-
+                print(f"Error adding batch to vector store: {str(e)}")
+                print(f"First document in batch: {contents[0][:100]}...")
+                print(f"First metadata in batch: {metadatas[0]}")
+        
         print("Vector store creation completed")
+        doc_count = self.rag_collection.count()
+        print(f"Total documents in collection: {doc_count}")
 
     def build_rag_store(self, directory_path: str):
         print(f"Building RAG store from directory: {directory_path}")
@@ -231,10 +221,11 @@ class RAG:
                 all_documents.extend(processed_docs)
                 print(f"Processed {filename}: {len(processed_docs)} documents created")
 
+        print(f"Total documents created: {len(all_documents)}")
         self.create_vector_store(all_documents)
-        
-        print(f"RAG vector store created with {len(all_documents)} documents.")
-        print(f"Vector store saved to {self.config.chroma_persist_directory}")
+
+        print(f"RAG vector store creation completed.")
+        print(f"Total documents in collection: {self.rag_collection.count()}")
 
     def query_vector_store(self, query: str, k: int = 5):
         collection_name = "rag"
