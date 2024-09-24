@@ -40,10 +40,8 @@ class Utils:
         config = Config()
         
         
-        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory,
-                                                  settings=Settings(),
-                                                  tenant="edvisor",
-                                                  database="edvisor")
+        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory)
+
         try:
             # Initialize RAG
             rag = RAG(chroma_client)
@@ -61,10 +59,7 @@ class Utils:
 
             config = Config()
 
-            chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory,
-                                                  settings=Settings(),
-                                                  tenant="edvisor",
-                                                  database="edvisor")
+            chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory)
             
             rag = RAG(chroma_client)
            
