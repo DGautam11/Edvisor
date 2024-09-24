@@ -59,6 +59,7 @@ class Engine:
             f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
             <|start_header_id|>Conversation Summary:<|end_header_id|> {{context}}<|eot_id|>
             <|start_header_id|>Retrieved Information:<|end_header_id|> {{retrieved_docs}}<|eot_id|>
+             Use the above information to inform your response.<|eot_id|>
             <|start_header_id|>user<|end_header_id|>
             {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
             """
@@ -80,6 +81,7 @@ class Engine:
             memory = self._load_chat_history(chat_id, user_email)
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
+            print(f"retrieved_docs_text:{retrieved_docs_text}")
             
             max_tokens = self.config.max_context_length
             system_prompt_tokens = len(self.tokenizer.encode(self._system_prompt))
@@ -88,6 +90,7 @@ class Engine:
             available_context_tokens = max_tokens - system_prompt_tokens - user_message_tokens - retrieved_docs_tokens - 100
 
             truncated_context = self._truncate_context(memory.buffer, available_context_tokens)
+            print(f"truncated_context:{truncated_context}")
 
             chain = self.full_prompt | self.llm
             full_response = chain.invoke({
@@ -98,7 +101,7 @@ class Engine:
 
         # Extract only the assistant's response
         assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
-
+        print(f"assistant_response:{assistant_response}")
         # Save the new message to chat manager
         self._save_message(chat_id, user_email, user_message, assistant_response)
 
@@ -117,7 +120,7 @@ class Engine:
         return any(re.search(pattern, message_lower) for pattern in greeting_patterns)
 
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
-        return " ".join([doc.page_content for doc in docs])
+        return "\n".join([doc.page_content for doc in docs])
 
     def _truncate_context(self, context: str, max_tokens: int) -> str:
         encoded_context = self.tokenizer.encode(context)
