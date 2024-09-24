@@ -43,8 +43,7 @@ class Engine:
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
 
         self._system_prompt = """You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
-        Provide helpful and accurate information only about studying in Finland, Finnish education system, student visas, and living in Finland as a student. 
-        Use the conversation summary and retrieved documents to inform your responses and maintain context. If you don't know the answer, politely inform the user that you are unable to assist with the query.
+        Provide helpful and accurate information only about studying in Finland, Finnish education system, student visas. If you don't know the answer, politely inform the user that you are unable to assist with the query.
         If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
         For simple greetings, respond politely and briefly."""
 
@@ -56,12 +55,13 @@ class Engine:
         )
 
         self.full_prompt = PromptTemplate.from_template(
-            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
-            <|start_header_id|>Conversation Summary:<|end_header_id|> {{context}}<|eot_id|>
-            <|start_header_id|>Retrieved Information:<|end_header_id|> {{retrieved_docs}}<|eot_id|>
-             Use the above information to inform your response.<|eot_id|>
+            """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+            <|start_header_id|>Conversation Summary:<|end_header_id|> {context} Use above information to maintain the context<|eot_id|>
+            <|start_header_id|>Retrieved Information:<|end_header_id|> 
+            {retrieved_docs}
+            Use the above information to inform your response.<|eot_id|>
             <|start_header_id|>user<|end_header_id|>
-            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+            {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
             """
         )
 
@@ -112,10 +112,6 @@ class Engine:
         # Extract only the assistant's response
         assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
         print(f"Extracted assistant response: {assistant_response}")
-
-        if not assistant_response:
-            print("Empty response detected, using fallback")
-            assistant_response = "I apologize, but I couldn't generate a proper response. Could you please rephrase your question?"
 
         # Save the new message to chat manager
         self._save_message(chat_id, user_email, user_message, assistant_response)
