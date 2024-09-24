@@ -1,6 +1,5 @@
-from langchain_community.llms import HuggingFacePipeline
+from langchain_huggingface import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
-from langchain_core.runnables import RunnablePassthrough
 from langchain.memory import ConversationSummaryMemory
 from langchain_community.chat_message_histories import ChatMessageHistory
 from model import Model
@@ -55,13 +54,13 @@ class Engine:
         )
 
         self.full_prompt = PromptTemplate.from_template(
-            """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
-            <|start_header_id|>Conversation Summary:<|end_header_id|> {context} Use above information to maintain the context<|eot_id|>
+            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+            <|start_header_id|>Conversation Summary:<|end_header_id|> {{context}}Use above information to maintain the context<|eot_id|>
             <|start_header_id|>Retrieved Information:<|end_header_id|> 
-            {retrieved_docs}
+            {{retrieved_docs}}
             Use the above information to inform your response.<|eot_id|>
             <|start_header_id|>user<|end_header_id|>
-            {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
             """
         )
 
@@ -144,9 +143,7 @@ class Engine:
     def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
         chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
         
-        if not chat_history:
-            return ConversationSummaryMemory(llm=self.llm, max_token_limit=256)
-        else:
+        if chat_history:
             history = ChatMessageHistory()
             for message in chat_history:
                 if message["role"] == "user":
@@ -157,7 +154,7 @@ class Engine:
             return ConversationSummaryMemory.from_messages(
                 llm=self.llm,
                 chat_memory=history,
-                max_token_limit=256
+                return_messages=True
             )
 
     def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
