@@ -39,11 +39,8 @@ class Utils:
         
         config = Config()
         
-        # Create a Chroma client
-        chroma_client = chromadb.Client(Settings(
-            persist_directory=config.chroma_persist_directory,
-        ))
         
+        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory)
         try:
             # Initialize RAG
             rag = RAG(chroma_client)
