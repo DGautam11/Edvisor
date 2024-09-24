@@ -19,7 +19,7 @@ class Engine:
         self.model = Model()
         self.config = Config()
        # Create a single Chroma client
-        chroma_client = chromadb.PersistentClient(path=self.config.chroma_persist_directory,
+        self.chroma_client = chromadb.PersistentClient(path=self.config.chroma_persist_directory,
                                                   settings=Settings(),
                                                   tenant="edvisor",
                                                   database="edvisor")

@@ -54,6 +54,21 @@ class Utils:
             print(f"RAG database built successfully.")
             print(f"Vector store saved to {config.chroma_persist_directory}")
 
+            del chroma_client
+
+            
+        finally:
+
+            config = Config()
+
+            chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory,
+                                                  settings=Settings(),
+                                                  tenant="edvisor",
+                                                  database="edvisor")
+            
+            rag = RAG(chroma_client)
+           
+
             # Optionally, you can add some test queries here
             test_queries = [
                 "Why Finland?",
@@ -73,6 +88,4 @@ class Utils:
                     print(f"Content: {doc.page_content[:200]}...")
                     print("---")
 
-        finally:
-            print("Chroma client closed.")
-            del chroma_client
+            
