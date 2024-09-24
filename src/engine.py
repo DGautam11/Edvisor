@@ -66,23 +66,31 @@ class Engine:
         )
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
+        print(f"Generating response for user: {user_email}, message: {user_message}")
+        
         # Check if it's a new chat
         is_new_chat = len(self.chat_manager.get_chat_history(chat_id, user_email)) == 0
+        print(f"Is new chat: {is_new_chat}")
 
         # Check if the message is a greeting
         is_greeting = self._is_greeting(user_message)
+        print(f"Is greeting: {is_greeting}")
 
         if is_new_chat or is_greeting:
-            # For new chats or greetings, use a simplified prompt without context or RAG
+            print("Using greeting prompt")
             chain = self.greeting_prompt | self.llm
             full_response = chain.invoke({"user_query": user_message})
         else:
-            # For ongoing conversations, use the full context and RAG
+            print("Using full prompt with RAG")
             memory = self._load_chat_history(chat_id, user_email)
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
-            print(f"retrieved_docs_text:{retrieved_docs_text}")
+            print(f"Retrieved docs: {retrieved_docs_text}")
             
+            if not retrieved_docs_text.strip():
+                print("No relevant documents found, using fallback")
+                retrieved_docs_text = "No specific information found. Using general knowledge about studying in Finland."
+
             max_tokens = self.config.max_context_length
             system_prompt_tokens = len(self.tokenizer.encode(self._system_prompt))
             user_message_tokens = len(self.tokenizer.encode(user_message))
@@ -90,7 +98,7 @@ class Engine:
             available_context_tokens = max_tokens - system_prompt_tokens - user_message_tokens - retrieved_docs_tokens - 100
 
             truncated_context = self._truncate_context(memory.buffer, available_context_tokens)
-            print(f"truncated_context:{truncated_context}")
+            print(f"Truncated context: {truncated_context}")
 
             chain = self.full_prompt | self.llm
             full_response = chain.invoke({
@@ -99,9 +107,16 @@ class Engine:
                 "user_query": user_message
             })
 
+        print(f"Full response from model: {full_response}")
+
         # Extract only the assistant's response
         assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
-        print(f"assistant_response:{assistant_response}")
+        print(f"Extracted assistant response: {assistant_response}")
+
+        if not assistant_response:
+            print("Empty response detected, using fallback")
+            assistant_response = "I apologize, but I couldn't generate a proper response. Could you please rephrase your question?"
+
         # Save the new message to chat manager
         self._save_message(chat_id, user_email, user_message, assistant_response)
 
