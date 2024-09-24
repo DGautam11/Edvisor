@@ -40,7 +40,10 @@ class Utils:
         config = Config()
         
         
-        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory)
+        chroma_client = chromadb.PersistentClient(path=config.chroma_persist_directory,
+                                                  settings=Settings(),
+                                                  tenant="edvisor",
+                                                  database="edvisor")
         try:
             # Initialize RAG
             rag = RAG(chroma_client)

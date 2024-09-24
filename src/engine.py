@@ -19,7 +19,10 @@ class Engine:
         self.model = Model()
         self.config = Config()
        # Create a single Chroma client
-        self.chroma_client = chromadb.PersistentClient(path=self.config.chroma_persist_directory)
+        chroma_client = chromadb.PersistentClient(path=self.config.chroma_persist_directory,
+                                                  settings=Settings(),
+                                                  tenant="edvisor",
+                                                  database="edvisor")
 
         # Initialize ChatManager and RAG with the same Chroma client
         self.chat_manager = ChatManager(self.chroma_client)
