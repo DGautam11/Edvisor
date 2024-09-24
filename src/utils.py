@@ -87,5 +87,7 @@ class Utils:
                     print(f"Similarity Score: {doc.metadata['similarity_score']:.4f}")
                     print(f"Content: {doc.page_content[:200]}...")
                     print("---")
+            
+            del chroma_client
 
             
