@@ -71,6 +71,7 @@ class Engine:
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
             context = memory.buffer
+            print(context)
             print(retrieved_docs_text)
             
 
