@@ -28,7 +28,6 @@ class Engine:
     
     def _setup_llm(self):
         model, tokenizer = self.model.get_model_tokenizer()
-        self.tokenizer = tokenizer
         hf_pipeline = pipeline(
             "text-generation",
             model=model,
@@ -46,7 +45,6 @@ class Engine:
         If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
         For simple greetings, respond politely and briefly."""
 
-        self.llm_engine = ChatHuggingFace(llm=self.llm)
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
         print(f"Generating response for user: {user_email}, message: {user_message}")
@@ -76,7 +74,7 @@ class Engine:
         print(f"Generated messages: {messages}")
 
         # Generate response
-        response = self.llm_engine.invoke(messages)
+        response = self.llm.invoke(messages)
         print(f"Full response from model: {response}")
 
         assistant_response = response.content
