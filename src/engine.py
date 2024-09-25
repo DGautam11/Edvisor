@@ -82,7 +82,7 @@ class Engine:
         response = self.llm.invoke(messages)
         print(f"Full response from model: {response}")
 
-        assistant_response = response[0][-1]
+        assistant_response = response.split("Human")[-1].split("System:")[-1].strip()
         print(f"Extracted assistant response: {assistant_response}")
 
         # Save the new message to chat manager
