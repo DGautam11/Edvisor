@@ -8,9 +8,7 @@ from rag import RAG
 from transformers import pipeline
 from typing import List, Dict
 from langchain.docstore.document import Document
-import re
 import chromadb
-from chromadb.config import Settings
 from config import Config   
 
 class Engine:
