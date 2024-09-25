@@ -1,7 +1,7 @@
-from langchain_huggingface import HuggingFacePipeline
-from langchain.prompts import PromptTemplate
+from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from langchain.memory import ConversationSummaryMemory
 from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.messages import HumanMessage, SystemMessage,AImessage
 from model import Model
 from chat_manager import ChatManager
 from rag import RAG
@@ -46,71 +46,43 @@ class Engine:
         If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
         For simple greetings, respond politely and briefly."""
 
-        self.greeting_prompt = PromptTemplate.from_template(
-            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
-            <|start_header_id|>user<|end_header_id|>
-            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-            """
-        )
-
-        self.full_prompt = PromptTemplate.from_template(
-            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
-            <|start_header_id|>Conversation Summary:<|end_header_id|> {{context}}Use above information to maintain the context<|eot_id|>
-            <|start_header_id|>Retrieved Information:<|end_header_id|> 
-            {{retrieved_docs}}
-            Use the above information to inform your response.<|eot_id|>
-            <|start_header_id|>user<|end_header_id|>
-            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-            """
-        )
+        self.llm_engine = ChatHuggingFace(llm=self.llm)
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
         print(f"Generating response for user: {user_email}, message: {user_message}")
-        
-        # Check if it's a new chat
-        is_new_chat = len(self.chat_manager.get_chat_history(chat_id, user_email)) == 0
-        print(f"Is new chat: {is_new_chat}")
 
-        # Check if the message is a greeting
         is_greeting = self._is_greeting(user_message)
         print(f"Is greeting: {is_greeting}")
 
-        if is_new_chat or is_greeting:
-            print("Using greeting prompt")
-            chain = self.greeting_prompt | self.llm
-            full_response = chain.invoke({"user_query": user_message})
-        else:
+        messages = [SystemMessage(content=self._system_prompt)]
+
+        if not is_greeting :
             print("Using full prompt with RAG")
             memory = self._load_chat_history(chat_id, user_email)
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
             print(f"Retrieved docs: {retrieved_docs_text}")
-            
-            if not retrieved_docs_text.strip():
-                print("No relevant documents found, using fallback")
-                retrieved_docs_text = "No specific information found. Using general knowledge about studying in Finland."
 
-            max_tokens = self.config.max_context_length
-            system_prompt_tokens = len(self.tokenizer.encode(self._system_prompt))
-            user_message_tokens = len(self.tokenizer.encode(user_message))
-            retrieved_docs_tokens = len(self.tokenizer.encode(retrieved_docs_text))
-            available_context_tokens = max_tokens - system_prompt_tokens - user_message_tokens - retrieved_docs_tokens - 100
+            context_message = f" Use below information to maintain the context. \n Conversation Summary: {memory.buffer}"
+            retrieved_docs_message = f" Use the below information to inform your response.Retrieved Information:\n{retrieved_docs_text}"
 
-            truncated_context = self._truncate_context(memory.buffer, available_context_tokens)
-            print(f"Truncated context: {truncated_context}")
+            messages.extend([
+                SystemMessage(content=context_message),
+                SystemMessage(content=retrieved_docs_message),
+            ])
 
-            chain = self.full_prompt | self.llm
-            full_response = chain.invoke({
-                "context": truncated_context,
-                "retrieved_docs": retrieved_docs_text,
-                "user_query": user_message
-            })
+        messages.append(HumanMessage(content=user_message))
 
-        print(f"Full response from model: {full_response}")
+        print(f"Generated messages: {messages}")
 
-        # Extract only the assistant's response
-        assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
+        # Generate response
+        response = self.llm_engine.invoke(messages)
+        print(f"Full response from model: {response}")
+
+        assistant_response = response.content
         print(f"Extracted assistant response: {assistant_response}")
+
+
 
         # Save the new message to chat manager
         self._save_message(chat_id, user_email, user_message, assistant_response)
@@ -132,13 +104,6 @@ class Engine:
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
         return "\n".join([doc.page_content for doc in docs])
 
-    def _truncate_context(self, context: str, max_tokens: int) -> str:
-        encoded_context = self.tokenizer.encode(context)
-        if len(encoded_context) <= max_tokens:
-            return context
-        
-        truncated_encoded = encoded_context[-max_tokens:]
-        return self.tokenizer.decode(truncated_encoded)
 
     def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
         chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
