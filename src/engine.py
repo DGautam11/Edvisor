@@ -1,7 +1,7 @@
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from langchain.memory import ConversationSummaryMemory
 from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_core.messages import HumanMessage, SystemMessage,AImessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from model import Model
 from chat_manager import ChatManager
 from rag import RAG
