@@ -43,7 +43,7 @@ class Engine:
         self._system_prompt = """You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
             Follow these rules strictly:
             1. Provide helpful and accurate information only about studying in Finland, Finnish education system, and student visas.
-            2. Respond directly to the user's query or greeting without generating additional questions.
+            2. Respond directly to the user's query or greeting without generating additional context to questions.
             3. For greetings or general inquiries, respond politely and briefly, then ask how you can assist with information about studying in Finland.
             4. If you don't know the answer, politely inform the user that you are unable to assist with that specific query.
             5. If the query is not related to studying in Finland or Finnish student visas, politely inform the user that you can only assist with these topics.
@@ -84,8 +84,6 @@ class Engine:
 
         assistant_response = response[0][-1]
         print(f"Extracted assistant response: {assistant_response}")
-
-
 
         # Save the new message to chat manager
         self._save_message(chat_id, user_email, user_message, assistant_response)
