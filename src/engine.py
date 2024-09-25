@@ -41,9 +41,14 @@ class Engine:
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
 
         self._system_prompt = """You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
-        Provide helpful and accurate information only about studying in Finland, Finnish education system, student visas. If you don't know the answer, politely inform the user that you are unable to assist with the query.
-        If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
-        For simple greetings, respond politely and briefly."""
+            Follow these rules strictly:
+            1. Provide helpful and accurate information only about studying in Finland, Finnish education system, and student visas.
+            2. Respond directly to the user's query or greeting without generating additional questions.
+            3. For greetings or general inquiries, respond politely and briefly, then ask how you can assist with information about studying in Finland.
+            4. If you don't know the answer, politely inform the user that you are unable to assist with that specific query.
+            5. If the query is not related to studying in Finland or Finnish student visas, politely inform the user that you can only assist with these topics.
+            6. Always maintain a helpful and friendly tone, but focus on providing information rather than engaging in open-ended conversation.
+            Remember, your primary function is to provide information about studying in Finland and related visa processes."""
 
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
@@ -61,7 +66,7 @@ class Engine:
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
             print(f"Retrieved docs: {retrieved_docs_text}")
 
-            context_message = f" Use below information to maintain the context. \n Conversation Summary: {memory.buffer}"
+            context_message = f" Use below conversation summary to maintain the context. \n Conversation Summary: {memory.buffer}"
             retrieved_docs_message = f" Use the below information to inform your response.Retrieved Information:\n{retrieved_docs_text}"
 
             messages.extend([
@@ -106,7 +111,7 @@ class Engine:
     def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
         chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
         
-        if chat_history:
+        if len(chat_history) > 0:
             history = ChatMessageHistory()
             for message in chat_history:
                 if message["role"] == "user":
