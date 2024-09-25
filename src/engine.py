@@ -1,7 +1,8 @@
-from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
+from langchain_community.llms import HuggingFacePipeline
+from langchain.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 from langchain.memory import ConversationSummaryMemory
 from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_core.messages import HumanMessage, SystemMessage
 from model import Model
 from chat_manager import ChatManager
 from rag import RAG
@@ -28,6 +29,7 @@ class Engine:
     
     def _setup_llm(self):
         model, tokenizer = self.model.get_model_tokenizer()
+        self.tokenizer = tokenizer
         hf_pipeline = pipeline(
             "text-generation",
             model=model,
@@ -41,49 +43,62 @@ class Engine:
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
 
         self._system_prompt = """You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
-            Follow these rules strictly:
-            1. Provide helpful and accurate information only about studying in Finland, Finnish education system, and student visas.
-            2. Respond directly to the user's query or greeting without generating additional context to questions.
-            3. For greetings or general inquiries, respond politely and briefly, then ask how you can assist with information about studying in Finland.
-            4. If you don't know the answer, politely inform the user that you are unable to assist with that specific query.
-            5. If the query is not related to studying in Finland or Finnish student visas, politely inform the user that you can only assist with these topics.
-            6. Always maintain a helpful and friendly tone, but focus on providing information rather than engaging in open-ended conversation.
-            Remember, your primary function is to provide information about studying in Finland and related visa processes."""
+        Provide helpful and accurate information only about studying in Finland, Finnish education system, student visas, and living in Finland as a student. 
+        Use the conversation summary and retrieved documents to inform your responses and maintain context. If you don't know the answer, politely inform the user that you are unable to assist with the query.
+        If the query is not related to these topics, politely inform the user that you can only assist with Finland study and visa related queries.
+        For simple greetings, respond politely and briefly."""
 
+        self.greeting_prompt = PromptTemplate.from_template(
+            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+            <|start_header_id|>user<|end_header_id|>
+            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+            """
+        )
+
+        self.full_prompt = PromptTemplate.from_template(
+            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+            <|start_header_id|>Conversation Summary:<|end_header_id|> {{context}}<|eot_id|>
+            <|start_header_id|>Retrieved Information:<|end_header_id|> {{retrieved_docs}}<|eot_id|>
+            <|start_header_id|>user<|end_header_id|>
+            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+            """
+        )
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
-        print(f"Generating response for user: {user_email}, message: {user_message}")
+        # Check if it's a new chat
+        is_new_chat = len(self.chat_manager.get_chat_history(chat_id, user_email)) == 0
 
+        # Check if the message is a greeting
         is_greeting = self._is_greeting(user_message)
-        print(f"Is greeting: {is_greeting}")
 
-        messages = [SystemMessage(content=self._system_prompt)]
-
-        if not is_greeting :
-            print("Using full prompt with RAG")
+        if is_new_chat or is_greeting:
+            # For new chats or greetings, use a simplified prompt without context or RAG
+            chain = self.greeting_prompt | self.llm
+            full_response = chain.invoke({"user_query": user_message})
+        else:
+            # For ongoing conversations, use the full context and RAG
             memory = self._load_chat_history(chat_id, user_email)
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
-            print(f"Retrieved docs: {retrieved_docs_text}")
+            print(retrieved_docs_text)
+            
+            max_tokens = self.config.max_context_length
+            system_prompt_tokens = len(self.tokenizer.encode(self._system_prompt))
+            user_message_tokens = len(self.tokenizer.encode(user_message))
+            retrieved_docs_tokens = len(self.tokenizer.encode(retrieved_docs_text))
+            available_context_tokens = max_tokens - system_prompt_tokens - user_message_tokens - retrieved_docs_tokens - 100
 
-            context_message = f" Use below conversation summary to maintain the context. \n Conversation Summary: {memory.buffer}"
-            retrieved_docs_message = f" Use the below information to inform your response.Retrieved Information:\n{retrieved_docs_text}"
+            truncated_context = self._truncate_context(memory.buffer, available_context_tokens)
 
-            messages.extend([
-                SystemMessage(content=context_message),
-                SystemMessage(content=retrieved_docs_message),
-            ])
+            chain = self.full_prompt | self.llm
+            full_response = chain.invoke({
+                "context": truncated_context,
+                "retrieved_docs": retrieved_docs_text,
+                "user_query": user_message
+            })
 
-        messages.append(HumanMessage(content=user_message))
-
-        print(f"Generated messages: {messages}")
-
-        # Generate response
-        response = self.llm.invoke(messages)
-        print(f"Full response from model: {response}")
-
-        assistant_response = response.split("Human")[-1].split("System:")[-1].strip()
-        print(f"Extracted assistant response: {assistant_response}")
+        # Extract only the assistant's response
+        assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
 
         # Save the new message to chat manager
         self._save_message(chat_id, user_email, user_message, assistant_response)
@@ -103,13 +118,22 @@ class Engine:
         return any(re.search(pattern, message_lower) for pattern in greeting_patterns)
 
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
-        return "\n".join([doc.page_content for doc in docs])
+        return " ".join([doc.page_content for doc in docs])
 
+    def _truncate_context(self, context: str, max_tokens: int) -> str:
+        encoded_context = self.tokenizer.encode(context)
+        if len(encoded_context) <= max_tokens:
+            return context
+        
+        truncated_encoded = encoded_context[-max_tokens:]
+        return self.tokenizer.decode(truncated_encoded)
 
     def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
         chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
         
-        if len(chat_history) > 0:
+        if not chat_history:
+            return ConversationSummaryMemory(llm=self.llm, max_token_limit=256)
+        else:
             history = ChatMessageHistory()
             for message in chat_history:
                 if message["role"] == "user":
@@ -120,7 +144,7 @@ class Engine:
             return ConversationSummaryMemory.from_messages(
                 llm=self.llm,
                 chat_memory=history,
-                return_messages=True
+                max_token_limit=256
             )
 
     def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
