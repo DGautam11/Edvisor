@@ -10,6 +10,7 @@ from typing import List, Dict
 from langchain.docstore.document import Document
 import chromadb
 from config import Config   
+import re
 
 class Engine:
     def __init__(self):
@@ -50,7 +51,7 @@ class Engine:
                 For off-topic queries, politely inform the user that you specialize in Finland study and visa services.
                 """
 
-        self.full_prompt = PromptTemplate.from_template(
+        self.full_prompt = PromptTemplate.from_template (
             f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
             <|start_header_id|>Use the following conversation summary to maintain context in your responses (if available):<|end_header_id|> 
             {{context}}<|eot_id|>
@@ -58,10 +59,49 @@ class Engine:
             {{retrieved_docs}}<|eot_id|>
             <|start_header_id|>user<|end_header_id|>
             {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-            """
-        )
+            """ )
+        
+    def _is_greeting(self, message: str) -> bool:
+  
+        greeting_patterns = [
+            r'\b(hello|hi|hey|greetings)\b',         # Simple greetings
+            r'\b(good\s(morning|afternoon|evening))\b',  # Time-specific greetings
+            r'\bhow\s(are\syou|is\sit\sgoing)\b',    # Common follow-up questions
+            r'\bwhat\'s\sup\b',
+            r'\bnice\sto\smeet\syou\b'
+        ]
+    
+        message_lower = message.lower()
+        return any(re.search(pattern, message_lower) for pattern in greeting_patterns)
+    
+    def _greeting_chain(self):
+        self.greeting_prompt = PromptTemplate.from_template(
+        """
+        <|begin_of_text|><|start_header_id|>system<|end_header_id|>
+        You are a friendly and polite assistant. The user has just greeted you. 
+        Respond with a friendly and polite greeting message, offering your assistance in a helpful manner.
+        <|eot_id|><|start_header_id|>user<|end_header_id|>
+        {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+        """
+    )
+        chain = self.greeting_prompt | self.llm
+        return chain
+       
+        
+    
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
+            
+            # Check if the message is a greeting
+            if self._is_greeting(user_message):
+                chain = self._greeting_chain()
+                response = chain.invoke({
+                    "user_query": user_message
+                })
+                assistant_response = self._extract_assistant_response(response)
+                self._save_message(chat_id, user_email, user_message, assistant_response)
+                return assistant_response
+
             
             # For ongoing conversations, use the full context and RAG
             memory = self._load_chat_history(chat_id, user_email)
@@ -81,7 +121,7 @@ class Engine:
             })
 
             # Extract only the assistant's response
-            assistant_response = full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
+            assistant_response = self._extract_assistant_response(full_response)
 
             # Save the new message to chat manager
             self._save_message(chat_id, user_email, user_message, assistant_response)
@@ -92,6 +132,10 @@ class Engine:
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
         return " ".join([doc.page_content for doc in docs])
 
+    def _extract_assistant_response(self, full_response: str) -> str:
+        """Extracts the assistant's response from the full LLM output."""
+        return full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
+    
 
     def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
         chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
