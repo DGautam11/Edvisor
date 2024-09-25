@@ -77,7 +77,7 @@ class Engine:
         response = self.llm.invoke(messages)
         print(f"Full response from model: {response}")
 
-        assistant_response = response.content
+        assistant_response = response[0]["generated_text"][-1]
         print(f"Extracted assistant response: {assistant_response}")
 
 
