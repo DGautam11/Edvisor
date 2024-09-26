@@ -24,6 +24,7 @@ class Engine:
         self.rag = RAG(self.chroma_client)
         
         self._setup_llm()
+        self._setup_memory()
     
     def _setup_llm(self):
         model, tokenizer = self.model.get_model_tokenizer()
@@ -39,8 +40,12 @@ class Engine:
             eos_token_id=tokenizer.eos_token_id
         )
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
+    
+    def _setup_memory(self):
+        self._setup_memory = ConversationSummaryMemory(llm=self.llm, return_messages=True)
 
-        self._system_prompt = """
+    def _system_prompt(self):
+        return """
                 You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
                 Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student. 
                 If a conversation summary is provided, use it to maintain context from the user's previous questions and answers, to avoid redundancy, and to provide more personalized responses.
@@ -50,16 +55,6 @@ class Engine:
                 Respond concisely and politely to simple greetings.
                 For off-topic queries, politely inform the user that you specialize in Finland study and visa services.
                 """
-
-        self.full_prompt = PromptTemplate.from_template (
-            f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
-            <|start_header_id|>Use the following conversation summary to maintain context in your responses (if available):<|end_header_id|> 
-            {{context}}<|eot_id|>
-            <|start_header_id|>Use the following retrieved information to provide accurate and up-to-date responses (if available):<|end_header_id|> 
-            {{retrieved_docs}}<|eot_id|>
-            <|start_header_id|>user<|end_header_id|>
-            {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-            """ )
         
     def _is_greeting(self, message: str) -> bool:
   
@@ -75,17 +70,26 @@ class Engine:
         return any(re.search(pattern, message_lower) for pattern in greeting_patterns)
     
     def _greeting_chain(self):
-        self.greeting_prompt = PromptTemplate.from_template(
+        greeting_prompt = PromptTemplate.from_template(
         """
         <|begin_of_text|><|start_header_id|>system<|end_header_id|>
-        You are a friendly and polite assistant. The user has just greeted you. 
+        You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
+        Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student.. The user has just greeted you. 
         Respond with a friendly and polite greeting message, offering your assistance in a helpful manner.
         <|eot_id|><|start_header_id|>user<|end_header_id|>
         {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
         """
     )
-        chain = self.greeting_prompt | self.llm
+        chain = greeting_prompt | self.llm
         return chain
+    
+    def _handle_greeting(self, user_message: str)-> str:
+        chain = self._greeting_chain()
+        response = chain.invoke({
+            "user_query": user_message
+        })
+        assistant_response = self._extract_assistant_response(response)
+        return assistant_response
        
         
     
@@ -96,32 +100,41 @@ class Engine:
             
             # Check if the message is a greeting
             if self._is_greeting(user_message):
-                chain = self._greeting_chain()
-                response = chain.invoke({
-                    "user_query": user_message
-                })
-                assistant_response = self._extract_assistant_response(response)
+                assistant_response = self._handle_greeting(user_message)
                 self._save_message(chat_id, user_email, user_message, assistant_response)
                 print(f"assistant response: {assistant_response}")
                 return assistant_response
-                
-
             
-            # For ongoing conversations, use the full context and RAG
-            context = self._load_chat_history(chat_id, user_email)
+            # Load chat history and update memory
+            chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
+            if len(chat_history) > 0:
+                prev_conversation_summary = self._get_conversation_summary(chat_history)
+            else:
+                prev_conversation_summary = "No previous conversation"
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
-            retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
-            print(context)
-            print(retrieved_docs_text)
-            
+            retrieved_docs_content = self._prepare_retrieved_docs(retrieved_docs)
+            print(f"Previous conversation summary: {prev_conversation_summary}")
+            print(f"Retrieved documents: {retrieved_docs_content}")
 
-            chain = self.full_prompt | self.llm
+            
+            prompt = PromptTemplate.from_template (
+                f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+                <|start_header_id|>Use the following previous conversation summary to maintain context in your responses (if available):<|end_header_id|> 
+                {{previous_conversation_summary}}<|eot_id|>
+                <|start_header_id|>Use the following retrieved information to provide accurate and up-to-date responses (if available):<|end_header_id|> 
+                {{retrieved_docs}}<|eot_id|>
+                <|start_header_id|>user<|end_header_id|>
+                {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+                """ )
+            
+            chain = prompt | self.llm
 
             full_response = chain.invoke({
-                "context": context,
-                "retrieved_docs": retrieved_docs_text,
+                "previous_conversation_summary": prev_conversation_summary,
+                "retrieved_docs": retrieved_docs_content,
                 "user_query": user_message
             })
+            print(f"full response: {full_response}")
 
             # Extract only the assistant's response
             assistant_response = self._extract_assistant_response(full_response)
@@ -132,31 +145,29 @@ class Engine:
             print(f"assistant response: {assistant_response}")
 
             return assistant_response
+    
+    def _get_conversation_summary(self, chat_history: List[Dict[str, str]]) -> str:
+        # clear the existing memory
+        self.memory.clear()
+        #Populate the memory with the chat history
+        for i in range(0, len(chat_history), 2):
+            if i+1 < len(chat_history):
+                user_message = chat_history[i]["content"]
+                assistant_message = chat_history[i+1]["content"]
+                self.memory.save_context({"input": user_message, "output": assistant_message})
 
+
+        # Get the conversation summary
+        memory_variables = self.memory.load_memory_variables({})
+        return memory_variables.get("history","")
 
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
-        return " ".join([doc.page_content for doc in docs])
+        return "\n".join([doc.page_content for doc in docs])
 
     def _extract_assistant_response(self, full_response: str) -> str:
         """Extracts the assistant's response from the full LLM output."""
         return full_response.split("<|start_header_id|>assistant<|end_header_id|>")[-1].split("<|eot_id|>")[0].strip()
-    
 
-    def _load_chat_history(self, chat_id: str, user_email: str) -> ConversationSummaryMemory:
-        chat_history: List[Dict[str, str]] = self.chat_manager.get_chat_history(chat_id, user_email)
-        history = ChatMessageHistory()
-        for message in chat_history:
-            if message["role"] == "user":
-                history.add_user_message(message["content"])
-            elif message["role"] == "assistant":
-                history.add_ai_message(message["content"])
-
-        memory = ConversationSummaryMemory.from_messages(
-                llm=self.llm,
-                chat_memory=history,
-                return_messages=True
-        )
-        return memory.buffer
 
     def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
         self.chat_manager.add_message(chat_id, "user", user_message, user_email)

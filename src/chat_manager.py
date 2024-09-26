@@ -78,10 +78,10 @@ class ChatManager:
                 include=['metadatas', 'documents']
                 )
             messages = [
-                {"role": meta['role'], "content": doc}
+                {"role": meta['role'], "content": doc,"created_at": meta['created_at']}
                 for meta, doc in zip(results['metadatas'], results['documents'])
                 ]
-            sorted_messages = sorted(messages, key=lambda x: x['metadatas']['created_at'])
+            sorted_messages = sorted(messages, key=lambda x: x['created_at'])
 
             self.active_chats[chat_id] = ChatData(messages=sorted_messages)
 
