@@ -33,7 +33,7 @@ class Engine:
             "text-generation",
             model=model,
             tokenizer=tokenizer,
-            max_new_tokens=256,
+            max_new_tokens=1024,
             temperature=0.7,
             top_p=0.9,
             do_sample=True,
@@ -44,15 +44,16 @@ class Engine:
     
     def _system_prompt(self):
         return """
-                You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
-                Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student. 
-                If a conversation summary is provided, use it to maintain context from the user's previous questions and answers, to avoid redundancy, and to provide more personalized responses.
-                If retrieved information is available, incorporate it into your response to ensure the latest data or facts are used. 
-                Always prioritize accuracy and clarity in your answers, especially when providing information about visa policies, deadlines, or documentation.
-                If unsure or the information is unavailable, direct users to trusted sources such as the Finnish Immigration Service or university websites.
-                Respond concisely and politely to simple greetings.
-                For off-topic queries, politely inform the user that you specialize in Finland study and visa services.
-                """
+            You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
+            Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student. 
+            Always respond to user queries, even if they are complex or require detailed information.
+            If a conversation summary is provided, use it to maintain context from the user's previous questions and answers, to avoid redundancy, and to provide more personalized responses.
+            If retrieved information is available, incorporate it into your response to ensure the latest data or facts are used. 
+            Always prioritize accuracy and clarity in your answers, especially when providing information about visa policies, deadlines, or documentation.
+            If unsure or the information is unavailable, say so and suggest where the user might find more information.
+            Respond concisely to simple greetings, but provide detailed answers to complex questions about studying in Finland.
+            For off-topic queries, politely inform the user that you specialize in Finland study and visa services, but still attempt to provide a helpful response.
+            """
         
     def _is_greeting(self, message: str) -> bool:
   
@@ -75,7 +76,7 @@ class Engine:
         Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student.. The user has just greeted you. 
         Respond with a friendly and polite greeting message, offering your assistance in a helpful manner.
         <|eot_id|><|start_header_id|>user<|end_header_id|>
-        {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+        {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
         """
     )
         chain = greeting_prompt | self.llm
@@ -118,18 +119,19 @@ class Engine:
 
             
             prompt = PromptTemplate.from_template (
-                f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>{self._system_prompt}<|eot_id|>
+                """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}<|eot_id|>
                 <|start_header_id|>Use the following previous conversation summary to maintain context in your responses (if available):<|end_header_id|> 
-                {{previous_conversation_summary}}<|eot_id|>
+                {previous_conversation_summary}<|eot_id|>
                 <|start_header_id|>Use the following retrieved information to provide accurate and up-to-date responses (if available):<|end_header_id|> 
-                {{retrieved_docs}}<|eot_id|>
+                {retrieved_docs}<|eot_id|>
                 <|start_header_id|>user<|end_header_id|>
-                {{user_query}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+                {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
                 """ )
             
             chain = prompt | self.llm
 
             full_response = chain.invoke({
+                "system_prompt": self._system_prompt(),
                 "previous_conversation_summary": prev_conversation_summary,
                 "retrieved_docs": retrieved_docs_content,
                 "user_query": user_message
