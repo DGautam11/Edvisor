@@ -96,7 +96,7 @@ class Engine:
             
             print(f"User message: {user_message}")
 
-            memory = self._get_or_create_meemory(chat_id,user_email)
+            memory = self._get_or_create_memory(chat_id,user_email)
             
             # Check if the message is a greeting
             if self._is_greeting(user_message):
@@ -108,7 +108,7 @@ class Engine:
                 return assistant_response
             
             # Load chat history and update memory
-            prev_conversation_summary = memory.buffer()
+            prev_conversation_summary = memory.buffer
 
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_content = self._prepare_retrieved_docs(retrieved_docs)
@@ -147,7 +147,7 @@ class Engine:
 
             return assistant_response
     
-    def _get_or_create_meemory(self,chat_id:str,user_email:str)->ConversationSummaryMemory:
+    def _get_or_create_memory(self,chat_id:str,user_email:str)->ConversationSummaryMemory:
         if chat_id not in self.chat_memories:
            chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
            history = ChatMessageHistory()
