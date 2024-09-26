@@ -24,7 +24,7 @@ class Engine:
         self.rag = RAG(self.chroma_client)
         
         self._setup_llm()
-        self._setup_memory()
+        self.chat_memories = {}
     
     def _setup_llm(self):
         model, tokenizer = self.model.get_model_tokenizer()
@@ -40,11 +40,8 @@ class Engine:
             eos_token_id=tokenizer.eos_token_id
         )
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
-        self.memory = self._setup_memory()
+        
     
-    def _setup_memory(self):
-        return ConversationSummaryMemory(llm=self.llm, return_messages=True)
-
     def _system_prompt(self):
         return """
                 You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
@@ -98,11 +95,15 @@ class Engine:
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
             
             print(f"User message: {user_message}")
+
+            memory = self._get_or_create_meemory(chat_id,user_email)
             
             # Check if the message is a greeting
             if self._is_greeting(user_message):
                 assistant_response = self._handle_greeting(user_message)
                 self._save_message(chat_id, user_email, user_message, assistant_response)
+                # Update the memory with the new interaction
+                memory.save_context({"input": user_message}, {"output": assistant_response})
                 print(f"assistant response: {assistant_response}")
                 return assistant_response
             
@@ -142,25 +143,27 @@ class Engine:
 
             # Save the new message to chat manager
             self._save_message(chat_id, user_email, user_message, assistant_response)
+            memory.save_context({"input": user_message}, {"output": assistant_response})
 
             print(f"assistant response: {assistant_response}")
 
             return assistant_response
     
-    def _get_conversation_summary(self, chat_history: List[Dict[str, str]]) -> str:
-        # clear the existing memory
-        self.memory.clear()
-        #Populate the memory with the chat history
-        for i in range(0, len(chat_history), 2):
-            if i+1 < len(chat_history):
-                user_message = chat_history[i]["content"]
-                assistant_message = chat_history[i+1]["content"]
-                self.memory.save_context({"input": user_message, "output": assistant_message})
-
-
-        # Get the conversation summary
-        memory_variables = self.memory.load_memory_variables({})
-        return memory_variables.get("history","")
+    def _get_or_create_meemory(self,chat_id:str,user_email:str)->ConversationSummaryMemory:
+        if chat_id not in self.chat_memories:
+           chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
+           history = ChatMessageHistory(chat_history)
+           for message in chat_history:
+               if message["role"] == "user":
+                   history.add_user_message(message["content"])
+               elif message["role"] == "assistant":
+                    history.add_assistant_message(message["content"])
+           self .chat_memories[chat_id] = ConversationSummaryMemory.from_messages(
+                llm = self.llm,
+                messages = history,
+                return_messages = True
+            )
+        return self.chat_memories[chat_id]
 
     def _prepare_retrieved_docs(self, docs: List[Document]) -> str:
         return "\n".join([doc.page_content for doc in docs])
