@@ -153,11 +153,12 @@ class Engine:
         if chat_id not in self.chat_memories:
            chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
            history = ChatMessageHistory()
-           for message in chat_history:
-               if message["role"] == "user":
-                   history.add_user_message(message["content"])
-               elif message["role"] == "assistant":
-                    history.add_assistant_message(message["content"])
+           if chat_history:
+               for message in chat_history:
+                   if message["role"] == "user":
+                       history.add_user_message(message["content"])
+                   elif message["role"] == "assistant":
+                        history.add_assistant_message(message["content"])
            self .chat_memories[chat_id] = ConversationSummaryMemory.from_messages(
                 llm = self.llm,
                 chat_memory = history,
