@@ -152,7 +152,7 @@ class Engine:
     def _get_or_create_meemory(self,chat_id:str,user_email:str)->ConversationSummaryMemory:
         if chat_id not in self.chat_memories:
            chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
-           history = ChatMessageHistory(chat_history)
+           history = ChatMessageHistory()
            for message in chat_history:
                if message["role"] == "user":
                    history.add_user_message(message["content"])
