@@ -40,9 +40,10 @@ class Engine:
             eos_token_id=tokenizer.eos_token_id
         )
         self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
+        self.memory = self._setup_memory()
     
     def _setup_memory(self):
-        self._setup_memory = ConversationSummaryMemory(llm=self.llm, return_messages=True)
+        return ConversationSummaryMemory(llm=self.llm, return_messages=True)
 
     def _system_prompt(self):
         return """
