@@ -160,7 +160,7 @@ class Engine:
                     history.add_assistant_message(message["content"])
            self .chat_memories[chat_id] = ConversationSummaryMemory.from_messages(
                 llm = self.llm,
-                messages = history,
+                chat_memory = history,
                 return_messages = True
             )
         return self.chat_memories[chat_id]
