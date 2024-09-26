@@ -108,13 +108,11 @@ class Engine:
                 return assistant_response
             
             # Load chat history and update memory
-            chat_history = self.chat_manager.get_chat_history(chat_id, user_email)
-            if len(chat_history) > 0:
-                prev_conversation_summary = self._get_conversation_summary(chat_history)
-            else:
-                prev_conversation_summary = "No previous conversation"
+            prev_conversation_summary = memory.buffer()
+
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_content = self._prepare_retrieved_docs(retrieved_docs)
+
             print(f"Previous conversation summary: {prev_conversation_summary}")
             print(f"Retrieved documents: {retrieved_docs_content}")
 
