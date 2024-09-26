@@ -41,8 +41,6 @@ class Config:
 
     oauth_credentials_file: str = "oauth_credentials.json"
 
-    chroma_db_backup_path:str = "/content/drive/MyDrive/Edvisor/ChromaDB_Backup"
-
 
     def __post_init__(self):
         """

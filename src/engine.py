@@ -92,6 +92,8 @@ class Engine:
 
     def generate_response(self, chat_id: str, user_email: str, user_message: str):
             
+            print(f"User message: {user_message}")
+            
             # Check if the message is a greeting
             if self._is_greeting(user_message):
                 chain = self._greeting_chain()
@@ -100,14 +102,15 @@ class Engine:
                 })
                 assistant_response = self._extract_assistant_response(response)
                 self._save_message(chat_id, user_email, user_message, assistant_response)
+                print(f"assistant response: {assistant_response}")
                 return assistant_response
+                
 
             
             # For ongoing conversations, use the full context and RAG
-            memory = self._load_chat_history(chat_id, user_email)
+            context = self._load_chat_history(chat_id, user_email)
             retrieved_docs = self.rag.query_vector_store(user_message, k=2)
             retrieved_docs_text = self._prepare_retrieved_docs(retrieved_docs)
-            context = memory.buffer
             print(context)
             print(retrieved_docs_text)
             
@@ -125,6 +128,8 @@ class Engine:
 
             # Save the new message to chat manager
             self._save_message(chat_id, user_email, user_message, assistant_response)
+
+            print(f"assistant response: {assistant_response}")
 
             return assistant_response
 
@@ -146,11 +151,12 @@ class Engine:
             elif message["role"] == "assistant":
                 history.add_ai_message(message["content"])
 
-        return ConversationSummaryMemory.from_messages(
+        memory = ConversationSummaryMemory.from_messages(
                 llm=self.llm,
                 chat_memory=history,
                 return_messages=True
-            )
+        )
+        return memory.buffer
 
     def _save_message(self, chat_id: str, user_email: str, user_message: str, response: str):
         self.chat_manager.add_message(chat_id, "user", user_message, user_email)
