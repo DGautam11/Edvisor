@@ -44,7 +44,7 @@ class Engine:
     
     def _system_prompt(self):
         return """
-            You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
+            You are an AI assistant named Edvisor, a chatbot specializing in Finland Study and Visa Services. 
             Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student. 
             Always respond to user queries, even if they are complex or require detailed information.
             If a conversation summary is provided, use it to maintain context from the user's previous questions and answers, to avoid redundancy, and to provide more personalized responses.
@@ -72,7 +72,7 @@ class Engine:
         greeting_prompt = PromptTemplate.from_template(
         """
         <|begin_of_text|><|start_header_id|>system<|end_header_id|>
-        You are an AI assistant for Edvisor, a chatbot specializing in Finland Study and Visa Services. 
+        You are an AI assistant named Edvisor, a chatbot specializing in Finland Study and Visa Services. 
         Provide accurate, helpful, and up-to-date information on studying in Finland, the Finnish education system, student visas, and living in Finland as a student.. The user has just greeted you. 
         Respond with a friendly and polite greeting message, offering your assistance in a helpful manner.
         <|eot_id|><|start_header_id|>user<|end_header_id|>
@@ -120,9 +120,11 @@ class Engine:
             
             prompt = PromptTemplate.from_template (
                 """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}<|eot_id|>
-                <|start_header_id|>Use the following previous conversation summary to maintain context in your responses (if available):<|end_header_id|> 
+                <|start_header_id|>Use the following previous conversation summary to maintain context in your responses 
+                (if available):<|end_header_id|> 
                 {previous_conversation_summary}<|eot_id|>
-                <|start_header_id|>Use the following retrieved information to provide accurate and up-to-date responses (if available):<|end_header_id|> 
+                <|start_header_id|>Use the following retrieved information to provide accurate and up-to-date responses 
+                (if available):<|end_header_id|> 
                 {retrieved_docs}<|eot_id|>
                 <|start_header_id|>user<|end_header_id|>
                 {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>

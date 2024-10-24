@@ -29,7 +29,7 @@ class Config:
     ))
 
     #Model Configurations
-    base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
+    base_model: str = "Dpngtm/llama-3-8b-Instruct-finetuned-edvisor-thesis"
     embedding_model: str = "sentence-transformers/multi-qa-mpnet-base-cos-v1"
 
     #Name of the API keys file
