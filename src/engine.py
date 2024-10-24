@@ -11,6 +11,7 @@ from langchain.docstore.document import Document
 import chromadb
 from config import Config   
 import re
+from langchain_openai import OpenAI
 
 class Engine:
     def __init__(self):
@@ -158,7 +159,7 @@ class Engine:
                    elif message["role"] == "assistant":
                         history.add_assistant_message(message["content"])
            self .chat_memories[chat_id] = ConversationSummaryMemory.from_messages(
-                llm = self.llm,
+                llm=OpenAI(temperature=0),
                 chat_memory = history,
                 return_messages = True
             )
