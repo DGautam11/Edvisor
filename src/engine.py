@@ -112,8 +112,16 @@ class Engine:
             print(f"Previous conversation summary: {prev_conversation_summary}")
             print(f"Retrieved documents: {retrieved_docs_content}")
 
-            # Construct the prompt
-            prompt = self._construct_prompt(prev_conversation_summary, retrieved_docs_content, user_message)
+            
+            prompt = PromptTemplate.from_template (
+                """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}
+                    Use the following previous conversation summary to maintain context in your responses 
+                    (if available): {previous_conversation_summary}
+                    Use the following retrieved information to provide accurate and up-to-date responses 
+                    (if available): {retrieved_docs}<|eot_id|>
+                    <|start_header_id|>user<|end_header_id|>
+                    {user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+                """ )
             
             chain = prompt | self.llm
             # Log the complete prompt for debugging
@@ -151,7 +159,7 @@ class Engine:
             """
         )
         # Returning the constructed prompt ready to be fed into the LLM
-        return prompt
+    return prompt
 
     
     def _get_or_create_memory(self,chat_id:str,user_email:str)->ConversationSummaryMemory:
