@@ -33,7 +33,7 @@ class Engine:
             "text-generation",
             model=model,
             tokenizer=tokenizer,
-            max_new_tokens=1024,
+            max_new_tokens=4096,
             temperature=0.7,
             top_p=0.9,
             do_sample=True,
@@ -111,7 +111,7 @@ class Engine:
             # Load chat history and update memory
             prev_conversation_summary = memory.buffer
 
-            retrieved_docs = self.rag.query_vector_store(user_message, k=2)
+            retrieved_docs = self.rag.query_vector_store(user_message, k=1)
             retrieved_docs_content = self._prepare_retrieved_docs(retrieved_docs)
 
             print(f"Previous conversation summary: {prev_conversation_summary}")
