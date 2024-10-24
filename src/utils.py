@@ -66,7 +66,8 @@ class Utils:
 
             # Optionally, you can add some test queries here
             test_queries = [
-                "Why Finland?",
+                "Why to study in Finland?",
+                "What are the requirements for student visa in Finland?",
                 "Programs at LAB University of Applied Sciences",
                 "Tution fee at Turku University of Applied Sciences",
             ]
@@ -74,7 +75,7 @@ class Utils:
             print("\nTesting RAG database with sample queries:")
             for query in test_queries:
                 print(f"\nQuery: {query}")
-                results = rag.search(query, k=3)
+                results = rag.search(query, k=2)
                 for i, doc in enumerate(results, 1):
                     print(f"Result {i}:")
                     print(f"Context: {doc.metadata['context']}")
