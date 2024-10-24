@@ -131,6 +131,8 @@ class Engine:
                 """ )
             
             chain = prompt | self.llm
+            # Log the complete prompt for debugging
+            print(f"Prompt sent to model: {prompt}")
 
             full_response = chain.invoke({
                 "system_prompt": self._system_prompt(),
