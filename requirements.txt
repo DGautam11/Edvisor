@@ -18,4 +18,5 @@ sqlalchemy
 google-auth-oauthlib
 google-auth
 google-api-python-client
+langchain_openai
 
