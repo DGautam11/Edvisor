@@ -145,21 +145,6 @@ class Engine:
             print(f"assistant response: {assistant_response}")
 
             return assistant_response
-    
-    def _construct_prompt(self, previous_summary: str, retrieved_docs: str, user_message: str) -> str:
-        # This constructs the prompt combining memory, system prompt, and user query
-        prompt = PromptTemplate.from_template(
-            """<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}<|eot_id|>
-            <|start_header_id|>Previous conversation summary:<|end_header_id|> 
-            {previous_summary}<|eot_id|>
-            <|start_header_id|>Relevant documents:<|end_header_id|> 
-            {retrieved_docs}<|eot_id|>
-            <|start_header_id|>user<|end_header_id|>
-            {user_message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-            """
-        )
-        # Returning the constructed prompt ready to be fed into the LLM
-    return prompt
 
     
     def _get_or_create_memory(self,chat_id:str,user_email:str)->ConversationSummaryMemory:
