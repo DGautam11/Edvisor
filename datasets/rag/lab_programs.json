@@ -2,7 +2,7 @@
     "university":"LAB University of Applied Sciences",
     "short name":"LAB",
     "about":"The LAB University of Applied Sciences is a higher education institution specialising in innovation, business and industry.It operates in Lahti and Lappeenranta, Finland, and also online. We offer education in five fields: health care and social services, technology, business, hospitality, and design, fine arts and visual communication. Our strengths include the circular economy, design, innovations and health. We have 9800 students and 550 teachers and RDI experts, which makes us the sixth largest university of applied sciences in Finland.LAB represents the vision and operating culture of the new university of applied sciences focusing on supporting responsible, regenerative growth through intangible value creation, multipurpose materials, and human well-being. It depicts an active approach where different people and experts create something new together with business enterprises. The name LAB is easy to pronounce in both Finnish and English and establishes a link to the LUT Universities.Lahti University of Applied Sciences and Saimaa University of Applied Sciences merged end of the year of 2019, establishing a completely new institution: the LAB University of Applied Sciences. LAB started its operation on 1 January 2020.",
-    "bachelor's programs":[
+    "bachelor's degree":[
         {
             "program":"Industrial Mechanical Engineering",
             "degree title":"Bachelor of Engineering",
@@ -92,7 +92,7 @@
 
         }
     ],
-    "master's programs":[
+    "master's degree":[
         {
             "program":"Urban Sustainability",
             "degree title":"Master of Engineering",
